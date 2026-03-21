@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import dev.relayapi.core.Enum
 import dev.relayapi.core.ExcludeMissing
 import dev.relayapi.core.JsonField
 import dev.relayapi.core.JsonMissing
@@ -20,24 +21,24 @@ import kotlin.jvm.optionals.getOrNull
 class UsageRetrieveResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val apiCalls: JsonField<ApiCalls>,
     private val plan: JsonField<Plan>,
+    private val rateLimit: JsonField<RateLimit>,
+    private val subscription: JsonField<Subscription>,
     private val usage: JsonField<Usage>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("api_calls") @ExcludeMissing apiCalls: JsonField<ApiCalls> = JsonMissing.of(),
         @JsonProperty("plan") @ExcludeMissing plan: JsonField<Plan> = JsonMissing.of(),
+        @JsonProperty("rate_limit")
+        @ExcludeMissing
+        rateLimit: JsonField<RateLimit> = JsonMissing.of(),
+        @JsonProperty("subscription")
+        @ExcludeMissing
+        subscription: JsonField<Subscription> = JsonMissing.of(),
         @JsonProperty("usage") @ExcludeMissing usage: JsonField<Usage> = JsonMissing.of(),
-    ) : this(apiCalls, plan, usage, mutableMapOf())
-
-    /**
-     * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
-     *   missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun apiCalls(): ApiCalls = apiCalls.getRequired("api_calls")
+    ) : this(plan, rateLimit, subscription, usage, mutableMapOf())
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
@@ -49,14 +50,19 @@ private constructor(
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun usage(): Usage = usage.getRequired("usage")
+    fun rateLimit(): RateLimit = rateLimit.getRequired("rate_limit")
 
     /**
-     * Returns the raw JSON value of [apiCalls].
-     *
-     * Unlike [apiCalls], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
+     *   missing or null (e.g. if the server responded with an unexpected value).
      */
-    @JsonProperty("api_calls") @ExcludeMissing fun _apiCalls(): JsonField<ApiCalls> = apiCalls
+    fun subscription(): Subscription = subscription.getRequired("subscription")
+
+    /**
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
+     *   missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun usage(): Usage = usage.getRequired("usage")
 
     /**
      * Returns the raw JSON value of [plan].
@@ -64,6 +70,22 @@ private constructor(
      * Unlike [plan], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("plan") @ExcludeMissing fun _plan(): JsonField<Plan> = plan
+
+    /**
+     * Returns the raw JSON value of [rateLimit].
+     *
+     * Unlike [rateLimit], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("rate_limit") @ExcludeMissing fun _rateLimit(): JsonField<RateLimit> = rateLimit
+
+    /**
+     * Returns the raw JSON value of [subscription].
+     *
+     * Unlike [subscription], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("subscription")
+    @ExcludeMissing
+    fun _subscription(): JsonField<Subscription> = subscription
 
     /**
      * Returns the raw JSON value of [usage].
@@ -91,8 +113,9 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .apiCalls()
          * .plan()
+         * .rateLimit()
+         * .subscription()
          * .usage()
          * ```
          */
@@ -102,29 +125,20 @@ private constructor(
     /** A builder for [UsageRetrieveResponse]. */
     class Builder internal constructor() {
 
-        private var apiCalls: JsonField<ApiCalls>? = null
         private var plan: JsonField<Plan>? = null
+        private var rateLimit: JsonField<RateLimit>? = null
+        private var subscription: JsonField<Subscription>? = null
         private var usage: JsonField<Usage>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(usageRetrieveResponse: UsageRetrieveResponse) = apply {
-            apiCalls = usageRetrieveResponse.apiCalls
             plan = usageRetrieveResponse.plan
+            rateLimit = usageRetrieveResponse.rateLimit
+            subscription = usageRetrieveResponse.subscription
             usage = usageRetrieveResponse.usage
             additionalProperties = usageRetrieveResponse.additionalProperties.toMutableMap()
         }
-
-        fun apiCalls(apiCalls: ApiCalls) = apiCalls(JsonField.of(apiCalls))
-
-        /**
-         * Sets [Builder.apiCalls] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.apiCalls] with a well-typed [ApiCalls] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun apiCalls(apiCalls: JsonField<ApiCalls>) = apply { this.apiCalls = apiCalls }
 
         fun plan(plan: Plan) = plan(JsonField.of(plan))
 
@@ -135,6 +149,30 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun plan(plan: JsonField<Plan>) = apply { this.plan = plan }
+
+        fun rateLimit(rateLimit: RateLimit) = rateLimit(JsonField.of(rateLimit))
+
+        /**
+         * Sets [Builder.rateLimit] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.rateLimit] with a well-typed [RateLimit] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun rateLimit(rateLimit: JsonField<RateLimit>) = apply { this.rateLimit = rateLimit }
+
+        fun subscription(subscription: Subscription) = subscription(JsonField.of(subscription))
+
+        /**
+         * Sets [Builder.subscription] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.subscription] with a well-typed [Subscription] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun subscription(subscription: JsonField<Subscription>) = apply {
+            this.subscription = subscription
+        }
 
         fun usage(usage: Usage) = usage(JsonField.of(usage))
 
@@ -172,8 +210,9 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .apiCalls()
          * .plan()
+         * .rateLimit()
+         * .subscription()
          * .usage()
          * ```
          *
@@ -181,8 +220,9 @@ private constructor(
          */
         fun build(): UsageRetrieveResponse =
             UsageRetrieveResponse(
-                checkRequired("apiCalls", apiCalls),
                 checkRequired("plan", plan),
+                checkRequired("rateLimit", rateLimit),
+                checkRequired("subscription", subscription),
                 checkRequired("usage", usage),
                 additionalProperties.toMutableMap(),
             )
@@ -195,8 +235,9 @@ private constructor(
             return@apply
         }
 
-        apiCalls().validate()
         plan().validate()
+        rateLimit().validate()
+        subscription().validate()
         usage().validate()
         validated = true
     }
@@ -216,11 +257,638 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (apiCalls.asKnown().getOrNull()?.validity() ?: 0) +
-            (plan.asKnown().getOrNull()?.validity() ?: 0) +
+        (plan.asKnown().getOrNull()?.validity() ?: 0) +
+            (rateLimit.asKnown().getOrNull()?.validity() ?: 0) +
+            (subscription.asKnown().getOrNull()?.validity() ?: 0) +
             (usage.asKnown().getOrNull()?.validity() ?: 0)
 
-    class ApiCalls
+    class Plan
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val apiCallsLimit: JsonField<Double>,
+        private val apiCallsPerMin: JsonField<Double>,
+        private val features: JsonField<Features>,
+        private val name: JsonField<Name>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("api_calls_limit")
+            @ExcludeMissing
+            apiCallsLimit: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("api_calls_per_min")
+            @ExcludeMissing
+            apiCallsPerMin: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("features")
+            @ExcludeMissing
+            features: JsonField<Features> = JsonMissing.of(),
+            @JsonProperty("name") @ExcludeMissing name: JsonField<Name> = JsonMissing.of(),
+        ) : this(apiCallsLimit, apiCallsPerMin, features, name, mutableMapOf())
+
+        /**
+         * API calls included per billing cycle
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun apiCallsLimit(): Double = apiCallsLimit.getRequired("api_calls_limit")
+
+        /**
+         * API calls allowed per minute
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun apiCallsPerMin(): Double = apiCallsPerMin.getRequired("api_calls_per_min")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun features(): Features = features.getRequired("features")
+
+        /**
+         * Current plan
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun name(): Name = name.getRequired("name")
+
+        /**
+         * Returns the raw JSON value of [apiCallsLimit].
+         *
+         * Unlike [apiCallsLimit], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("api_calls_limit")
+        @ExcludeMissing
+        fun _apiCallsLimit(): JsonField<Double> = apiCallsLimit
+
+        /**
+         * Returns the raw JSON value of [apiCallsPerMin].
+         *
+         * Unlike [apiCallsPerMin], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("api_calls_per_min")
+        @ExcludeMissing
+        fun _apiCallsPerMin(): JsonField<Double> = apiCallsPerMin
+
+        /**
+         * Returns the raw JSON value of [features].
+         *
+         * Unlike [features], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("features") @ExcludeMissing fun _features(): JsonField<Features> = features
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Plan].
+             *
+             * The following fields are required:
+             * ```java
+             * .apiCallsLimit()
+             * .apiCallsPerMin()
+             * .features()
+             * .name()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Plan]. */
+        class Builder internal constructor() {
+
+            private var apiCallsLimit: JsonField<Double>? = null
+            private var apiCallsPerMin: JsonField<Double>? = null
+            private var features: JsonField<Features>? = null
+            private var name: JsonField<Name>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(plan: Plan) = apply {
+                apiCallsLimit = plan.apiCallsLimit
+                apiCallsPerMin = plan.apiCallsPerMin
+                features = plan.features
+                name = plan.name
+                additionalProperties = plan.additionalProperties.toMutableMap()
+            }
+
+            /** API calls included per billing cycle */
+            fun apiCallsLimit(apiCallsLimit: Double) = apiCallsLimit(JsonField.of(apiCallsLimit))
+
+            /**
+             * Sets [Builder.apiCallsLimit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.apiCallsLimit] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun apiCallsLimit(apiCallsLimit: JsonField<Double>) = apply {
+                this.apiCallsLimit = apiCallsLimit
+            }
+
+            /** API calls allowed per minute */
+            fun apiCallsPerMin(apiCallsPerMin: Double) =
+                apiCallsPerMin(JsonField.of(apiCallsPerMin))
+
+            /**
+             * Sets [Builder.apiCallsPerMin] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.apiCallsPerMin] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun apiCallsPerMin(apiCallsPerMin: JsonField<Double>) = apply {
+                this.apiCallsPerMin = apiCallsPerMin
+            }
+
+            fun features(features: Features) = features(JsonField.of(features))
+
+            /**
+             * Sets [Builder.features] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.features] with a well-typed [Features] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun features(features: JsonField<Features>) = apply { this.features = features }
+
+            /** Current plan */
+            fun name(name: Name) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [Name] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<Name>) = apply { this.name = name }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Plan].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .apiCallsLimit()
+             * .apiCallsPerMin()
+             * .features()
+             * .name()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Plan =
+                Plan(
+                    checkRequired("apiCallsLimit", apiCallsLimit),
+                    checkRequired("apiCallsPerMin", apiCallsPerMin),
+                    checkRequired("features", features),
+                    checkRequired("name", name),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Plan = apply {
+            if (validated) {
+                return@apply
+            }
+
+            apiCallsLimit()
+            apiCallsPerMin()
+            features().validate()
+            name().validate()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (apiCallsLimit.asKnown().isPresent) 1 else 0) +
+                (if (apiCallsPerMin.asKnown().isPresent) 1 else 0) +
+                (features.asKnown().getOrNull()?.validity() ?: 0) +
+                (name.asKnown().getOrNull()?.validity() ?: 0)
+
+        class Features
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val analytics: JsonField<Boolean>,
+            private val inbox: JsonField<Boolean>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("analytics")
+                @ExcludeMissing
+                analytics: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("inbox") @ExcludeMissing inbox: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(analytics, inbox, mutableMapOf())
+
+            /**
+             * Access to /v1/analytics
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun analytics(): Boolean = analytics.getRequired("analytics")
+
+            /**
+             * Access to /v1/inbox
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun inbox(): Boolean = inbox.getRequired("inbox")
+
+            /**
+             * Returns the raw JSON value of [analytics].
+             *
+             * Unlike [analytics], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("analytics")
+            @ExcludeMissing
+            fun _analytics(): JsonField<Boolean> = analytics
+
+            /**
+             * Returns the raw JSON value of [inbox].
+             *
+             * Unlike [inbox], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("inbox") @ExcludeMissing fun _inbox(): JsonField<Boolean> = inbox
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Features].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .analytics()
+                 * .inbox()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Features]. */
+            class Builder internal constructor() {
+
+                private var analytics: JsonField<Boolean>? = null
+                private var inbox: JsonField<Boolean>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(features: Features) = apply {
+                    analytics = features.analytics
+                    inbox = features.inbox
+                    additionalProperties = features.additionalProperties.toMutableMap()
+                }
+
+                /** Access to /v1/analytics */
+                fun analytics(analytics: Boolean) = analytics(JsonField.of(analytics))
+
+                /**
+                 * Sets [Builder.analytics] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.analytics] with a well-typed [Boolean] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun analytics(analytics: JsonField<Boolean>) = apply { this.analytics = analytics }
+
+                /** Access to /v1/inbox */
+                fun inbox(inbox: Boolean) = inbox(JsonField.of(inbox))
+
+                /**
+                 * Sets [Builder.inbox] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.inbox] with a well-typed [Boolean] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun inbox(inbox: JsonField<Boolean>) = apply { this.inbox = inbox }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Features].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .analytics()
+                 * .inbox()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Features =
+                    Features(
+                        checkRequired("analytics", analytics),
+                        checkRequired("inbox", inbox),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Features = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                analytics()
+                inbox()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (analytics.asKnown().isPresent) 1 else 0) +
+                    (if (inbox.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Features &&
+                    analytics == other.analytics &&
+                    inbox == other.inbox &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(analytics, inbox, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Features{analytics=$analytics, inbox=$inbox, additionalProperties=$additionalProperties}"
+        }
+
+        /** Current plan */
+        class Name @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val FREE = of("free")
+
+                @JvmField val PRO = of("pro")
+
+                @JvmStatic fun of(value: String) = Name(JsonField.of(value))
+            }
+
+            /** An enum containing [Name]'s known values. */
+            enum class Known {
+                FREE,
+                PRO,
+            }
+
+            /**
+             * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Name] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                FREE,
+                PRO,
+                /** An enum member indicating that [Name] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    FREE -> Value.FREE
+                    PRO -> Value.PRO
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws RelayInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    FREE -> Known.FREE
+                    PRO -> Known.PRO
+                    else -> throw RelayInvalidDataException("Unknown Name: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws RelayInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    RelayInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            fun validate(): Name = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Name && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Plan &&
+                apiCallsLimit == other.apiCallsLimit &&
+                apiCallsPerMin == other.apiCallsPerMin &&
+                features == other.features &&
+                name == other.name &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(apiCallsLimit, apiCallsPerMin, features, name, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Plan{apiCallsLimit=$apiCallsLimit, apiCallsPerMin=$apiCallsPerMin, features=$features, name=$name, additionalProperties=$additionalProperties}"
+    }
+
+    class RateLimit
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val currentMinute: JsonField<Double>,
@@ -239,7 +907,7 @@ private constructor(
         ) : this(currentMinute, limitPerMinute, mutableMapOf())
 
         /**
-         * API calls in the current minute
+         * API calls in the current rate-limit window
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -247,7 +915,7 @@ private constructor(
         fun currentMinute(): Double = currentMinute.getRequired("current_minute")
 
         /**
-         * Max API calls per minute
+         * Max API calls per rate-limit window
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -289,7 +957,7 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of [ApiCalls].
+             * Returns a mutable builder for constructing an instance of [RateLimit].
              *
              * The following fields are required:
              * ```java
@@ -300,7 +968,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [ApiCalls]. */
+        /** A builder for [RateLimit]. */
         class Builder internal constructor() {
 
             private var currentMinute: JsonField<Double>? = null
@@ -308,13 +976,13 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(apiCalls: ApiCalls) = apply {
-                currentMinute = apiCalls.currentMinute
-                limitPerMinute = apiCalls.limitPerMinute
-                additionalProperties = apiCalls.additionalProperties.toMutableMap()
+            internal fun from(rateLimit: RateLimit) = apply {
+                currentMinute = rateLimit.currentMinute
+                limitPerMinute = rateLimit.limitPerMinute
+                additionalProperties = rateLimit.additionalProperties.toMutableMap()
             }
 
-            /** API calls in the current minute */
+            /** API calls in the current rate-limit window */
             fun currentMinute(currentMinute: Double) = currentMinute(JsonField.of(currentMinute))
 
             /**
@@ -328,7 +996,7 @@ private constructor(
                 this.currentMinute = currentMinute
             }
 
-            /** Max API calls per minute */
+            /** Max API calls per rate-limit window */
             fun limitPerMinute(limitPerMinute: Double) =
                 limitPerMinute(JsonField.of(limitPerMinute))
 
@@ -363,7 +1031,7 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [ApiCalls].
+             * Returns an immutable instance of [RateLimit].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
@@ -375,8 +1043,8 @@ private constructor(
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): ApiCalls =
-                ApiCalls(
+            fun build(): RateLimit =
+                RateLimit(
                     checkRequired("currentMinute", currentMinute),
                     checkRequired("limitPerMinute", limitPerMinute),
                     additionalProperties.toMutableMap(),
@@ -385,7 +1053,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): ApiCalls = apply {
+        fun validate(): RateLimit = apply {
             if (validated) {
                 return@apply
             }
@@ -419,7 +1087,7 @@ private constructor(
                 return true
             }
 
-            return other is ApiCalls &&
+            return other is RateLimit &&
                 currentMinute == other.currentMinute &&
                 limitPerMinute == other.limitPerMinute &&
                 additionalProperties == other.additionalProperties
@@ -432,78 +1100,80 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "ApiCalls{currentMinute=$currentMinute, limitPerMinute=$limitPerMinute, additionalProperties=$additionalProperties}"
+            "RateLimit{currentMinute=$currentMinute, limitPerMinute=$limitPerMinute, additionalProperties=$additionalProperties}"
     }
 
-    class Plan
+    class Subscription
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val apiCallsPerMin: JsonField<Double>,
-        private val name: JsonField<String>,
-        private val postsLimit: JsonField<Double>,
+        private val monthlyPriceCents: JsonField<Double>,
+        private val pricePerThousandCallsCents: JsonField<Double>,
+        private val status: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("api_calls_per_min")
+            @JsonProperty("monthly_price_cents")
             @ExcludeMissing
-            apiCallsPerMin: JsonField<Double> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("posts_limit")
+            monthlyPriceCents: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("price_per_thousand_calls_cents")
             @ExcludeMissing
-            postsLimit: JsonField<Double> = JsonMissing.of(),
-        ) : this(apiCallsPerMin, name, postsLimit, mutableMapOf())
+            pricePerThousandCallsCents: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("status") @ExcludeMissing status: JsonField<String> = JsonMissing.of(),
+        ) : this(monthlyPriceCents, pricePerThousandCallsCents, status, mutableMapOf())
 
         /**
-         * API calls allowed per minute
+         * Base monthly price in cents
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun apiCallsPerMin(): Double = apiCallsPerMin.getRequired("api_calls_per_min")
+        fun monthlyPriceCents(): Double = monthlyPriceCents.getRequired("monthly_price_cents")
 
         /**
-         * Plan name
+         * Overage price per 1K API calls in cents
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun name(): String = name.getRequired("name")
+        fun pricePerThousandCallsCents(): Double =
+            pricePerThousandCallsCents.getRequired("price_per_thousand_calls_cents")
 
         /**
-         * Max posts per billing cycle
+         * Subscription status
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun postsLimit(): Double = postsLimit.getRequired("posts_limit")
+        fun status(): String = status.getRequired("status")
 
         /**
-         * Returns the raw JSON value of [apiCallsPerMin].
+         * Returns the raw JSON value of [monthlyPriceCents].
          *
-         * Unlike [apiCallsPerMin], this method doesn't throw if the JSON field has an unexpected
+         * Unlike [monthlyPriceCents], this method doesn't throw if the JSON field has an unexpected
          * type.
          */
-        @JsonProperty("api_calls_per_min")
+        @JsonProperty("monthly_price_cents")
         @ExcludeMissing
-        fun _apiCallsPerMin(): JsonField<Double> = apiCallsPerMin
+        fun _monthlyPriceCents(): JsonField<Double> = monthlyPriceCents
 
         /**
-         * Returns the raw JSON value of [name].
+         * Returns the raw JSON value of [pricePerThousandCallsCents].
          *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [pricePerThousandCallsCents], this method doesn't throw if the JSON field has an
+         * unexpected type.
          */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+        @JsonProperty("price_per_thousand_calls_cents")
+        @ExcludeMissing
+        fun _pricePerThousandCallsCents(): JsonField<Double> = pricePerThousandCallsCents
 
         /**
-         * Returns the raw JSON value of [postsLimit].
+         * Returns the raw JSON value of [status].
          *
-         * Unlike [postsLimit], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("posts_limit")
-        @ExcludeMissing
-        fun _postsLimit(): JsonField<Double> = postsLimit
+        @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<String> = status
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -520,72 +1190,75 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of [Plan].
+             * Returns a mutable builder for constructing an instance of [Subscription].
              *
              * The following fields are required:
              * ```java
-             * .apiCallsPerMin()
-             * .name()
-             * .postsLimit()
+             * .monthlyPriceCents()
+             * .pricePerThousandCallsCents()
+             * .status()
              * ```
              */
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [Plan]. */
+        /** A builder for [Subscription]. */
         class Builder internal constructor() {
 
-            private var apiCallsPerMin: JsonField<Double>? = null
-            private var name: JsonField<String>? = null
-            private var postsLimit: JsonField<Double>? = null
+            private var monthlyPriceCents: JsonField<Double>? = null
+            private var pricePerThousandCallsCents: JsonField<Double>? = null
+            private var status: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(plan: Plan) = apply {
-                apiCallsPerMin = plan.apiCallsPerMin
-                name = plan.name
-                postsLimit = plan.postsLimit
-                additionalProperties = plan.additionalProperties.toMutableMap()
+            internal fun from(subscription: Subscription) = apply {
+                monthlyPriceCents = subscription.monthlyPriceCents
+                pricePerThousandCallsCents = subscription.pricePerThousandCallsCents
+                status = subscription.status
+                additionalProperties = subscription.additionalProperties.toMutableMap()
             }
 
-            /** API calls allowed per minute */
-            fun apiCallsPerMin(apiCallsPerMin: Double) =
-                apiCallsPerMin(JsonField.of(apiCallsPerMin))
+            /** Base monthly price in cents */
+            fun monthlyPriceCents(monthlyPriceCents: Double) =
+                monthlyPriceCents(JsonField.of(monthlyPriceCents))
 
             /**
-             * Sets [Builder.apiCallsPerMin] to an arbitrary JSON value.
+             * Sets [Builder.monthlyPriceCents] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.apiCallsPerMin] with a well-typed [Double] value
+             * You should usually call [Builder.monthlyPriceCents] with a well-typed [Double] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun apiCallsPerMin(apiCallsPerMin: JsonField<Double>) = apply {
-                this.apiCallsPerMin = apiCallsPerMin
+            fun monthlyPriceCents(monthlyPriceCents: JsonField<Double>) = apply {
+                this.monthlyPriceCents = monthlyPriceCents
             }
 
-            /** Plan name */
-            fun name(name: String) = name(JsonField.of(name))
+            /** Overage price per 1K API calls in cents */
+            fun pricePerThousandCallsCents(pricePerThousandCallsCents: Double) =
+                pricePerThousandCallsCents(JsonField.of(pricePerThousandCallsCents))
 
             /**
-             * Sets [Builder.name] to an arbitrary JSON value.
+             * Sets [Builder.pricePerThousandCallsCents] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.pricePerThousandCallsCents] with a well-typed
+             * [Double] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
              */
-            fun name(name: JsonField<String>) = apply { this.name = name }
+            fun pricePerThousandCallsCents(pricePerThousandCallsCents: JsonField<Double>) = apply {
+                this.pricePerThousandCallsCents = pricePerThousandCallsCents
+            }
 
-            /** Max posts per billing cycle */
-            fun postsLimit(postsLimit: Double) = postsLimit(JsonField.of(postsLimit))
+            /** Subscription status */
+            fun status(status: String) = status(JsonField.of(status))
 
             /**
-             * Sets [Builder.postsLimit] to an arbitrary JSON value.
+             * Sets [Builder.status] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.postsLimit] with a well-typed [Double] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.status] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun postsLimit(postsLimit: JsonField<Double>) = apply { this.postsLimit = postsLimit }
+            fun status(status: JsonField<String>) = apply { this.status = status }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -607,38 +1280,38 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [Plan].
+             * Returns an immutable instance of [Subscription].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
              * ```java
-             * .apiCallsPerMin()
-             * .name()
-             * .postsLimit()
+             * .monthlyPriceCents()
+             * .pricePerThousandCallsCents()
+             * .status()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Plan =
-                Plan(
-                    checkRequired("apiCallsPerMin", apiCallsPerMin),
-                    checkRequired("name", name),
-                    checkRequired("postsLimit", postsLimit),
+            fun build(): Subscription =
+                Subscription(
+                    checkRequired("monthlyPriceCents", monthlyPriceCents),
+                    checkRequired("pricePerThousandCallsCents", pricePerThousandCallsCents),
+                    checkRequired("status", status),
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
-        fun validate(): Plan = apply {
+        fun validate(): Subscription = apply {
             if (validated) {
                 return@apply
             }
 
-            apiCallsPerMin()
-            name()
-            postsLimit()
+            monthlyPriceCents()
+            pricePerThousandCallsCents()
+            status()
             validated = true
         }
 
@@ -658,61 +1331,94 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (apiCallsPerMin.asKnown().isPresent) 1 else 0) +
-                (if (name.asKnown().isPresent) 1 else 0) +
-                (if (postsLimit.asKnown().isPresent) 1 else 0)
+            (if (monthlyPriceCents.asKnown().isPresent) 1 else 0) +
+                (if (pricePerThousandCallsCents.asKnown().isPresent) 1 else 0) +
+                (if (status.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return other is Plan &&
-                apiCallsPerMin == other.apiCallsPerMin &&
-                name == other.name &&
-                postsLimit == other.postsLimit &&
+            return other is Subscription &&
+                monthlyPriceCents == other.monthlyPriceCents &&
+                pricePerThousandCallsCents == other.pricePerThousandCallsCents &&
+                status == other.status &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(apiCallsPerMin, name, postsLimit, additionalProperties)
+            Objects.hash(
+                monthlyPriceCents,
+                pricePerThousandCallsCents,
+                status,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Plan{apiCallsPerMin=$apiCallsPerMin, name=$name, postsLimit=$postsLimit, additionalProperties=$additionalProperties}"
+            "Subscription{monthlyPriceCents=$monthlyPriceCents, pricePerThousandCallsCents=$pricePerThousandCallsCents, status=$status, additionalProperties=$additionalProperties}"
     }
 
     class Usage
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val apiCallsRemaining: JsonField<Double>,
+        private val apiCallsUsed: JsonField<Double>,
         private val cycleEnd: JsonField<OffsetDateTime>,
-        private val cycleResetsAt: JsonField<OffsetDateTime>,
         private val cycleStart: JsonField<OffsetDateTime>,
-        private val postsLimit: JsonField<Double>,
-        private val postsUsed: JsonField<Double>,
+        private val overageCalls: JsonField<Double>,
+        private val overageCostCents: JsonField<Double>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
+            @JsonProperty("api_calls_remaining")
+            @ExcludeMissing
+            apiCallsRemaining: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("api_calls_used")
+            @ExcludeMissing
+            apiCallsUsed: JsonField<Double> = JsonMissing.of(),
             @JsonProperty("cycle_end")
             @ExcludeMissing
             cycleEnd: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("cycle_resets_at")
-            @ExcludeMissing
-            cycleResetsAt: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("cycle_start")
             @ExcludeMissing
             cycleStart: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("posts_limit")
+            @JsonProperty("overage_calls")
             @ExcludeMissing
-            postsLimit: JsonField<Double> = JsonMissing.of(),
-            @JsonProperty("posts_used")
+            overageCalls: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("overage_cost_cents")
             @ExcludeMissing
-            postsUsed: JsonField<Double> = JsonMissing.of(),
-        ) : this(cycleEnd, cycleResetsAt, cycleStart, postsLimit, postsUsed, mutableMapOf())
+            overageCostCents: JsonField<Double> = JsonMissing.of(),
+        ) : this(
+            apiCallsRemaining,
+            apiCallsUsed,
+            cycleEnd,
+            cycleStart,
+            overageCalls,
+            overageCostCents,
+            mutableMapOf(),
+        )
+
+        /**
+         * API calls remaining this cycle (Infinity for pro overage)
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun apiCallsRemaining(): Double = apiCallsRemaining.getRequired("api_calls_remaining")
+
+        /**
+         * API calls used this cycle
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun apiCallsUsed(): Double = apiCallsUsed.getRequired("api_calls_used")
 
         /**
          * Current billing cycle end
@@ -723,14 +1429,6 @@ private constructor(
         fun cycleEnd(): OffsetDateTime = cycleEnd.getRequired("cycle_end")
 
         /**
-         * When the cycle resets
-         *
-         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun cycleResetsAt(): OffsetDateTime = cycleResetsAt.getRequired("cycle_resets_at")
-
-        /**
          * Current billing cycle start
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
@@ -739,20 +1437,40 @@ private constructor(
         fun cycleStart(): OffsetDateTime = cycleStart.getRequired("cycle_start")
 
         /**
-         * Max posts per billing cycle
+         * API calls exceeding included amount
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun postsLimit(): Double = postsLimit.getRequired("posts_limit")
+        fun overageCalls(): Double = overageCalls.getRequired("overage_calls")
 
         /**
-         * Posts used this cycle
+         * Overage cost in cents
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun postsUsed(): Double = postsUsed.getRequired("posts_used")
+        fun overageCostCents(): Double = overageCostCents.getRequired("overage_cost_cents")
+
+        /**
+         * Returns the raw JSON value of [apiCallsRemaining].
+         *
+         * Unlike [apiCallsRemaining], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("api_calls_remaining")
+        @ExcludeMissing
+        fun _apiCallsRemaining(): JsonField<Double> = apiCallsRemaining
+
+        /**
+         * Returns the raw JSON value of [apiCallsUsed].
+         *
+         * Unlike [apiCallsUsed], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("api_calls_used")
+        @ExcludeMissing
+        fun _apiCallsUsed(): JsonField<Double> = apiCallsUsed
 
         /**
          * Returns the raw JSON value of [cycleEnd].
@@ -764,16 +1482,6 @@ private constructor(
         fun _cycleEnd(): JsonField<OffsetDateTime> = cycleEnd
 
         /**
-         * Returns the raw JSON value of [cycleResetsAt].
-         *
-         * Unlike [cycleResetsAt], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("cycle_resets_at")
-        @ExcludeMissing
-        fun _cycleResetsAt(): JsonField<OffsetDateTime> = cycleResetsAt
-
-        /**
          * Returns the raw JSON value of [cycleStart].
          *
          * Unlike [cycleStart], this method doesn't throw if the JSON field has an unexpected type.
@@ -783,20 +1491,24 @@ private constructor(
         fun _cycleStart(): JsonField<OffsetDateTime> = cycleStart
 
         /**
-         * Returns the raw JSON value of [postsLimit].
+         * Returns the raw JSON value of [overageCalls].
          *
-         * Unlike [postsLimit], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [overageCalls], this method doesn't throw if the JSON field has an unexpected
+         * type.
          */
-        @JsonProperty("posts_limit")
+        @JsonProperty("overage_calls")
         @ExcludeMissing
-        fun _postsLimit(): JsonField<Double> = postsLimit
+        fun _overageCalls(): JsonField<Double> = overageCalls
 
         /**
-         * Returns the raw JSON value of [postsUsed].
+         * Returns the raw JSON value of [overageCostCents].
          *
-         * Unlike [postsUsed], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [overageCostCents], this method doesn't throw if the JSON field has an unexpected
+         * type.
          */
-        @JsonProperty("posts_used") @ExcludeMissing fun _postsUsed(): JsonField<Double> = postsUsed
+        @JsonProperty("overage_cost_cents")
+        @ExcludeMissing
+        fun _overageCostCents(): JsonField<Double> = overageCostCents
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -817,11 +1529,12 @@ private constructor(
              *
              * The following fields are required:
              * ```java
+             * .apiCallsRemaining()
+             * .apiCallsUsed()
              * .cycleEnd()
-             * .cycleResetsAt()
              * .cycleStart()
-             * .postsLimit()
-             * .postsUsed()
+             * .overageCalls()
+             * .overageCostCents()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -830,21 +1543,52 @@ private constructor(
         /** A builder for [Usage]. */
         class Builder internal constructor() {
 
+            private var apiCallsRemaining: JsonField<Double>? = null
+            private var apiCallsUsed: JsonField<Double>? = null
             private var cycleEnd: JsonField<OffsetDateTime>? = null
-            private var cycleResetsAt: JsonField<OffsetDateTime>? = null
             private var cycleStart: JsonField<OffsetDateTime>? = null
-            private var postsLimit: JsonField<Double>? = null
-            private var postsUsed: JsonField<Double>? = null
+            private var overageCalls: JsonField<Double>? = null
+            private var overageCostCents: JsonField<Double>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(usage: Usage) = apply {
+                apiCallsRemaining = usage.apiCallsRemaining
+                apiCallsUsed = usage.apiCallsUsed
                 cycleEnd = usage.cycleEnd
-                cycleResetsAt = usage.cycleResetsAt
                 cycleStart = usage.cycleStart
-                postsLimit = usage.postsLimit
-                postsUsed = usage.postsUsed
+                overageCalls = usage.overageCalls
+                overageCostCents = usage.overageCostCents
                 additionalProperties = usage.additionalProperties.toMutableMap()
+            }
+
+            /** API calls remaining this cycle (Infinity for pro overage) */
+            fun apiCallsRemaining(apiCallsRemaining: Double) =
+                apiCallsRemaining(JsonField.of(apiCallsRemaining))
+
+            /**
+             * Sets [Builder.apiCallsRemaining] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.apiCallsRemaining] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun apiCallsRemaining(apiCallsRemaining: JsonField<Double>) = apply {
+                this.apiCallsRemaining = apiCallsRemaining
+            }
+
+            /** API calls used this cycle */
+            fun apiCallsUsed(apiCallsUsed: Double) = apiCallsUsed(JsonField.of(apiCallsUsed))
+
+            /**
+             * Sets [Builder.apiCallsUsed] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.apiCallsUsed] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun apiCallsUsed(apiCallsUsed: JsonField<Double>) = apply {
+                this.apiCallsUsed = apiCallsUsed
             }
 
             /** Current billing cycle end */
@@ -858,21 +1602,6 @@ private constructor(
              * supported value.
              */
             fun cycleEnd(cycleEnd: JsonField<OffsetDateTime>) = apply { this.cycleEnd = cycleEnd }
-
-            /** When the cycle resets */
-            fun cycleResetsAt(cycleResetsAt: OffsetDateTime) =
-                cycleResetsAt(JsonField.of(cycleResetsAt))
-
-            /**
-             * Sets [Builder.cycleResetsAt] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.cycleResetsAt] with a well-typed [OffsetDateTime]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun cycleResetsAt(cycleResetsAt: JsonField<OffsetDateTime>) = apply {
-                this.cycleResetsAt = cycleResetsAt
-            }
 
             /** Current billing cycle start */
             fun cycleStart(cycleStart: OffsetDateTime) = cycleStart(JsonField.of(cycleStart))
@@ -888,29 +1617,34 @@ private constructor(
                 this.cycleStart = cycleStart
             }
 
-            /** Max posts per billing cycle */
-            fun postsLimit(postsLimit: Double) = postsLimit(JsonField.of(postsLimit))
+            /** API calls exceeding included amount */
+            fun overageCalls(overageCalls: Double) = overageCalls(JsonField.of(overageCalls))
 
             /**
-             * Sets [Builder.postsLimit] to an arbitrary JSON value.
+             * Sets [Builder.overageCalls] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.postsLimit] with a well-typed [Double] value
+             * You should usually call [Builder.overageCalls] with a well-typed [Double] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun postsLimit(postsLimit: JsonField<Double>) = apply { this.postsLimit = postsLimit }
+            fun overageCalls(overageCalls: JsonField<Double>) = apply {
+                this.overageCalls = overageCalls
+            }
 
-            /** Posts used this cycle */
-            fun postsUsed(postsUsed: Double) = postsUsed(JsonField.of(postsUsed))
+            /** Overage cost in cents */
+            fun overageCostCents(overageCostCents: Double) =
+                overageCostCents(JsonField.of(overageCostCents))
 
             /**
-             * Sets [Builder.postsUsed] to an arbitrary JSON value.
+             * Sets [Builder.overageCostCents] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.postsUsed] with a well-typed [Double] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.overageCostCents] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun postsUsed(postsUsed: JsonField<Double>) = apply { this.postsUsed = postsUsed }
+            fun overageCostCents(overageCostCents: JsonField<Double>) = apply {
+                this.overageCostCents = overageCostCents
+            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -938,22 +1672,24 @@ private constructor(
              *
              * The following fields are required:
              * ```java
+             * .apiCallsRemaining()
+             * .apiCallsUsed()
              * .cycleEnd()
-             * .cycleResetsAt()
              * .cycleStart()
-             * .postsLimit()
-             * .postsUsed()
+             * .overageCalls()
+             * .overageCostCents()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Usage =
                 Usage(
+                    checkRequired("apiCallsRemaining", apiCallsRemaining),
+                    checkRequired("apiCallsUsed", apiCallsUsed),
                     checkRequired("cycleEnd", cycleEnd),
-                    checkRequired("cycleResetsAt", cycleResetsAt),
                     checkRequired("cycleStart", cycleStart),
-                    checkRequired("postsLimit", postsLimit),
-                    checkRequired("postsUsed", postsUsed),
+                    checkRequired("overageCalls", overageCalls),
+                    checkRequired("overageCostCents", overageCostCents),
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -965,11 +1701,12 @@ private constructor(
                 return@apply
             }
 
+            apiCallsRemaining()
+            apiCallsUsed()
             cycleEnd()
-            cycleResetsAt()
             cycleStart()
-            postsLimit()
-            postsUsed()
+            overageCalls()
+            overageCostCents()
             validated = true
         }
 
@@ -989,11 +1726,12 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (cycleEnd.asKnown().isPresent) 1 else 0) +
-                (if (cycleResetsAt.asKnown().isPresent) 1 else 0) +
+            (if (apiCallsRemaining.asKnown().isPresent) 1 else 0) +
+                (if (apiCallsUsed.asKnown().isPresent) 1 else 0) +
+                (if (cycleEnd.asKnown().isPresent) 1 else 0) +
                 (if (cycleStart.asKnown().isPresent) 1 else 0) +
-                (if (postsLimit.asKnown().isPresent) 1 else 0) +
-                (if (postsUsed.asKnown().isPresent) 1 else 0)
+                (if (overageCalls.asKnown().isPresent) 1 else 0) +
+                (if (overageCostCents.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1001,21 +1739,23 @@ private constructor(
             }
 
             return other is Usage &&
+                apiCallsRemaining == other.apiCallsRemaining &&
+                apiCallsUsed == other.apiCallsUsed &&
                 cycleEnd == other.cycleEnd &&
-                cycleResetsAt == other.cycleResetsAt &&
                 cycleStart == other.cycleStart &&
-                postsLimit == other.postsLimit &&
-                postsUsed == other.postsUsed &&
+                overageCalls == other.overageCalls &&
+                overageCostCents == other.overageCostCents &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
+                apiCallsRemaining,
+                apiCallsUsed,
                 cycleEnd,
-                cycleResetsAt,
                 cycleStart,
-                postsLimit,
-                postsUsed,
+                overageCalls,
+                overageCostCents,
                 additionalProperties,
             )
         }
@@ -1023,7 +1763,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Usage{cycleEnd=$cycleEnd, cycleResetsAt=$cycleResetsAt, cycleStart=$cycleStart, postsLimit=$postsLimit, postsUsed=$postsUsed, additionalProperties=$additionalProperties}"
+            "Usage{apiCallsRemaining=$apiCallsRemaining, apiCallsUsed=$apiCallsUsed, cycleEnd=$cycleEnd, cycleStart=$cycleStart, overageCalls=$overageCalls, overageCostCents=$overageCostCents, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -1032,16 +1772,19 @@ private constructor(
         }
 
         return other is UsageRetrieveResponse &&
-            apiCalls == other.apiCalls &&
             plan == other.plan &&
+            rateLimit == other.rateLimit &&
+            subscription == other.subscription &&
             usage == other.usage &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(apiCalls, plan, usage, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(plan, rateLimit, subscription, usage, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UsageRetrieveResponse{apiCalls=$apiCalls, plan=$plan, usage=$usage, additionalProperties=$additionalProperties}"
+        "UsageRetrieveResponse{plan=$plan, rateLimit=$rateLimit, subscription=$subscription, usage=$usage, additionalProperties=$additionalProperties}"
 }
