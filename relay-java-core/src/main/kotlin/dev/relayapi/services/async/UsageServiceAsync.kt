@@ -24,7 +24,7 @@ interface UsageServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): UsageServiceAsync
 
-    /** Returns current subscription details and usage statistics for the organization. */
+    /** Returns current plan details and API call usage statistics for the organization. */
     fun retrieve(): CompletableFuture<UsageRetrieveResponse> = retrieve(UsageRetrieveParams.none())
 
     /** @see retrieve */

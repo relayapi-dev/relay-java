@@ -7,7 +7,7 @@ import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
 import java.util.Objects
 
-/** Returns current subscription details and usage statistics for the organization. */
+/** Returns current plan details and API call usage statistics for the organization. */
 class UsageRetrieveParams
 private constructor(
     private val additionalHeaders: Headers,
