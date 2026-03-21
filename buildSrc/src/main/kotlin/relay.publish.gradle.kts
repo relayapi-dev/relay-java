@@ -11,7 +11,7 @@ configure<PublishingExtension> {
             pom {
                 name.set("RelayAPI")
                 description.set("Unified social media API — post to 17 platforms via a single API")
-                url.set("https://www.github.com/relayapi-dev/relay-java")
+                url.set("https://docs.relayapi.dev")
 
                 licenses {
                     license {
@@ -22,6 +22,7 @@ configure<PublishingExtension> {
                 developers {
                     developer {
                         name.set("Relay")
+                        email.set("support@relayapi.dev")
                     }
                 }
 
