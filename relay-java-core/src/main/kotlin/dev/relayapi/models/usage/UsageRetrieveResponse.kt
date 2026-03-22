@@ -891,28 +891,16 @@ private constructor(
     class RateLimit
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val currentMinute: JsonField<Double>,
         private val limitPerMinute: JsonField<Double>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("current_minute")
-            @ExcludeMissing
-            currentMinute: JsonField<Double> = JsonMissing.of(),
             @JsonProperty("limit_per_minute")
             @ExcludeMissing
-            limitPerMinute: JsonField<Double> = JsonMissing.of(),
-        ) : this(currentMinute, limitPerMinute, mutableMapOf())
-
-        /**
-         * API calls in the current rate-limit window
-         *
-         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun currentMinute(): Double = currentMinute.getRequired("current_minute")
+            limitPerMinute: JsonField<Double> = JsonMissing.of()
+        ) : this(limitPerMinute, mutableMapOf())
 
         /**
          * Max API calls per rate-limit window
@@ -921,16 +909,6 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun limitPerMinute(): Double = limitPerMinute.getRequired("limit_per_minute")
-
-        /**
-         * Returns the raw JSON value of [currentMinute].
-         *
-         * Unlike [currentMinute], this method doesn't throw if the JSON field has an unexpected
-         * type.
-         */
-        @JsonProperty("current_minute")
-        @ExcludeMissing
-        fun _currentMinute(): JsonField<Double> = currentMinute
 
         /**
          * Returns the raw JSON value of [limitPerMinute].
@@ -961,7 +939,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .currentMinute()
              * .limitPerMinute()
              * ```
              */
@@ -971,29 +948,13 @@ private constructor(
         /** A builder for [RateLimit]. */
         class Builder internal constructor() {
 
-            private var currentMinute: JsonField<Double>? = null
             private var limitPerMinute: JsonField<Double>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(rateLimit: RateLimit) = apply {
-                currentMinute = rateLimit.currentMinute
                 limitPerMinute = rateLimit.limitPerMinute
                 additionalProperties = rateLimit.additionalProperties.toMutableMap()
-            }
-
-            /** API calls in the current rate-limit window */
-            fun currentMinute(currentMinute: Double) = currentMinute(JsonField.of(currentMinute))
-
-            /**
-             * Sets [Builder.currentMinute] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.currentMinute] with a well-typed [Double] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun currentMinute(currentMinute: JsonField<Double>) = apply {
-                this.currentMinute = currentMinute
             }
 
             /** Max API calls per rate-limit window */
@@ -1037,7 +998,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .currentMinute()
              * .limitPerMinute()
              * ```
              *
@@ -1045,7 +1005,6 @@ private constructor(
              */
             fun build(): RateLimit =
                 RateLimit(
-                    checkRequired("currentMinute", currentMinute),
                     checkRequired("limitPerMinute", limitPerMinute),
                     additionalProperties.toMutableMap(),
                 )
@@ -1058,7 +1017,6 @@ private constructor(
                 return@apply
             }
 
-            currentMinute()
             limitPerMinute()
             validated = true
         }
@@ -1078,9 +1036,7 @@ private constructor(
          * Used for best match union deserialization.
          */
         @JvmSynthetic
-        internal fun validity(): Int =
-            (if (currentMinute.asKnown().isPresent) 1 else 0) +
-                (if (limitPerMinute.asKnown().isPresent) 1 else 0)
+        internal fun validity(): Int = (if (limitPerMinute.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1088,19 +1044,16 @@ private constructor(
             }
 
             return other is RateLimit &&
-                currentMinute == other.currentMinute &&
                 limitPerMinute == other.limitPerMinute &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy {
-            Objects.hash(currentMinute, limitPerMinute, additionalProperties)
-        }
+        private val hashCode: Int by lazy { Objects.hash(limitPerMinute, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "RateLimit{currentMinute=$currentMinute, limitPerMinute=$limitPerMinute, additionalProperties=$additionalProperties}"
+            "RateLimit{limitPerMinute=$limitPerMinute, additionalProperties=$additionalProperties}"
     }
 
     class Subscription

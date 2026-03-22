@@ -27,12 +27,7 @@ internal class UsageRetrieveResponseTest {
                         .name(UsageRetrieveResponse.Plan.Name.FREE)
                         .build()
                 )
-                .rateLimit(
-                    UsageRetrieveResponse.RateLimit.builder()
-                        .currentMinute(0.0)
-                        .limitPerMinute(0.0)
-                        .build()
-                )
+                .rateLimit(UsageRetrieveResponse.RateLimit.builder().limitPerMinute(0.0).build())
                 .subscription(
                     UsageRetrieveResponse.Subscription.builder()
                         .monthlyPriceCents(0.0)
@@ -67,12 +62,7 @@ internal class UsageRetrieveResponseTest {
                     .build()
             )
         assertThat(usageRetrieveResponse.rateLimit())
-            .isEqualTo(
-                UsageRetrieveResponse.RateLimit.builder()
-                    .currentMinute(0.0)
-                    .limitPerMinute(0.0)
-                    .build()
-            )
+            .isEqualTo(UsageRetrieveResponse.RateLimit.builder().limitPerMinute(0.0).build())
         assertThat(usageRetrieveResponse.subscription())
             .isEqualTo(
                 UsageRetrieveResponse.Subscription.builder()
@@ -112,12 +102,7 @@ internal class UsageRetrieveResponseTest {
                         .name(UsageRetrieveResponse.Plan.Name.FREE)
                         .build()
                 )
-                .rateLimit(
-                    UsageRetrieveResponse.RateLimit.builder()
-                        .currentMinute(0.0)
-                        .limitPerMinute(0.0)
-                        .build()
-                )
+                .rateLimit(UsageRetrieveResponse.RateLimit.builder().limitPerMinute(0.0).build())
                 .subscription(
                     UsageRetrieveResponse.Subscription.builder()
                         .monthlyPriceCents(0.0)
