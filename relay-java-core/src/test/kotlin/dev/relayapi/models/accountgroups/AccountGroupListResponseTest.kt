@@ -17,24 +17,30 @@ internal class AccountGroupListResponseTest {
                 .addData(
                     AccountGroupListResponse.Data.builder()
                         .id("id")
-                        .addAccountId("string")
+                        .accountCount(0.0)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .description("description")
                         .name("name")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
+                .hasMore(true)
+                .nextCursor("next_cursor")
                 .build()
 
         assertThat(accountGroupListResponse.data())
             .containsExactly(
                 AccountGroupListResponse.Data.builder()
                     .id("id")
-                    .addAccountId("string")
+                    .accountCount(0.0)
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .description("description")
                     .name("name")
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
+        assertThat(accountGroupListResponse.hasMore()).isEqualTo(true)
+        assertThat(accountGroupListResponse.nextCursor()).contains("next_cursor")
     }
 
     @Test
@@ -45,12 +51,15 @@ internal class AccountGroupListResponseTest {
                 .addData(
                     AccountGroupListResponse.Data.builder()
                         .id("id")
-                        .addAccountId("string")
+                        .accountCount(0.0)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .description("description")
                         .name("name")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
+                .hasMore(true)
+                .nextCursor("next_cursor")
                 .build()
 
         val roundtrippedAccountGroupListResponse =

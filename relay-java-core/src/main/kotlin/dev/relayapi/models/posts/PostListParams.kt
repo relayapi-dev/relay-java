@@ -14,19 +14,27 @@ import kotlin.jvm.optionals.getOrNull
 /** List posts */
 class PostListParams
 private constructor(
+    private val accountId: String?,
     private val cursor: String?,
     private val from: OffsetDateTime?,
+    private val groupId: String?,
     private val limit: Long?,
     private val to: OffsetDateTime?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** Filter by specific account ID */
+    fun accountId(): Optional<String> = Optional.ofNullable(accountId)
+
     /** Pagination cursor */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
     /** Filter: start date (ISO 8601) */
     fun from(): Optional<OffsetDateTime> = Optional.ofNullable(from)
+
+    /** Filter by account group ID */
+    fun groupId(): Optional<String> = Optional.ofNullable(groupId)
 
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
@@ -53,8 +61,10 @@ private constructor(
     /** A builder for [PostListParams]. */
     class Builder internal constructor() {
 
+        private var accountId: String? = null
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
+        private var groupId: String? = null
         private var limit: Long? = null
         private var to: OffsetDateTime? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
@@ -62,13 +72,21 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(postListParams: PostListParams) = apply {
+            accountId = postListParams.accountId
             cursor = postListParams.cursor
             from = postListParams.from
+            groupId = postListParams.groupId
             limit = postListParams.limit
             to = postListParams.to
             additionalHeaders = postListParams.additionalHeaders.toBuilder()
             additionalQueryParams = postListParams.additionalQueryParams.toBuilder()
         }
+
+        /** Filter by specific account ID */
+        fun accountId(accountId: String?) = apply { this.accountId = accountId }
+
+        /** Alias for calling [Builder.accountId] with `accountId.orElse(null)`. */
+        fun accountId(accountId: Optional<String>) = accountId(accountId.getOrNull())
 
         /** Pagination cursor */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
@@ -81,6 +99,12 @@ private constructor(
 
         /** Alias for calling [Builder.from] with `from.orElse(null)`. */
         fun from(from: Optional<OffsetDateTime>) = from(from.getOrNull())
+
+        /** Filter by account group ID */
+        fun groupId(groupId: String?) = apply { this.groupId = groupId }
+
+        /** Alias for calling [Builder.groupId] with `groupId.orElse(null)`. */
+        fun groupId(groupId: Optional<String>) = groupId(groupId.getOrNull())
 
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
@@ -206,8 +230,10 @@ private constructor(
          */
         fun build(): PostListParams =
             PostListParams(
+                accountId,
                 cursor,
                 from,
+                groupId,
                 limit,
                 to,
                 additionalHeaders.build(),
@@ -220,8 +246,10 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                accountId?.let { put("account_id", it) }
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                groupId?.let { put("group_id", it) }
                 limit?.let { put("limit", it.toString()) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 putAll(additionalQueryParams)
@@ -234,8 +262,10 @@ private constructor(
         }
 
         return other is PostListParams &&
+            accountId == other.accountId &&
             cursor == other.cursor &&
             from == other.from &&
+            groupId == other.groupId &&
             limit == other.limit &&
             to == other.to &&
             additionalHeaders == other.additionalHeaders &&
@@ -243,8 +273,17 @@ private constructor(
     }
 
     override fun hashCode(): Int =
-        Objects.hash(cursor, from, limit, to, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            accountId,
+            cursor,
+            from,
+            groupId,
+            limit,
+            to,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "PostListParams{cursor=$cursor, from=$from, limit=$limit, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, groupId=$groupId, limit=$limit, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -39,6 +39,14 @@ private constructor(
     fun displayName(): Optional<String> = body.displayName()
 
     /**
+     * Group ID (null to ungroup)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun groupId(): Optional<String> = body.groupId()
+
+    /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -50,6 +58,13 @@ private constructor(
      * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _displayName(): JsonField<String> = body._displayName()
+
+    /**
+     * Returns the raw JSON value of [groupId].
+     *
+     * Unlike [groupId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _groupId(): JsonField<String> = body._groupId()
 
     /**
      * Returns the raw JSON value of [metadata].
@@ -104,6 +119,7 @@ private constructor(
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [displayName]
+         * - [groupId]
          * - [metadata]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -118,6 +134,20 @@ private constructor(
          * value.
          */
         fun displayName(displayName: JsonField<String>) = apply { body.displayName(displayName) }
+
+        /** Group ID (null to ungroup) */
+        fun groupId(groupId: String?) = apply { body.groupId(groupId) }
+
+        /** Alias for calling [Builder.groupId] with `groupId.orElse(null)`. */
+        fun groupId(groupId: Optional<String>) = groupId(groupId.getOrNull())
+
+        /**
+         * Sets [Builder.groupId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.groupId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun groupId(groupId: JsonField<String>) = apply { body.groupId(groupId) }
 
         fun metadata(metadata: Metadata) = apply { body.metadata(metadata) }
 
@@ -277,6 +307,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val displayName: JsonField<String>,
+        private val groupId: JsonField<String>,
         private val metadata: JsonField<Metadata>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -286,16 +317,25 @@ private constructor(
             @JsonProperty("display_name")
             @ExcludeMissing
             displayName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("group_id") @ExcludeMissing groupId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
-        ) : this(displayName, metadata, mutableMapOf())
+        ) : this(displayName, groupId, metadata, mutableMapOf())
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
         fun displayName(): Optional<String> = displayName.getOptional("display_name")
+
+        /**
+         * Group ID (null to ungroup)
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun groupId(): Optional<String> = groupId.getOptional("group_id")
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -311,6 +351,13 @@ private constructor(
         @JsonProperty("display_name")
         @ExcludeMissing
         fun _displayName(): JsonField<String> = displayName
+
+        /**
+         * Returns the raw JSON value of [groupId].
+         *
+         * Unlike [groupId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("group_id") @ExcludeMissing fun _groupId(): JsonField<String> = groupId
 
         /**
          * Returns the raw JSON value of [metadata].
@@ -341,12 +388,14 @@ private constructor(
         class Builder internal constructor() {
 
             private var displayName: JsonField<String> = JsonMissing.of()
+            private var groupId: JsonField<String> = JsonMissing.of()
             private var metadata: JsonField<Metadata> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 displayName = body.displayName
+                groupId = body.groupId
                 metadata = body.metadata
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
@@ -363,6 +412,21 @@ private constructor(
             fun displayName(displayName: JsonField<String>) = apply {
                 this.displayName = displayName
             }
+
+            /** Group ID (null to ungroup) */
+            fun groupId(groupId: String?) = groupId(JsonField.ofNullable(groupId))
+
+            /** Alias for calling [Builder.groupId] with `groupId.orElse(null)`. */
+            fun groupId(groupId: Optional<String>) = groupId(groupId.getOrNull())
+
+            /**
+             * Sets [Builder.groupId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.groupId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun groupId(groupId: JsonField<String>) = apply { this.groupId = groupId }
 
             fun metadata(metadata: Metadata) = metadata(JsonField.of(metadata))
 
@@ -399,7 +463,8 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Body = Body(displayName, metadata, additionalProperties.toMutableMap())
+            fun build(): Body =
+                Body(displayName, groupId, metadata, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -410,6 +475,7 @@ private constructor(
             }
 
             displayName()
+            groupId()
             metadata().ifPresent { it.validate() }
             validated = true
         }
@@ -431,6 +497,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (displayName.asKnown().isPresent) 1 else 0) +
+                (if (groupId.asKnown().isPresent) 1 else 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
@@ -440,18 +507,19 @@ private constructor(
 
             return other is Body &&
                 displayName == other.displayName &&
+                groupId == other.groupId &&
                 metadata == other.metadata &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(displayName, metadata, additionalProperties)
+            Objects.hash(displayName, groupId, metadata, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{displayName=$displayName, metadata=$metadata, additionalProperties=$additionalProperties}"
+            "Body{displayName=$displayName, groupId=$groupId, metadata=$metadata, additionalProperties=$additionalProperties}"
     }
 
     class Metadata

@@ -19,6 +19,7 @@ internal class GmbLocationSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(GmbLocationSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     GmbLocationSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -35,6 +36,8 @@ internal class GmbLocationSetDefaultResponseTest {
         assertThat(gmbLocationSetDefaultResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(gmbLocationSetDefaultResponse.displayName()).contains("display_name")
+        assertThat(gmbLocationSetDefaultResponse.group())
+            .contains(GmbLocationSetDefaultResponse.Group.builder().id("id").name("name").build())
         assertThat(gmbLocationSetDefaultResponse.metadata())
             .contains(
                 GmbLocationSetDefaultResponse.Metadata.builder()
@@ -59,6 +62,7 @@ internal class GmbLocationSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(GmbLocationSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     GmbLocationSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

@@ -21,6 +21,9 @@ internal class AccountListResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
+                        .group(
+                            AccountListResponse.Data.Group.builder().id("id").name("name").build()
+                        )
                         .metadata(
                             AccountListResponse.Data.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -43,6 +46,7 @@ internal class AccountListResponseTest {
                     .avatarUrl("avatar_url")
                     .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .displayName("display_name")
+                    .group(AccountListResponse.Data.Group.builder().id("id").name("name").build())
                     .metadata(
                         AccountListResponse.Data.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -69,6 +73,9 @@ internal class AccountListResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
+                        .group(
+                            AccountListResponse.Data.Group.builder().id("id").name("name").build()
+                        )
                         .metadata(
                             AccountListResponse.Data.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))

@@ -19,6 +19,7 @@ internal class AccountRetrieveResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(AccountRetrieveResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     AccountRetrieveResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -35,6 +36,8 @@ internal class AccountRetrieveResponseTest {
         assertThat(accountRetrieveResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(accountRetrieveResponse.displayName()).contains("display_name")
+        assertThat(accountRetrieveResponse.group())
+            .contains(AccountRetrieveResponse.Group.builder().id("id").name("name").build())
         assertThat(accountRetrieveResponse.metadata())
             .contains(
                 AccountRetrieveResponse.Metadata.builder()
@@ -58,6 +61,7 @@ internal class AccountRetrieveResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(AccountRetrieveResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     AccountRetrieveResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

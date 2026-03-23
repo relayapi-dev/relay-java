@@ -10,21 +10,21 @@ import dev.relayapi.core.ExcludeMissing
 import dev.relayapi.core.JsonField
 import dev.relayapi.core.JsonMissing
 import dev.relayapi.core.JsonValue
-import dev.relayapi.core.checkKnown
 import dev.relayapi.core.checkRequired
-import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class AccountGroupUpdateResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val accountIds: JsonField<List<String>>,
+    private val accountCount: JsonField<Double>,
     private val createdAt: JsonField<OffsetDateTime>,
+    private val description: JsonField<String>,
     private val name: JsonField<String>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -33,17 +33,20 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("account_ids")
+        @JsonProperty("account_count")
         @ExcludeMissing
-        accountIds: JsonField<List<String>> = JsonMissing.of(),
+        accountCount: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, accountIds, createdAt, name, updatedAt, mutableMapOf())
+    ) : this(id, accountCount, createdAt, description, name, updatedAt, mutableMapOf())
 
     /**
      * Group ID
@@ -54,12 +57,12 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * Account IDs in the group
+     * Number of accounts in this group
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun accountIds(): List<String> = accountIds.getRequired("account_ids")
+    fun accountCount(): Double = accountCount.getRequired("account_count")
 
     /**
      * Creation timestamp
@@ -68,6 +71,14 @@ private constructor(
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+    /**
+     * Group description
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun description(): Optional<String> = description.getOptional("description")
 
     /**
      * Group name
@@ -93,13 +104,13 @@ private constructor(
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
-     * Returns the raw JSON value of [accountIds].
+     * Returns the raw JSON value of [accountCount].
      *
-     * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [accountCount], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("account_ids")
+    @JsonProperty("account_count")
     @ExcludeMissing
-    fun _accountIds(): JsonField<List<String>> = accountIds
+    fun _accountCount(): JsonField<Double> = accountCount
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -109,6 +120,13 @@ private constructor(
     @JsonProperty("created_at")
     @ExcludeMissing
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+    /**
+     * Returns the raw JSON value of [description].
+     *
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
 
     /**
      * Returns the raw JSON value of [name].
@@ -146,8 +164,9 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .accountIds()
+         * .accountCount()
          * .createdAt()
+         * .description()
          * .name()
          * .updatedAt()
          * ```
@@ -159,8 +178,9 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var accountIds: JsonField<MutableList<String>>? = null
+        private var accountCount: JsonField<Double>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
+        private var description: JsonField<String>? = null
         private var name: JsonField<String>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -168,8 +188,9 @@ private constructor(
         @JvmSynthetic
         internal fun from(accountGroupUpdateResponse: AccountGroupUpdateResponse) = apply {
             id = accountGroupUpdateResponse.id
-            accountIds = accountGroupUpdateResponse.accountIds.map { it.toMutableList() }
+            accountCount = accountGroupUpdateResponse.accountCount
             createdAt = accountGroupUpdateResponse.createdAt
+            description = accountGroupUpdateResponse.description
             name = accountGroupUpdateResponse.name
             updatedAt = accountGroupUpdateResponse.updatedAt
             additionalProperties = accountGroupUpdateResponse.additionalProperties.toMutableMap()
@@ -186,30 +207,18 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
-        /** Account IDs in the group */
-        fun accountIds(accountIds: List<String>) = accountIds(JsonField.of(accountIds))
+        /** Number of accounts in this group */
+        fun accountCount(accountCount: Double) = accountCount(JsonField.of(accountCount))
 
         /**
-         * Sets [Builder.accountIds] to an arbitrary JSON value.
+         * Sets [Builder.accountCount] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.accountIds] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.accountCount] with a well-typed [Double] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun accountIds(accountIds: JsonField<List<String>>) = apply {
-            this.accountIds = accountIds.map { it.toMutableList() }
-        }
-
-        /**
-         * Adds a single [String] to [accountIds].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addAccountId(accountId: String) = apply {
-            accountIds =
-                (accountIds ?: JsonField.of(mutableListOf())).also {
-                    checkKnown("accountIds", it).add(accountId)
-                }
+        fun accountCount(accountCount: JsonField<Double>) = apply {
+            this.accountCount = accountCount
         }
 
         /** Creation timestamp */
@@ -223,6 +232,21 @@ private constructor(
          * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /** Group description */
+        fun description(description: String?) = description(JsonField.ofNullable(description))
+
+        /** Alias for calling [Builder.description] with `description.orElse(null)`. */
+        fun description(description: Optional<String>) = description(description.getOrNull())
+
+        /**
+         * Sets [Builder.description] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun description(description: JsonField<String>) = apply { this.description = description }
 
         /** Group name */
         fun name(name: String) = name(JsonField.of(name))
@@ -274,8 +298,9 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .accountIds()
+         * .accountCount()
          * .createdAt()
+         * .description()
          * .name()
          * .updatedAt()
          * ```
@@ -285,8 +310,9 @@ private constructor(
         fun build(): AccountGroupUpdateResponse =
             AccountGroupUpdateResponse(
                 checkRequired("id", id),
-                checkRequired("accountIds", accountIds).map { it.toImmutable() },
+                checkRequired("accountCount", accountCount),
                 checkRequired("createdAt", createdAt),
+                checkRequired("description", description),
                 checkRequired("name", name),
                 checkRequired("updatedAt", updatedAt),
                 additionalProperties.toMutableMap(),
@@ -301,8 +327,9 @@ private constructor(
         }
 
         id()
-        accountIds()
+        accountCount()
         createdAt()
+        description()
         name()
         updatedAt()
         validated = true
@@ -324,8 +351,9 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
-            (accountIds.asKnown().getOrNull()?.size ?: 0) +
+            (if (accountCount.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
 
@@ -336,19 +364,28 @@ private constructor(
 
         return other is AccountGroupUpdateResponse &&
             id == other.id &&
-            accountIds == other.accountIds &&
+            accountCount == other.accountCount &&
             createdAt == other.createdAt &&
+            description == other.description &&
             name == other.name &&
             updatedAt == other.updatedAt &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, accountIds, createdAt, name, updatedAt, additionalProperties)
+        Objects.hash(
+            id,
+            accountCount,
+            createdAt,
+            description,
+            name,
+            updatedAt,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AccountGroupUpdateResponse{id=$id, accountIds=$accountIds, createdAt=$createdAt, name=$name, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "AccountGroupUpdateResponse{id=$id, accountCount=$accountCount, createdAt=$createdAt, description=$description, name=$name, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

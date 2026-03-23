@@ -13,6 +13,7 @@ internal class AccountUpdateParamsTest {
         AccountUpdateParams.builder()
             .id("id")
             .displayName("display_name")
+            .groupId("group_id")
             .metadata(
                 AccountUpdateParams.Metadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -36,6 +37,7 @@ internal class AccountUpdateParamsTest {
             AccountUpdateParams.builder()
                 .id("id")
                 .displayName("display_name")
+                .groupId("group_id")
                 .metadata(
                     AccountUpdateParams.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -46,6 +48,7 @@ internal class AccountUpdateParamsTest {
         val body = params._body()
 
         assertThat(body.displayName()).contains("display_name")
+        assertThat(body.groupId()).contains("group_id")
         assertThat(body.metadata())
             .contains(
                 AccountUpdateParams.Metadata.builder()

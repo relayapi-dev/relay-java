@@ -4,6 +4,7 @@ package dev.relayapi.services.async
 
 import dev.relayapi.client.okhttp.RelayOkHttpClientAsync
 import dev.relayapi.models.accountgroups.AccountGroupCreateParams
+import dev.relayapi.models.accountgroups.AccountGroupListParams
 import dev.relayapi.models.accountgroups.AccountGroupUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -18,7 +19,7 @@ internal class AccountGroupServiceAsyncTest {
 
         val accountGroupFuture =
             accountGroupServiceAsync.create(
-                AccountGroupCreateParams.builder().name("x").addAccountId("string").build()
+                AccountGroupCreateParams.builder().name("x").description("description").build()
             )
 
         val accountGroup = accountGroupFuture.get()
@@ -33,7 +34,11 @@ internal class AccountGroupServiceAsyncTest {
 
         val accountGroupFuture =
             accountGroupServiceAsync.update(
-                AccountGroupUpdateParams.builder().id("id").addAccountId("string").name("x").build()
+                AccountGroupUpdateParams.builder()
+                    .id("id")
+                    .description("description")
+                    .name("x")
+                    .build()
             )
 
         val accountGroup = accountGroupFuture.get()
@@ -46,7 +51,14 @@ internal class AccountGroupServiceAsyncTest {
         val client = RelayOkHttpClientAsync.builder().apiKey("My API Key").build()
         val accountGroupServiceAsync = client.accountGroups()
 
-        val accountGroupsFuture = accountGroupServiceAsync.list()
+        val accountGroupsFuture =
+            accountGroupServiceAsync.list(
+                AccountGroupListParams.builder()
+                    .cursor("cursor")
+                    .limit(1.0)
+                    .search("search")
+                    .build()
+            )
 
         val accountGroups = accountGroupsFuture.get()
         accountGroups.validate()
