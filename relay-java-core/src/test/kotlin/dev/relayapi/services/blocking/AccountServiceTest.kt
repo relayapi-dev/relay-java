@@ -34,6 +34,7 @@ internal class AccountServiceTest {
                 AccountUpdateParams.builder()
                     .id("id")
                     .displayName("display_name")
+                    .groupId("group_id")
                     .metadata(
                         AccountUpdateParams.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -56,8 +57,11 @@ internal class AccountServiceTest {
                 AccountListParams.builder()
                     .cursor("cursor")
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .groupId("group_id")
                     .limit(1L)
+                    .search("search")
                     .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .ungrouped(true)
                     .build()
             )
 

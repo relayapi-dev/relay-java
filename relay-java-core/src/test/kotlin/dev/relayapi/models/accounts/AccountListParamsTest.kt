@@ -14,8 +14,11 @@ internal class AccountListParamsTest {
         AccountListParams.builder()
             .cursor("cursor")
             .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .groupId("group_id")
             .limit(1L)
+            .search("search")
             .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .ungrouped(true)
             .build()
     }
 
@@ -25,8 +28,11 @@ internal class AccountListParamsTest {
             AccountListParams.builder()
                 .cursor("cursor")
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .groupId("group_id")
                 .limit(1L)
+                .search("search")
                 .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .ungrouped(true)
                 .build()
 
         val queryParams = params._queryParams()
@@ -36,8 +42,11 @@ internal class AccountListParamsTest {
                 QueryParams.builder()
                     .put("cursor", "cursor")
                     .put("from", "2019-12-27T18:11:19.117Z")
+                    .put("group_id", "group_id")
                     .put("limit", "1")
+                    .put("search", "search")
                     .put("to", "2019-12-27T18:11:19.117Z")
+                    .put("ungrouped", "true")
                     .build()
             )
     }

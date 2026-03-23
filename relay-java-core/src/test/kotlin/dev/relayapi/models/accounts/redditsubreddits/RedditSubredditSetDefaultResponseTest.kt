@@ -19,6 +19,9 @@ internal class RedditSubredditSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(
+                    RedditSubredditSetDefaultResponse.Group.builder().id("id").name("name").build()
+                )
                 .metadata(
                     RedditSubredditSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -35,6 +38,10 @@ internal class RedditSubredditSetDefaultResponseTest {
         assertThat(redditSubredditSetDefaultResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(redditSubredditSetDefaultResponse.displayName()).contains("display_name")
+        assertThat(redditSubredditSetDefaultResponse.group())
+            .contains(
+                RedditSubredditSetDefaultResponse.Group.builder().id("id").name("name").build()
+            )
         assertThat(redditSubredditSetDefaultResponse.metadata())
             .contains(
                 RedditSubredditSetDefaultResponse.Metadata.builder()
@@ -59,6 +66,9 @@ internal class RedditSubredditSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(
+                    RedditSubredditSetDefaultResponse.Group.builder().id("id").name("name").build()
+                )
                 .metadata(
                     RedditSubredditSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

@@ -2,7 +2,6 @@
 
 package dev.relayapi.models.accountgroups
 
-import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -10,7 +9,7 @@ internal class AccountGroupUpdateParamsTest {
 
     @Test
     fun create() {
-        AccountGroupUpdateParams.builder().id("id").addAccountId("string").name("x").build()
+        AccountGroupUpdateParams.builder().id("id").description("description").name("x").build()
     }
 
     @Test
@@ -25,11 +24,11 @@ internal class AccountGroupUpdateParamsTest {
     @Test
     fun body() {
         val params =
-            AccountGroupUpdateParams.builder().id("id").addAccountId("string").name("x").build()
+            AccountGroupUpdateParams.builder().id("id").description("description").name("x").build()
 
         val body = params._body()
 
-        assertThat(body.accountIds().getOrNull()).containsExactly("string")
+        assertThat(body.description()).contains("description")
         assertThat(body.name()).contains("x")
     }
 

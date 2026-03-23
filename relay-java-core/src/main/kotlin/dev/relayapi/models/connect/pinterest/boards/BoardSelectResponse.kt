@@ -163,6 +163,7 @@ private constructor(
         private val avatarUrl: JsonField<String>,
         private val connectedAt: JsonField<OffsetDateTime>,
         private val displayName: JsonField<String>,
+        private val group: JsonField<Group>,
         private val metadata: JsonField<Metadata>,
         private val platform: JsonField<Platform>,
         private val platformAccountId: JsonField<String>,
@@ -183,6 +184,7 @@ private constructor(
             @JsonProperty("display_name")
             @ExcludeMissing
             displayName: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("group") @ExcludeMissing group: JsonField<Group> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -201,6 +203,7 @@ private constructor(
             avatarUrl,
             connectedAt,
             displayName,
+            group,
             metadata,
             platform,
             platformAccountId,
@@ -234,6 +237,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun displayName(): Optional<String> = displayName.getOptional("display_name")
+
+        /**
+         * Account group
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun group(): Optional<Group> = group.getOptional("group")
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -298,6 +309,13 @@ private constructor(
         fun _displayName(): JsonField<String> = displayName
 
         /**
+         * Returns the raw JSON value of [group].
+         *
+         * Unlike [group], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("group") @ExcludeMissing fun _group(): JsonField<Group> = group
+
+        /**
          * Returns the raw JSON value of [metadata].
          *
          * Unlike [metadata], this method doesn't throw if the JSON field has an unexpected type.
@@ -360,6 +378,7 @@ private constructor(
              * .avatarUrl()
              * .connectedAt()
              * .displayName()
+             * .group()
              * .metadata()
              * .platform()
              * .platformAccountId()
@@ -377,6 +396,7 @@ private constructor(
             private var avatarUrl: JsonField<String>? = null
             private var connectedAt: JsonField<OffsetDateTime>? = null
             private var displayName: JsonField<String>? = null
+            private var group: JsonField<Group>? = null
             private var metadata: JsonField<Metadata>? = null
             private var platform: JsonField<Platform>? = null
             private var platformAccountId: JsonField<String>? = null
@@ -390,6 +410,7 @@ private constructor(
                 avatarUrl = account.avatarUrl
                 connectedAt = account.connectedAt
                 displayName = account.displayName
+                group = account.group
                 metadata = account.metadata
                 platform = account.platform
                 platformAccountId = account.platformAccountId
@@ -452,6 +473,21 @@ private constructor(
             fun displayName(displayName: JsonField<String>) = apply {
                 this.displayName = displayName
             }
+
+            /** Account group */
+            fun group(group: Group?) = group(JsonField.ofNullable(group))
+
+            /** Alias for calling [Builder.group] with `group.orElse(null)`. */
+            fun group(group: Optional<Group>) = group(group.getOrNull())
+
+            /**
+             * Sets [Builder.group] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.group] with a well-typed [Group] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun group(group: JsonField<Group>) = apply { this.group = group }
 
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
@@ -549,6 +585,7 @@ private constructor(
              * .avatarUrl()
              * .connectedAt()
              * .displayName()
+             * .group()
              * .metadata()
              * .platform()
              * .platformAccountId()
@@ -564,6 +601,7 @@ private constructor(
                     checkRequired("avatarUrl", avatarUrl),
                     checkRequired("connectedAt", connectedAt),
                     checkRequired("displayName", displayName),
+                    checkRequired("group", group),
                     checkRequired("metadata", metadata),
                     checkRequired("platform", platform),
                     checkRequired("platformAccountId", platformAccountId),
@@ -584,6 +622,7 @@ private constructor(
             avatarUrl()
             connectedAt()
             displayName()
+            group().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
             platform().validate()
             platformAccountId()
@@ -612,11 +651,209 @@ private constructor(
                 (if (avatarUrl.asKnown().isPresent) 1 else 0) +
                 (if (connectedAt.asKnown().isPresent) 1 else 0) +
                 (if (displayName.asKnown().isPresent) 1 else 0) +
+                (group.asKnown().getOrNull()?.validity() ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (platform.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (platformAccountId.asKnown().isPresent) 1 else 0) +
                 (if (updatedAt.asKnown().isPresent) 1 else 0) +
                 (if (username.asKnown().isPresent) 1 else 0)
+
+        /** Account group */
+        class Group
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val id: JsonField<String>,
+            private val name: JsonField<String>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            ) : this(id, name, mutableMapOf())
+
+            /**
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun id(): String = id.getRequired("id")
+
+            /**
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun name(): String = name.getRequired("name")
+
+            /**
+             * Returns the raw JSON value of [id].
+             *
+             * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+            /**
+             * Returns the raw JSON value of [name].
+             *
+             * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Group].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * .name()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Group]. */
+            class Builder internal constructor() {
+
+                private var id: JsonField<String>? = null
+                private var name: JsonField<String>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(group: Group) = apply {
+                    id = group.id
+                    name = group.name
+                    additionalProperties = group.additionalProperties.toMutableMap()
+                }
+
+                fun id(id: String) = id(JsonField.of(id))
+
+                /**
+                 * Sets [Builder.id] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.id] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun id(id: JsonField<String>) = apply { this.id = id }
+
+                fun name(name: String) = name(JsonField.of(name))
+
+                /**
+                 * Sets [Builder.name] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.name] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun name(name: JsonField<String>) = apply { this.name = name }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Group].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * .name()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Group =
+                    Group(
+                        checkRequired("id", id),
+                        checkRequired("name", name),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Group = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                id()
+                name()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Group &&
+                    id == other.id &&
+                    name == other.name &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(id, name, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Group{id=$id, name=$name, additionalProperties=$additionalProperties}"
+        }
 
         class Metadata
         @JsonCreator
@@ -950,6 +1187,7 @@ private constructor(
                 avatarUrl == other.avatarUrl &&
                 connectedAt == other.connectedAt &&
                 displayName == other.displayName &&
+                group == other.group &&
                 metadata == other.metadata &&
                 platform == other.platform &&
                 platformAccountId == other.platformAccountId &&
@@ -964,6 +1202,7 @@ private constructor(
                 avatarUrl,
                 connectedAt,
                 displayName,
+                group,
                 metadata,
                 platform,
                 platformAccountId,
@@ -976,7 +1215,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Account{id=$id, avatarUrl=$avatarUrl, connectedAt=$connectedAt, displayName=$displayName, metadata=$metadata, platform=$platform, platformAccountId=$platformAccountId, updatedAt=$updatedAt, username=$username, additionalProperties=$additionalProperties}"
+            "Account{id=$id, avatarUrl=$avatarUrl, connectedAt=$connectedAt, displayName=$displayName, group=$group, metadata=$metadata, platform=$platform, platformAccountId=$platformAccountId, updatedAt=$updatedAt, username=$username, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

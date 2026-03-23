@@ -11,10 +11,8 @@ import dev.relayapi.core.JsonField
 import dev.relayapi.core.JsonMissing
 import dev.relayapi.core.JsonValue
 import dev.relayapi.core.Params
-import dev.relayapi.core.checkKnown
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
-import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
 import java.util.Collections
 import java.util.Objects
@@ -34,12 +32,12 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
-     * Account IDs to include in the group
+     * Group description
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun accountIds(): Optional<List<String>> = body.accountIds()
+    fun description(): Optional<String> = body.description()
 
     /**
      * Group name
@@ -50,11 +48,11 @@ private constructor(
     fun name(): Optional<String> = body.name()
 
     /**
-     * Returns the raw JSON value of [accountIds].
+     * Returns the raw JSON value of [description].
      *
-     * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _accountIds(): JsonField<List<String>> = body._accountIds()
+    fun _description(): JsonField<String> = body._description()
 
     /**
      * Returns the raw JSON value of [name].
@@ -108,29 +106,25 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [accountIds]
+         * - [description]
          * - [name]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Account IDs to include in the group */
-        fun accountIds(accountIds: List<String>) = apply { body.accountIds(accountIds) }
+        /** Group description */
+        fun description(description: String?) = apply { body.description(description) }
+
+        /** Alias for calling [Builder.description] with `description.orElse(null)`. */
+        fun description(description: Optional<String>) = description(description.getOrNull())
 
         /**
-         * Sets [Builder.accountIds] to an arbitrary JSON value.
+         * Sets [Builder.description] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.accountIds] with a well-typed `List<String>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun accountIds(accountIds: JsonField<List<String>>) = apply { body.accountIds(accountIds) }
-
-        /**
-         * Adds a single [String] to [accountIds].
-         *
-         * @throws IllegalStateException if the field was previously set to a non-list.
-         */
-        fun addAccountId(accountId: String) = apply { body.addAccountId(accountId) }
+        fun description(description: JsonField<String>) = apply { body.description(description) }
 
         /** Group name */
         fun name(name: String) = apply { body.name(name) }
@@ -289,26 +283,26 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val accountIds: JsonField<List<String>>,
+        private val description: JsonField<String>,
         private val name: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("account_ids")
+            @JsonProperty("description")
             @ExcludeMissing
-            accountIds: JsonField<List<String>> = JsonMissing.of(),
+            description: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        ) : this(accountIds, name, mutableMapOf())
+        ) : this(description, name, mutableMapOf())
 
         /**
-         * Account IDs to include in the group
+         * Group description
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
-        fun accountIds(): Optional<List<String>> = accountIds.getOptional("account_ids")
+        fun description(): Optional<String> = description.getOptional("description")
 
         /**
          * Group name
@@ -319,13 +313,13 @@ private constructor(
         fun name(): Optional<String> = name.getOptional("name")
 
         /**
-         * Returns the raw JSON value of [accountIds].
+         * Returns the raw JSON value of [description].
          *
-         * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("account_ids")
+        @JsonProperty("description")
         @ExcludeMissing
-        fun _accountIds(): JsonField<List<String>> = accountIds
+        fun _description(): JsonField<String> = description
 
         /**
          * Returns the raw JSON value of [name].
@@ -355,41 +349,32 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var accountIds: JsonField<MutableList<String>>? = null
+            private var description: JsonField<String> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                accountIds = body.accountIds.map { it.toMutableList() }
+                description = body.description
                 name = body.name
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Account IDs to include in the group */
-            fun accountIds(accountIds: List<String>) = accountIds(JsonField.of(accountIds))
+            /** Group description */
+            fun description(description: String?) = description(JsonField.ofNullable(description))
+
+            /** Alias for calling [Builder.description] with `description.orElse(null)`. */
+            fun description(description: Optional<String>) = description(description.getOrNull())
 
             /**
-             * Sets [Builder.accountIds] to an arbitrary JSON value.
+             * Sets [Builder.description] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.accountIds] with a well-typed `List<String>` value
+             * You should usually call [Builder.description] with a well-typed [String] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun accountIds(accountIds: JsonField<List<String>>) = apply {
-                this.accountIds = accountIds.map { it.toMutableList() }
-            }
-
-            /**
-             * Adds a single [String] to [accountIds].
-             *
-             * @throws IllegalStateException if the field was previously set to a non-list.
-             */
-            fun addAccountId(accountId: String) = apply {
-                accountIds =
-                    (accountIds ?: JsonField.of(mutableListOf())).also {
-                        checkKnown("accountIds", it).add(accountId)
-                    }
+            fun description(description: JsonField<String>) = apply {
+                this.description = description
             }
 
             /** Group name */
@@ -428,12 +413,7 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Body =
-                Body(
-                    (accountIds ?: JsonMissing.of()).map { it.toImmutable() },
-                    name,
-                    additionalProperties.toMutableMap(),
-                )
+            fun build(): Body = Body(description, name, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -443,7 +423,7 @@ private constructor(
                 return@apply
             }
 
-            accountIds()
+            description()
             name()
             validated = true
         }
@@ -464,7 +444,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (accountIds.asKnown().getOrNull()?.size ?: 0) + (if (name.asKnown().isPresent) 1 else 0)
+            (if (description.asKnown().isPresent) 1 else 0) +
+                (if (name.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -472,17 +453,17 @@ private constructor(
             }
 
             return other is Body &&
-                accountIds == other.accountIds &&
+                description == other.description &&
                 name == other.name &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(accountIds, name, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(description, name, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{accountIds=$accountIds, name=$name, additionalProperties=$additionalProperties}"
+            "Body{description=$description, name=$name, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

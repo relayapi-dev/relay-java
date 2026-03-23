@@ -6,13 +6,27 @@ import dev.relayapi.core.Params
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /** List account groups */
 class AccountGroupListParams
 private constructor(
+    private val cursor: String?,
+    private val limit: Double?,
+    private val search: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /** Pagination cursor */
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
+
+    /** Page size */
+    fun limit(): Optional<Double> = Optional.ofNullable(limit)
+
+    /** Search groups by name */
+    fun search(): Optional<String> = Optional.ofNullable(search)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -33,14 +47,45 @@ private constructor(
     /** A builder for [AccountGroupListParams]. */
     class Builder internal constructor() {
 
+        private var cursor: String? = null
+        private var limit: Double? = null
+        private var search: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(accountGroupListParams: AccountGroupListParams) = apply {
+            cursor = accountGroupListParams.cursor
+            limit = accountGroupListParams.limit
+            search = accountGroupListParams.search
             additionalHeaders = accountGroupListParams.additionalHeaders.toBuilder()
             additionalQueryParams = accountGroupListParams.additionalQueryParams.toBuilder()
         }
+
+        /** Pagination cursor */
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
+
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
+
+        /** Page size */
+        fun limit(limit: Double?) = apply { this.limit = limit }
+
+        /**
+         * Alias for [Builder.limit].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun limit(limit: Double) = limit(limit as Double?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Double>) = limit(limit.getOrNull())
+
+        /** Search groups by name */
+        fun search(search: String?) = apply { this.search = search }
+
+        /** Alias for calling [Builder.search] with `search.orElse(null)`. */
+        fun search(search: Optional<String>) = search(search.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -146,12 +191,26 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): AccountGroupListParams =
-            AccountGroupListParams(additionalHeaders.build(), additionalQueryParams.build())
+            AccountGroupListParams(
+                cursor,
+                limit,
+                search,
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+            )
     }
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                cursor?.let { put("cursor", it) }
+                limit?.let { put("limit", it.toString()) }
+                search?.let { put("search", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -159,12 +218,16 @@ private constructor(
         }
 
         return other is AccountGroupListParams &&
+            cursor == other.cursor &&
+            limit == other.limit &&
+            search == other.search &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(cursor, limit, search, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "AccountGroupListParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AccountGroupListParams{cursor=$cursor, limit=$limit, search=$search, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -19,6 +19,7 @@ internal class FacebookPageSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(FacebookPageSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     FacebookPageSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -35,6 +36,8 @@ internal class FacebookPageSetDefaultResponseTest {
         assertThat(facebookPageSetDefaultResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(facebookPageSetDefaultResponse.displayName()).contains("display_name")
+        assertThat(facebookPageSetDefaultResponse.group())
+            .contains(FacebookPageSetDefaultResponse.Group.builder().id("id").name("name").build())
         assertThat(facebookPageSetDefaultResponse.metadata())
             .contains(
                 FacebookPageSetDefaultResponse.Metadata.builder()
@@ -59,6 +62,7 @@ internal class FacebookPageSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(FacebookPageSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     FacebookPageSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

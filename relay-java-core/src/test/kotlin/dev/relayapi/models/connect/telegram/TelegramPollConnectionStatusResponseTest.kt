@@ -22,6 +22,12 @@ internal class TelegramPollConnectionStatusResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
+                        .group(
+                            TelegramPollConnectionStatusResponse.Account.Group.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .metadata(
                             TelegramPollConnectionStatusResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -48,6 +54,12 @@ internal class TelegramPollConnectionStatusResponseTest {
                     .avatarUrl("avatar_url")
                     .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .displayName("display_name")
+                    .group(
+                        TelegramPollConnectionStatusResponse.Account.Group.builder()
+                            .id("id")
+                            .name("name")
+                            .build()
+                    )
                     .metadata(
                         TelegramPollConnectionStatusResponse.Account.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -78,6 +90,12 @@ internal class TelegramPollConnectionStatusResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
+                        .group(
+                            TelegramPollConnectionStatusResponse.Account.Group.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .metadata(
                             TelegramPollConnectionStatusResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))

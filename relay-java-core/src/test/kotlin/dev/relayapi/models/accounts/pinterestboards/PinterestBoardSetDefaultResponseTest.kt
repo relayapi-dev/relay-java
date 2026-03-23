@@ -19,6 +19,9 @@ internal class PinterestBoardSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(
+                    PinterestBoardSetDefaultResponse.Group.builder().id("id").name("name").build()
+                )
                 .metadata(
                     PinterestBoardSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -35,6 +38,10 @@ internal class PinterestBoardSetDefaultResponseTest {
         assertThat(pinterestBoardSetDefaultResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(pinterestBoardSetDefaultResponse.displayName()).contains("display_name")
+        assertThat(pinterestBoardSetDefaultResponse.group())
+            .contains(
+                PinterestBoardSetDefaultResponse.Group.builder().id("id").name("name").build()
+            )
         assertThat(pinterestBoardSetDefaultResponse.metadata())
             .contains(
                 PinterestBoardSetDefaultResponse.Metadata.builder()
@@ -59,6 +66,9 @@ internal class PinterestBoardSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(
+                    PinterestBoardSetDefaultResponse.Group.builder().id("id").name("name").build()
+                )
                 .metadata(
                     PinterestBoardSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

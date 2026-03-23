@@ -19,6 +19,12 @@ internal class LinkedinOrganizationSwitchTypeResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(
+                    LinkedinOrganizationSwitchTypeResponse.Group.builder()
+                        .id("id")
+                        .name("name")
+                        .build()
+                )
                 .metadata(
                     LinkedinOrganizationSwitchTypeResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -35,6 +41,10 @@ internal class LinkedinOrganizationSwitchTypeResponseTest {
         assertThat(linkedinOrganizationSwitchTypeResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(linkedinOrganizationSwitchTypeResponse.displayName()).contains("display_name")
+        assertThat(linkedinOrganizationSwitchTypeResponse.group())
+            .contains(
+                LinkedinOrganizationSwitchTypeResponse.Group.builder().id("id").name("name").build()
+            )
         assertThat(linkedinOrganizationSwitchTypeResponse.metadata())
             .contains(
                 LinkedinOrganizationSwitchTypeResponse.Metadata.builder()
@@ -59,6 +69,12 @@ internal class LinkedinOrganizationSwitchTypeResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
+                .group(
+                    LinkedinOrganizationSwitchTypeResponse.Group.builder()
+                        .id("id")
+                        .name("name")
+                        .build()
+                )
                 .metadata(
                     LinkedinOrganizationSwitchTypeResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))

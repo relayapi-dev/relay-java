@@ -73,8 +73,10 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -100,8 +102,10 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -127,8 +131,10 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -154,8 +160,10 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -181,8 +189,10 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -208,8 +218,10 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -235,8 +247,10 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -262,8 +276,10 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -289,8 +305,10 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -316,8 +334,10 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -343,8 +363,10 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -370,8 +392,10 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -397,8 +421,10 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -424,8 +450,10 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -451,8 +479,10 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -478,8 +508,10 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
@@ -503,8 +535,10 @@ internal class ErrorHandlingTest {
             assertThrows<RelayException> {
                 postService.list(
                     PostListParams.builder()
+                        .accountId("account_id")
                         .cursor("cursor")
                         .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .groupId("group_id")
                         .limit(1L)
                         .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
