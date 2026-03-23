@@ -19,6 +19,7 @@ import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Create an account group */
@@ -30,14 +31,6 @@ private constructor(
 ) : Params {
 
     /**
-     * Account IDs to include in the group
-     *
-     * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
-     *   missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun accountIds(): List<String> = body.accountIds()
-
-    /**
      * Group name
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
@@ -46,11 +39,12 @@ private constructor(
     fun name(): String = body.name()
 
     /**
-     * Returns the raw JSON value of [accountIds].
+     * Account IDs to include in the group
      *
-     * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
-    fun _accountIds(): JsonField<List<String>> = body._accountIds()
+    fun accountIds(): Optional<List<String>> = body.accountIds()
 
     /**
      * Returns the raw JSON value of [name].
@@ -58,6 +52,13 @@ private constructor(
      * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _name(): JsonField<String> = body._name()
+
+    /**
+     * Returns the raw JSON value of [accountIds].
+     *
+     * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _accountIds(): JsonField<List<String>> = body._accountIds()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -76,7 +77,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .accountIds()
          * .name()
          * ```
          */
@@ -102,10 +102,21 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [accountIds]
          * - [name]
+         * - [accountIds]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /** Group name */
+        fun name(name: String) = apply { body.name(name) }
+
+        /**
+         * Sets [Builder.name] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.name] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun name(name: JsonField<String>) = apply { body.name(name) }
 
         /** Account IDs to include in the group */
         fun accountIds(accountIds: List<String>) = apply { body.accountIds(accountIds) }
@@ -125,17 +136,6 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addAccountId(accountId: String) = apply { body.addAccountId(accountId) }
-
-        /** Group name */
-        fun name(name: String) = apply { body.name(name) }
-
-        /**
-         * Sets [Builder.name] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.name] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun name(name: JsonField<String>) = apply { body.name(name) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -261,7 +261,6 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .accountIds()
          * .name()
          * ```
          *
@@ -284,26 +283,18 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val accountIds: JsonField<List<String>>,
         private val name: JsonField<String>,
+        private val accountIds: JsonField<List<String>>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("account_ids")
             @ExcludeMissing
             accountIds: JsonField<List<String>> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        ) : this(accountIds, name, mutableMapOf())
-
-        /**
-         * Account IDs to include in the group
-         *
-         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun accountIds(): List<String> = accountIds.getRequired("account_ids")
+        ) : this(name, accountIds, mutableMapOf())
 
         /**
          * Group name
@@ -314,13 +305,12 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Returns the raw JSON value of [accountIds].
+         * Account IDs to include in the group
          *
-         * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
          */
-        @JsonProperty("account_ids")
-        @ExcludeMissing
-        fun _accountIds(): JsonField<List<String>> = accountIds
+        fun accountIds(): Optional<List<String>> = accountIds.getOptional("account_ids")
 
         /**
          * Returns the raw JSON value of [name].
@@ -328,6 +318,15 @@ private constructor(
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [accountIds].
+         *
+         * Unlike [accountIds], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("account_ids")
+        @ExcludeMissing
+        fun _accountIds(): JsonField<List<String>> = accountIds
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -348,7 +347,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .accountIds()
              * .name()
              * ```
              */
@@ -358,16 +356,28 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var accountIds: JsonField<MutableList<String>>? = null
             private var name: JsonField<String>? = null
+            private var accountIds: JsonField<MutableList<String>>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                accountIds = body.accountIds.map { it.toMutableList() }
                 name = body.name
+                accountIds = body.accountIds.map { it.toMutableList() }
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
+
+            /** Group name */
+            fun name(name: String) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Account IDs to include in the group */
             fun accountIds(accountIds: List<String>) = accountIds(JsonField.of(accountIds))
@@ -395,18 +405,6 @@ private constructor(
                     }
             }
 
-            /** Group name */
-            fun name(name: String) = name(JsonField.of(name))
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
-
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -433,7 +431,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .accountIds()
              * .name()
              * ```
              *
@@ -441,8 +438,8 @@ private constructor(
              */
             fun build(): Body =
                 Body(
-                    checkRequired("accountIds", accountIds).map { it.toImmutable() },
                     checkRequired("name", name),
+                    (accountIds ?: JsonMissing.of()).map { it.toImmutable() },
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -454,8 +451,8 @@ private constructor(
                 return@apply
             }
 
-            accountIds()
             name()
+            accountIds()
             validated = true
         }
 
@@ -475,7 +472,7 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (accountIds.asKnown().getOrNull()?.size ?: 0) + (if (name.asKnown().isPresent) 1 else 0)
+            (if (name.asKnown().isPresent) 1 else 0) + (accountIds.asKnown().getOrNull()?.size ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -483,17 +480,17 @@ private constructor(
             }
 
             return other is Body &&
-                accountIds == other.accountIds &&
                 name == other.name &&
+                accountIds == other.accountIds &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(accountIds, name, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(name, accountIds, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{accountIds=$accountIds, name=$name, additionalProperties=$additionalProperties}"
+            "Body{name=$name, accountIds=$accountIds, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

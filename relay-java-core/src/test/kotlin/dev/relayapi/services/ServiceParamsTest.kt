@@ -14,6 +14,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import dev.relayapi.client.RelayClient
 import dev.relayapi.client.okhttp.RelayOkHttpClient
 import dev.relayapi.models.posts.PostListParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -43,7 +44,9 @@ internal class ServiceParamsTest {
         postService.list(
             PostListParams.builder()
                 .cursor("cursor")
+                .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .limit(1L)
+                .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .putAdditionalHeader("Secret-Header", "42")
                 .putAdditionalQueryParam("secret_query_param", "42")
                 .build()

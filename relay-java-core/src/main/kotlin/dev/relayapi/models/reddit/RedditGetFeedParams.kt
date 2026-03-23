@@ -10,6 +10,8 @@ import dev.relayapi.core.checkRequired
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
 import dev.relayapi.errors.RelayInvalidDataException
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -20,9 +22,11 @@ private constructor(
     private val accountId: String,
     private val subreddit: String,
     private val cursor: String?,
+    private val from: OffsetDateTime?,
     private val limit: Long?,
     private val sort: Sort?,
     private val time: Time?,
+    private val to: OffsetDateTime?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -36,6 +40,9 @@ private constructor(
     /** Pagination cursor */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
+    /** Filter: start date (ISO 8601) */
+    fun from(): Optional<OffsetDateTime> = Optional.ofNullable(from)
+
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
@@ -44,6 +51,9 @@ private constructor(
 
     /** Time filter (for top sort) */
     fun time(): Optional<Time> = Optional.ofNullable(time)
+
+    /** Filter: end date (ISO 8601) */
+    fun to(): Optional<OffsetDateTime> = Optional.ofNullable(to)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -73,9 +83,11 @@ private constructor(
         private var accountId: String? = null
         private var subreddit: String? = null
         private var cursor: String? = null
+        private var from: OffsetDateTime? = null
         private var limit: Long? = null
         private var sort: Sort? = null
         private var time: Time? = null
+        private var to: OffsetDateTime? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -84,9 +96,11 @@ private constructor(
             accountId = redditGetFeedParams.accountId
             subreddit = redditGetFeedParams.subreddit
             cursor = redditGetFeedParams.cursor
+            from = redditGetFeedParams.from
             limit = redditGetFeedParams.limit
             sort = redditGetFeedParams.sort
             time = redditGetFeedParams.time
+            to = redditGetFeedParams.to
             additionalHeaders = redditGetFeedParams.additionalHeaders.toBuilder()
             additionalQueryParams = redditGetFeedParams.additionalQueryParams.toBuilder()
         }
@@ -102,6 +116,12 @@ private constructor(
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
+
+        /** Filter: start date (ISO 8601) */
+        fun from(from: OffsetDateTime?) = apply { this.from = from }
+
+        /** Alias for calling [Builder.from] with `from.orElse(null)`. */
+        fun from(from: Optional<OffsetDateTime>) = from(from.getOrNull())
 
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
@@ -127,6 +147,12 @@ private constructor(
 
         /** Alias for calling [Builder.time] with `time.orElse(null)`. */
         fun time(time: Optional<Time>) = time(time.getOrNull())
+
+        /** Filter: end date (ISO 8601) */
+        fun to(to: OffsetDateTime?) = apply { this.to = to }
+
+        /** Alias for calling [Builder.to] with `to.orElse(null)`. */
+        fun to(to: Optional<OffsetDateTime>) = to(to.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -244,9 +270,11 @@ private constructor(
                 checkRequired("accountId", accountId),
                 checkRequired("subreddit", subreddit),
                 cursor,
+                from,
                 limit,
                 sort,
                 time,
+                to,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -260,9 +288,11 @@ private constructor(
                 put("account_id", accountId)
                 put("subreddit", subreddit)
                 cursor?.let { put("cursor", it) }
+                from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 limit?.let { put("limit", it.toString()) }
                 sort?.let { put("sort", it.toString()) }
                 time?.let { put("time", it.toString()) }
+                to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -562,9 +592,11 @@ private constructor(
             accountId == other.accountId &&
             subreddit == other.subreddit &&
             cursor == other.cursor &&
+            from == other.from &&
             limit == other.limit &&
             sort == other.sort &&
             time == other.time &&
+            to == other.to &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -574,13 +606,15 @@ private constructor(
             accountId,
             subreddit,
             cursor,
+            from,
             limit,
             sort,
             time,
+            to,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "RedditGetFeedParams{accountId=$accountId, subreddit=$subreddit, cursor=$cursor, limit=$limit, sort=$sort, time=$time, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "RedditGetFeedParams{accountId=$accountId, subreddit=$subreddit, cursor=$cursor, from=$from, limit=$limit, sort=$sort, time=$time, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

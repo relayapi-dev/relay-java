@@ -4,6 +4,7 @@ package dev.relayapi.services.async
 
 import dev.relayapi.client.okhttp.RelayOkHttpClientAsync
 import dev.relayapi.models.connections.ConnectionListLogsParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -17,7 +18,12 @@ internal class ConnectionServiceAsyncTest {
 
         val responseFuture =
             connectionServiceAsync.listLogs(
-                ConnectionListLogsParams.builder().cursor("cursor").limit(1L).build()
+                ConnectionListLogsParams.builder()
+                    .cursor("cursor")
+                    .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .limit(1L)
+                    .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
             )
 
         val response = responseFuture.get()

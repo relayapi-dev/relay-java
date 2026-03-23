@@ -23,6 +23,7 @@ import dev.relayapi.errors.UnauthorizedException
 import dev.relayapi.errors.UnexpectedStatusCodeException
 import dev.relayapi.errors.UnprocessableEntityException
 import dev.relayapi.models.posts.PostListParams
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.entry
 import org.junit.jupiter.api.BeforeEach
@@ -70,7 +71,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<BadRequestException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(400)
@@ -90,7 +98,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<BadRequestException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(400)
@@ -110,7 +125,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnauthorizedException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(401)
@@ -130,7 +152,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnauthorizedException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(401)
@@ -150,7 +179,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<PermissionDeniedException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(403)
@@ -170,7 +206,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<PermissionDeniedException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(403)
@@ -190,7 +233,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<NotFoundException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(404)
@@ -210,7 +260,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<NotFoundException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(404)
@@ -230,7 +287,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnprocessableEntityException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(422)
@@ -250,7 +314,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnprocessableEntityException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(422)
@@ -270,7 +341,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<RateLimitException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(429)
@@ -290,7 +368,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<RateLimitException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(429)
@@ -310,7 +395,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<InternalServerException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(500)
@@ -330,7 +422,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<InternalServerException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(500)
@@ -350,7 +449,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnexpectedStatusCodeException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(999)
@@ -370,7 +476,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnexpectedStatusCodeException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e.statusCode()).isEqualTo(999)
@@ -388,7 +501,14 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<RelayException> {
-                postService.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+                postService.list(
+                    PostListParams.builder()
+                        .cursor("cursor")
+                        .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .limit(1L)
+                        .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
             }
 
         assertThat(e).hasMessage("Error reading response")

@@ -18,7 +18,7 @@ internal class AccountGroupServiceTest {
 
         val accountGroup =
             accountGroupService.create(
-                AccountGroupCreateParams.builder().addAccountId("string").name("x").build()
+                AccountGroupCreateParams.builder().name("x").addAccountId("string").build()
             )
 
         accountGroup.validate()

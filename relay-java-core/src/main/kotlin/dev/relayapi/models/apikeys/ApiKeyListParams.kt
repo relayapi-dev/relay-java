@@ -5,6 +5,8 @@ package dev.relayapi.models.apikeys
 import dev.relayapi.core.Params
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -13,7 +15,9 @@ import kotlin.jvm.optionals.getOrNull
 class ApiKeyListParams
 private constructor(
     private val cursor: String?,
+    private val from: OffsetDateTime?,
     private val limit: Long?,
+    private val to: OffsetDateTime?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -21,8 +25,14 @@ private constructor(
     /** Pagination cursor */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
 
+    /** Filter: start date (ISO 8601) */
+    fun from(): Optional<OffsetDateTime> = Optional.ofNullable(from)
+
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    /** Filter: end date (ISO 8601) */
+    fun to(): Optional<OffsetDateTime> = Optional.ofNullable(to)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -44,14 +54,18 @@ private constructor(
     class Builder internal constructor() {
 
         private var cursor: String? = null
+        private var from: OffsetDateTime? = null
         private var limit: Long? = null
+        private var to: OffsetDateTime? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(apiKeyListParams: ApiKeyListParams) = apply {
             cursor = apiKeyListParams.cursor
+            from = apiKeyListParams.from
             limit = apiKeyListParams.limit
+            to = apiKeyListParams.to
             additionalHeaders = apiKeyListParams.additionalHeaders.toBuilder()
             additionalQueryParams = apiKeyListParams.additionalQueryParams.toBuilder()
         }
@@ -61,6 +75,12 @@ private constructor(
 
         /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
         fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
+
+        /** Filter: start date (ISO 8601) */
+        fun from(from: OffsetDateTime?) = apply { this.from = from }
+
+        /** Alias for calling [Builder.from] with `from.orElse(null)`. */
+        fun from(from: Optional<OffsetDateTime>) = from(from.getOrNull())
 
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
@@ -74,6 +94,12 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /** Filter: end date (ISO 8601) */
+        fun to(to: OffsetDateTime?) = apply { this.to = to }
+
+        /** Alias for calling [Builder.to] with `to.orElse(null)`. */
+        fun to(to: Optional<OffsetDateTime>) = to(to.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -181,7 +207,9 @@ private constructor(
         fun build(): ApiKeyListParams =
             ApiKeyListParams(
                 cursor,
+                from,
                 limit,
+                to,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -193,7 +221,9 @@ private constructor(
         QueryParams.builder()
             .apply {
                 cursor?.let { put("cursor", it) }
+                from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 limit?.let { put("limit", it.toString()) }
+                to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -205,14 +235,16 @@ private constructor(
 
         return other is ApiKeyListParams &&
             cursor == other.cursor &&
+            from == other.from &&
             limit == other.limit &&
+            to == other.to &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(cursor, limit, additionalHeaders, additionalQueryParams)
+        Objects.hash(cursor, from, limit, to, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ApiKeyListParams{cursor=$cursor, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ApiKeyListParams{cursor=$cursor, from=$from, limit=$limit, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
