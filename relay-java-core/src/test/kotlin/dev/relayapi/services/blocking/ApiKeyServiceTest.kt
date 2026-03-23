@@ -5,6 +5,7 @@ package dev.relayapi.services.blocking
 import dev.relayapi.client.okhttp.RelayOkHttpClient
 import dev.relayapi.models.apikeys.ApiKeyCreateParams
 import dev.relayapi.models.apikeys.ApiKeyListParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -29,7 +30,14 @@ internal class ApiKeyServiceTest {
         val apiKeyService = client.apiKeys()
 
         val apiKeys =
-            apiKeyService.list(ApiKeyListParams.builder().cursor("cursor").limit(1L).build())
+            apiKeyService.list(
+                ApiKeyListParams.builder()
+                    .cursor("cursor")
+                    .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .limit(1L)
+                    .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
 
         apiKeys.validate()
     }

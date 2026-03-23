@@ -8,6 +8,7 @@ import dev.relayapi.models.posts.PostBulkCreateParams
 import dev.relayapi.models.posts.PostCreateParams
 import dev.relayapi.models.posts.PostListParams
 import dev.relayapi.models.posts.PostUpdateParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -95,7 +96,14 @@ internal class PostServiceAsyncTest {
         val postServiceAsync = client.posts()
 
         val postsFuture =
-            postServiceAsync.list(PostListParams.builder().cursor("cursor").limit(1L).build())
+            postServiceAsync.list(
+                PostListParams.builder()
+                    .cursor("cursor")
+                    .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .limit(1L)
+                    .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
 
         val posts = postsFuture.get()
         posts.validate()

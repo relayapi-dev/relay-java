@@ -18,7 +18,7 @@ internal class AccountGroupServiceAsyncTest {
 
         val accountGroupFuture =
             accountGroupServiceAsync.create(
-                AccountGroupCreateParams.builder().addAccountId("string").name("x").build()
+                AccountGroupCreateParams.builder().name("x").addAccountId("string").build()
             )
 
         val accountGroup = accountGroupFuture.get()

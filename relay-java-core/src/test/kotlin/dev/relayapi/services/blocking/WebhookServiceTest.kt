@@ -8,6 +8,7 @@ import dev.relayapi.models.webhooks.WebhookListLogsParams
 import dev.relayapi.models.webhooks.WebhookListParams
 import dev.relayapi.models.webhooks.WebhookSendTestParams
 import dev.relayapi.models.webhooks.WebhookUpdateParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -56,7 +57,14 @@ internal class WebhookServiceTest {
         val webhookService = client.webhooks()
 
         val webhooks =
-            webhookService.list(WebhookListParams.builder().cursor("cursor").limit(1L).build())
+            webhookService.list(
+                WebhookListParams.builder()
+                    .cursor("cursor")
+                    .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .limit(1L)
+                    .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
 
         webhooks.validate()
     }
@@ -78,7 +86,12 @@ internal class WebhookServiceTest {
 
         val response =
             webhookService.listLogs(
-                WebhookListLogsParams.builder().cursor("cursor").limit(1L).build()
+                WebhookListLogsParams.builder()
+                    .cursor("cursor")
+                    .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .limit(1L)
+                    .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
             )
 
         response.validate()

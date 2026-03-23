@@ -5,6 +5,7 @@ package dev.relayapi.services.async
 import dev.relayapi.client.okhttp.RelayOkHttpClientAsync
 import dev.relayapi.models.apikeys.ApiKeyCreateParams
 import dev.relayapi.models.apikeys.ApiKeyListParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -32,7 +33,14 @@ internal class ApiKeyServiceAsyncTest {
         val apiKeyServiceAsync = client.apiKeys()
 
         val apiKeysFuture =
-            apiKeyServiceAsync.list(ApiKeyListParams.builder().cursor("cursor").limit(1L).build())
+            apiKeyServiceAsync.list(
+                ApiKeyListParams.builder()
+                    .cursor("cursor")
+                    .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .limit(1L)
+                    .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
 
         val apiKeys = apiKeysFuture.get()
         apiKeys.validate()

@@ -4,6 +4,7 @@ package dev.relayapi.services.async.posts
 
 import dev.relayapi.client.okhttp.RelayOkHttpClientAsync
 import dev.relayapi.models.posts.logs.LogListParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -28,7 +29,14 @@ internal class LogServiceAsyncTest {
         val logServiceAsync = client.posts().logs()
 
         val logsFuture =
-            logServiceAsync.list(LogListParams.builder().cursor("cursor").limit(1L).build())
+            logServiceAsync.list(
+                LogListParams.builder()
+                    .cursor("cursor")
+                    .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .limit(1L)
+                    .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .build()
+            )
 
         val logs = logsFuture.get()
         logs.validate()
