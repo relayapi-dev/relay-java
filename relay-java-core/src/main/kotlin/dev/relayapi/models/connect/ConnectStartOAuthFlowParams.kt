@@ -18,6 +18,7 @@ class ConnectStartOAuthFlowParams
 private constructor(
     private val platform: Platform?,
     private val headless: String?,
+    private val method: String?,
     private val redirectUrl: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -28,6 +29,9 @@ private constructor(
 
     /** Set to "true" for headless mode (returns data instead of redirecting) */
     fun headless(): Optional<String> = Optional.ofNullable(headless)
+
+    /** Auth method variant (e.g. "direct" for Instagram Login instead of Facebook Login) */
+    fun method(): Optional<String> = Optional.ofNullable(method)
 
     /** URL to redirect after OAuth completes */
     fun redirectUrl(): Optional<String> = Optional.ofNullable(redirectUrl)
@@ -55,6 +59,7 @@ private constructor(
 
         private var platform: Platform? = null
         private var headless: String? = null
+        private var method: String? = null
         private var redirectUrl: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -63,6 +68,7 @@ private constructor(
         internal fun from(connectStartOAuthFlowParams: ConnectStartOAuthFlowParams) = apply {
             platform = connectStartOAuthFlowParams.platform
             headless = connectStartOAuthFlowParams.headless
+            method = connectStartOAuthFlowParams.method
             redirectUrl = connectStartOAuthFlowParams.redirectUrl
             additionalHeaders = connectStartOAuthFlowParams.additionalHeaders.toBuilder()
             additionalQueryParams = connectStartOAuthFlowParams.additionalQueryParams.toBuilder()
@@ -79,6 +85,12 @@ private constructor(
 
         /** Alias for calling [Builder.headless] with `headless.orElse(null)`. */
         fun headless(headless: Optional<String>) = headless(headless.getOrNull())
+
+        /** Auth method variant (e.g. "direct" for Instagram Login instead of Facebook Login) */
+        fun method(method: String?) = apply { this.method = method }
+
+        /** Alias for calling [Builder.method] with `method.orElse(null)`. */
+        fun method(method: Optional<String>) = method(method.getOrNull())
 
         /** URL to redirect after OAuth completes */
         fun redirectUrl(redirectUrl: String?) = apply { this.redirectUrl = redirectUrl }
@@ -193,6 +205,7 @@ private constructor(
             ConnectStartOAuthFlowParams(
                 platform,
                 headless,
+                method,
                 redirectUrl,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -211,6 +224,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 headless?.let { put("headless", it) }
+                method?.let { put("method", it) }
                 redirectUrl?.let { put("redirect_url", it) }
                 putAll(additionalQueryParams)
             }
@@ -409,14 +423,22 @@ private constructor(
         return other is ConnectStartOAuthFlowParams &&
             platform == other.platform &&
             headless == other.headless &&
+            method == other.method &&
             redirectUrl == other.redirectUrl &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(platform, headless, redirectUrl, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            platform,
+            headless,
+            method,
+            redirectUrl,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "ConnectStartOAuthFlowParams{platform=$platform, headless=$headless, redirectUrl=$redirectUrl, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ConnectStartOAuthFlowParams{platform=$platform, headless=$headless, method=$method, redirectUrl=$redirectUrl, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

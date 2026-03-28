@@ -13,6 +13,7 @@ internal class ConnectStartOAuthFlowParamsTest {
         ConnectStartOAuthFlowParams.builder()
             .platform(ConnectStartOAuthFlowParams.Platform.TWITTER)
             .headless("headless")
+            .method("method")
             .redirectUrl("https://example.com")
             .build()
     }
@@ -35,6 +36,7 @@ internal class ConnectStartOAuthFlowParamsTest {
             ConnectStartOAuthFlowParams.builder()
                 .platform(ConnectStartOAuthFlowParams.Platform.TWITTER)
                 .headless("headless")
+                .method("method")
                 .redirectUrl("https://example.com")
                 .build()
 
@@ -44,6 +46,7 @@ internal class ConnectStartOAuthFlowParamsTest {
             .isEqualTo(
                 QueryParams.builder()
                     .put("headless", "headless")
+                    .put("method", "method")
                     .put("redirect_url", "https://example.com")
                     .build()
             )
