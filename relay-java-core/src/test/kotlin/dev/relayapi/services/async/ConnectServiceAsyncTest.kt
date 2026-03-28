@@ -75,6 +75,7 @@ internal class ConnectServiceAsyncTest {
                 ConnectStartOAuthFlowParams.builder()
                     .platform(ConnectStartOAuthFlowParams.Platform.TWITTER)
                     .headless("headless")
+                    .method("method")
                     .redirectUrl("https://example.com")
                     .build()
             )
