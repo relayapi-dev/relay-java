@@ -127,7 +127,7 @@ interface PostService {
     fun list(requestOptions: RequestOptions): PostListResponse =
         list(PostListParams.none(), requestOptions)
 
-    /** Delete a draft or scheduled post. */
+    /** Delete a post. */
     fun delete(id: String) = delete(id, PostDeleteParams.none())
 
     /** @see delete */

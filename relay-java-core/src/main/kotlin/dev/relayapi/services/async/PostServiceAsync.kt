@@ -138,7 +138,7 @@ interface PostServiceAsync {
     fun list(requestOptions: RequestOptions): CompletableFuture<PostListResponse> =
         list(PostListParams.none(), requestOptions)
 
-    /** Delete a draft or scheduled post. */
+    /** Delete a post. */
     fun delete(id: String): CompletableFuture<Void?> = delete(id, PostDeleteParams.none())
 
     /** @see delete */

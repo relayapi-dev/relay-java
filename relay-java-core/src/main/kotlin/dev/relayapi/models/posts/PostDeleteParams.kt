@@ -11,7 +11,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Delete a draft or scheduled post. */
+/** Delete a post. */
 class PostDeleteParams
 private constructor(
     private val id: String?,
