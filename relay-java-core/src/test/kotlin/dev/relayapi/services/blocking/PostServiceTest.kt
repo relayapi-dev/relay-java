@@ -7,6 +7,7 @@ import dev.relayapi.core.JsonValue
 import dev.relayapi.models.posts.PostBulkCreateParams
 import dev.relayapi.models.posts.PostCreateParams
 import dev.relayapi.models.posts.PostListParams
+import dev.relayapi.models.posts.PostUnpublishParams
 import dev.relayapi.models.posts.PostUpdateParams
 import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
@@ -170,7 +171,10 @@ internal class PostServiceTest {
         val client = RelayOkHttpClient.builder().apiKey("My API Key").build()
         val postService = client.posts()
 
-        val response = postService.unpublish("id")
+        val response =
+            postService.unpublish(
+                PostUnpublishParams.builder().id("id").addPlatform("string").build()
+            )
 
         response.validate()
     }
