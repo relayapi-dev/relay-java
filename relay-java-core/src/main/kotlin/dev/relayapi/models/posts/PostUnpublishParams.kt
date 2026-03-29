@@ -2,11 +2,21 @@
 
 package dev.relayapi.models.posts
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
+import dev.relayapi.core.ExcludeMissing
+import dev.relayapi.core.JsonField
+import dev.relayapi.core.JsonMissing
 import dev.relayapi.core.JsonValue
 import dev.relayapi.core.Params
+import dev.relayapi.core.checkKnown
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
 import dev.relayapi.core.toImmutable
+import dev.relayapi.errors.RelayInvalidDataException
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
@@ -15,16 +25,30 @@ import kotlin.jvm.optionals.getOrNull
 class PostUnpublishParams
 private constructor(
     private val id: String?,
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
-    private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
     /** Resource ID */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
-    /** Additional body properties to send with the request. */
-    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+    /**
+     * Platforms to unpublish from. If omitted, unpublishes from all.
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun platforms(): Optional<List<String>> = body.platforms()
+
+    /**
+     * Returns the raw JSON value of [platforms].
+     *
+     * Unlike [platforms], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _platforms(): JsonField<List<String>> = body._platforms()
+
+    fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -46,16 +70,16 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
-        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(postUnpublishParams: PostUnpublishParams) = apply {
             id = postUnpublishParams.id
+            body = postUnpublishParams.body.toBuilder()
             additionalHeaders = postUnpublishParams.additionalHeaders.toBuilder()
             additionalQueryParams = postUnpublishParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties = postUnpublishParams.additionalBodyProperties.toMutableMap()
         }
 
         /** Resource ID */
@@ -63,6 +87,53 @@ private constructor(
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
         fun id(id: Optional<String>) = id(id.getOrNull())
+
+        /**
+         * Sets the entire request body.
+         *
+         * This is generally only useful if you are already constructing the body separately.
+         * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [platforms]
+         */
+        fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /** Platforms to unpublish from. If omitted, unpublishes from all. */
+        fun platforms(platforms: List<String>) = apply { body.platforms(platforms) }
+
+        /**
+         * Sets [Builder.platforms] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.platforms] with a well-typed `List<String>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun platforms(platforms: JsonField<List<String>>) = apply { body.platforms(platforms) }
+
+        /**
+         * Adds a single [String] to [platforms].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addPlatform(platform: String) = apply { body.addPlatform(platform) }
+
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
+            body.additionalProperties(additionalBodyProperties)
+        }
+
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
+            body.putAdditionalProperty(key, value)
+        }
+
+        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                body.putAllAdditionalProperties(additionalBodyProperties)
+            }
+
+        fun removeAdditionalBodyProperty(key: String) = apply { body.removeAdditionalProperty(key) }
+
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
+            body.removeAllAdditionalProperties(keys)
+        }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -162,28 +233,6 @@ private constructor(
             additionalQueryParams.removeAll(keys)
         }
 
-        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
-            this.additionalBodyProperties.clear()
-            putAllAdditionalBodyProperties(additionalBodyProperties)
-        }
-
-        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
-            additionalBodyProperties.put(key, value)
-        }
-
-        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
-            apply {
-                this.additionalBodyProperties.putAll(additionalBodyProperties)
-            }
-
-        fun removeAdditionalBodyProperty(key: String) = apply {
-            additionalBodyProperties.remove(key)
-        }
-
-        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalBodyProperty)
-        }
-
         /**
          * Returns an immutable instance of [PostUnpublishParams].
          *
@@ -192,14 +241,13 @@ private constructor(
         fun build(): PostUnpublishParams =
             PostUnpublishParams(
                 id,
+                body.build(),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
-                additionalBodyProperties.toImmutable(),
             )
     }
 
-    fun _body(): Optional<Map<String, JsonValue>> =
-        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+    fun _body(): Body = body
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -211,6 +259,169 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
+    class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val platforms: JsonField<List<String>>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("platforms")
+            @ExcludeMissing
+            platforms: JsonField<List<String>> = JsonMissing.of()
+        ) : this(platforms, mutableMapOf())
+
+        /**
+         * Platforms to unpublish from. If omitted, unpublishes from all.
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun platforms(): Optional<List<String>> = platforms.getOptional("platforms")
+
+        /**
+         * Returns the raw JSON value of [platforms].
+         *
+         * Unlike [platforms], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("platforms")
+        @ExcludeMissing
+        fun _platforms(): JsonField<List<String>> = platforms
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Body]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Body]. */
+        class Builder internal constructor() {
+
+            private var platforms: JsonField<MutableList<String>>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(body: Body) = apply {
+                platforms = body.platforms.map { it.toMutableList() }
+                additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /** Platforms to unpublish from. If omitted, unpublishes from all. */
+            fun platforms(platforms: List<String>) = platforms(JsonField.of(platforms))
+
+            /**
+             * Sets [Builder.platforms] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.platforms] with a well-typed `List<String>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun platforms(platforms: JsonField<List<String>>) = apply {
+                this.platforms = platforms.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [platforms].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addPlatform(platform: String) = apply {
+                platforms =
+                    (platforms ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("platforms", it).add(platform)
+                    }
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Body].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Body =
+                Body(
+                    (platforms ?: JsonMissing.of()).map { it.toImmutable() },
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Body = apply {
+            if (validated) {
+                return@apply
+            }
+
+            platforms()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = (platforms.asKnown().getOrNull()?.size ?: 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Body &&
+                platforms == other.platforms &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(platforms, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Body{platforms=$platforms, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -218,14 +429,13 @@ private constructor(
 
         return other is PostUnpublishParams &&
             id == other.id &&
+            body == other.body &&
             additionalHeaders == other.additionalHeaders &&
-            additionalQueryParams == other.additionalQueryParams &&
-            additionalBodyProperties == other.additionalBodyProperties
+            additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int =
-        Objects.hash(id, additionalHeaders, additionalQueryParams, additionalBodyProperties)
+    override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "PostUnpublishParams{id=$id, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "PostUnpublishParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
