@@ -2,9 +2,13 @@
 
 package dev.relayapi.models.posts
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import dev.relayapi.core.Enum
+import dev.relayapi.core.JsonField
 import dev.relayapi.core.Params
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
+import dev.relayapi.errors.RelayInvalidDataException
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Objects
@@ -19,6 +23,7 @@ private constructor(
     private val from: OffsetDateTime?,
     private val groupId: String?,
     private val limit: Long?,
+    private val status: Status?,
     private val to: OffsetDateTime?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -38,6 +43,9 @@ private constructor(
 
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    /** Filter by post status */
+    fun status(): Optional<Status> = Optional.ofNullable(status)
 
     /** Filter: end date (ISO 8601) */
     fun to(): Optional<OffsetDateTime> = Optional.ofNullable(to)
@@ -66,6 +74,7 @@ private constructor(
         private var from: OffsetDateTime? = null
         private var groupId: String? = null
         private var limit: Long? = null
+        private var status: Status? = null
         private var to: OffsetDateTime? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -77,6 +86,7 @@ private constructor(
             from = postListParams.from
             groupId = postListParams.groupId
             limit = postListParams.limit
+            status = postListParams.status
             to = postListParams.to
             additionalHeaders = postListParams.additionalHeaders.toBuilder()
             additionalQueryParams = postListParams.additionalQueryParams.toBuilder()
@@ -118,6 +128,12 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /** Filter by post status */
+        fun status(status: Status?) = apply { this.status = status }
+
+        /** Alias for calling [Builder.status] with `status.orElse(null)`. */
+        fun status(status: Optional<Status>) = status(status.getOrNull())
 
         /** Filter: end date (ISO 8601) */
         fun to(to: OffsetDateTime?) = apply { this.to = to }
@@ -235,6 +251,7 @@ private constructor(
                 from,
                 groupId,
                 limit,
+                status,
                 to,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -251,10 +268,154 @@ private constructor(
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 groupId?.let { put("group_id", it) }
                 limit?.let { put("limit", it.toString()) }
+                status?.let { put("status", it.toString()) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 putAll(additionalQueryParams)
             }
             .build()
+
+    /** Filter by post status */
+    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val DRAFT = of("draft")
+
+            @JvmField val SCHEDULED = of("scheduled")
+
+            @JvmField val PUBLISHING = of("publishing")
+
+            @JvmField val PUBLISHED = of("published")
+
+            @JvmField val FAILED = of("failed")
+
+            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+        }
+
+        /** An enum containing [Status]'s known values. */
+        enum class Known {
+            DRAFT,
+            SCHEDULED,
+            PUBLISHING,
+            PUBLISHED,
+            FAILED,
+        }
+
+        /**
+         * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Status] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            DRAFT,
+            SCHEDULED,
+            PUBLISHING,
+            PUBLISHED,
+            FAILED,
+            /** An enum member indicating that [Status] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                DRAFT -> Value.DRAFT
+                SCHEDULED -> Value.SCHEDULED
+                PUBLISHING -> Value.PUBLISHING
+                PUBLISHED -> Value.PUBLISHED
+                FAILED -> Value.FAILED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws RelayInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                DRAFT -> Known.DRAFT
+                SCHEDULED -> Known.SCHEDULED
+                PUBLISHING -> Known.PUBLISHING
+                PUBLISHED -> Known.PUBLISHED
+                FAILED -> Known.FAILED
+                else -> throw RelayInvalidDataException("Unknown Status: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws RelayInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow { RelayInvalidDataException("Value is not a String") }
+
+        private var validated: Boolean = false
+
+        fun validate(): Status = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Status && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -267,6 +428,7 @@ private constructor(
             from == other.from &&
             groupId == other.groupId &&
             limit == other.limit &&
+            status == other.status &&
             to == other.to &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
@@ -279,11 +441,12 @@ private constructor(
             from,
             groupId,
             limit,
+            status,
             to,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, groupId=$groupId, limit=$limit, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, groupId=$groupId, limit=$limit, status=$status, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
