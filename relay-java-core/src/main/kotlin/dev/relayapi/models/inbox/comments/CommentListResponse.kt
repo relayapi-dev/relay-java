@@ -311,9 +311,14 @@ private constructor(
         private val createdAt: JsonField<OffsetDateTime>,
         private val platform: JsonField<Platform>,
         private val text: JsonField<String>,
+        private val accountId: JsonField<String>,
         private val authorAvatar: JsonField<String>,
         private val hidden: JsonField<Boolean>,
         private val likes: JsonField<Double>,
+        private val postId: JsonField<String>,
+        private val postPlatformUrl: JsonField<String>,
+        private val postText: JsonField<String>,
+        private val postThumbnailUrl: JsonField<String>,
         private val repliesCount: JsonField<Double>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -331,11 +336,24 @@ private constructor(
             @ExcludeMissing
             platform: JsonField<Platform> = JsonMissing.of(),
             @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("account_id")
+            @ExcludeMissing
+            accountId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("author_avatar")
             @ExcludeMissing
             authorAvatar: JsonField<String> = JsonMissing.of(),
             @JsonProperty("hidden") @ExcludeMissing hidden: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("likes") @ExcludeMissing likes: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("post_id") @ExcludeMissing postId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("post_platform_url")
+            @ExcludeMissing
+            postPlatformUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("post_text")
+            @ExcludeMissing
+            postText: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("post_thumbnail_url")
+            @ExcludeMissing
+            postThumbnailUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("replies_count")
             @ExcludeMissing
             repliesCount: JsonField<Double> = JsonMissing.of(),
@@ -345,9 +363,14 @@ private constructor(
             createdAt,
             platform,
             text,
+            accountId,
             authorAvatar,
             hidden,
             likes,
+            postId,
+            postPlatformUrl,
+            postText,
+            postThumbnailUrl,
             repliesCount,
             mutableMapOf(),
         )
@@ -391,6 +414,14 @@ private constructor(
         fun text(): String = text.getRequired("text")
 
         /**
+         * Social account ID
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun accountId(): Optional<String> = accountId.getOptional("account_id")
+
+        /**
          * Author avatar URL
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -413,6 +444,39 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun likes(): Optional<Double> = likes.getOptional("likes")
+
+        /**
+         * Platform post/media/video ID
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun postId(): Optional<String> = postId.getOptional("post_id")
+
+        /**
+         * URL to the post on the platform
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun postPlatformUrl(): Optional<String> = postPlatformUrl.getOptional("post_platform_url")
+
+        /**
+         * Post caption snippet
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun postText(): Optional<String> = postText.getOptional("post_text")
+
+        /**
+         * Post thumbnail URL
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun postThumbnailUrl(): Optional<String> =
+            postThumbnailUrl.getOptional("post_thumbnail_url")
 
         /**
          * Reply count
@@ -462,6 +526,13 @@ private constructor(
         @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
         /**
+         * Returns the raw JSON value of [accountId].
+         *
+         * Unlike [accountId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("account_id") @ExcludeMissing fun _accountId(): JsonField<String> = accountId
+
+        /**
          * Returns the raw JSON value of [authorAvatar].
          *
          * Unlike [authorAvatar], this method doesn't throw if the JSON field has an unexpected
@@ -484,6 +555,40 @@ private constructor(
          * Unlike [likes], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("likes") @ExcludeMissing fun _likes(): JsonField<Double> = likes
+
+        /**
+         * Returns the raw JSON value of [postId].
+         *
+         * Unlike [postId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("post_id") @ExcludeMissing fun _postId(): JsonField<String> = postId
+
+        /**
+         * Returns the raw JSON value of [postPlatformUrl].
+         *
+         * Unlike [postPlatformUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("post_platform_url")
+        @ExcludeMissing
+        fun _postPlatformUrl(): JsonField<String> = postPlatformUrl
+
+        /**
+         * Returns the raw JSON value of [postText].
+         *
+         * Unlike [postText], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("post_text") @ExcludeMissing fun _postText(): JsonField<String> = postText
+
+        /**
+         * Returns the raw JSON value of [postThumbnailUrl].
+         *
+         * Unlike [postThumbnailUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("post_thumbnail_url")
+        @ExcludeMissing
+        fun _postThumbnailUrl(): JsonField<String> = postThumbnailUrl
 
         /**
          * Returns the raw JSON value of [repliesCount].
@@ -532,9 +637,14 @@ private constructor(
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var platform: JsonField<Platform>? = null
             private var text: JsonField<String>? = null
+            private var accountId: JsonField<String> = JsonMissing.of()
             private var authorAvatar: JsonField<String> = JsonMissing.of()
             private var hidden: JsonField<Boolean> = JsonMissing.of()
             private var likes: JsonField<Double> = JsonMissing.of()
+            private var postId: JsonField<String> = JsonMissing.of()
+            private var postPlatformUrl: JsonField<String> = JsonMissing.of()
+            private var postText: JsonField<String> = JsonMissing.of()
+            private var postThumbnailUrl: JsonField<String> = JsonMissing.of()
             private var repliesCount: JsonField<Double> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -545,9 +655,14 @@ private constructor(
                 createdAt = data.createdAt
                 platform = data.platform
                 text = data.text
+                accountId = data.accountId
                 authorAvatar = data.authorAvatar
                 hidden = data.hidden
                 likes = data.likes
+                postId = data.postId
+                postPlatformUrl = data.postPlatformUrl
+                postText = data.postText
+                postThumbnailUrl = data.postThumbnailUrl
                 repliesCount = data.repliesCount
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
@@ -613,6 +728,18 @@ private constructor(
              */
             fun text(text: JsonField<String>) = apply { this.text = text }
 
+            /** Social account ID */
+            fun accountId(accountId: String) = accountId(JsonField.of(accountId))
+
+            /**
+             * Sets [Builder.accountId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.accountId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun accountId(accountId: JsonField<String>) = apply { this.accountId = accountId }
+
             /** Author avatar URL */
             fun authorAvatar(authorAvatar: String?) =
                 authorAvatar(JsonField.ofNullable(authorAvatar))
@@ -655,6 +782,73 @@ private constructor(
              * supported value.
              */
             fun likes(likes: JsonField<Double>) = apply { this.likes = likes }
+
+            /** Platform post/media/video ID */
+            fun postId(postId: String) = postId(JsonField.of(postId))
+
+            /**
+             * Sets [Builder.postId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.postId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun postId(postId: JsonField<String>) = apply { this.postId = postId }
+
+            /** URL to the post on the platform */
+            fun postPlatformUrl(postPlatformUrl: String?) =
+                postPlatformUrl(JsonField.ofNullable(postPlatformUrl))
+
+            /** Alias for calling [Builder.postPlatformUrl] with `postPlatformUrl.orElse(null)`. */
+            fun postPlatformUrl(postPlatformUrl: Optional<String>) =
+                postPlatformUrl(postPlatformUrl.getOrNull())
+
+            /**
+             * Sets [Builder.postPlatformUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.postPlatformUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun postPlatformUrl(postPlatformUrl: JsonField<String>) = apply {
+                this.postPlatformUrl = postPlatformUrl
+            }
+
+            /** Post caption snippet */
+            fun postText(postText: String?) = postText(JsonField.ofNullable(postText))
+
+            /** Alias for calling [Builder.postText] with `postText.orElse(null)`. */
+            fun postText(postText: Optional<String>) = postText(postText.getOrNull())
+
+            /**
+             * Sets [Builder.postText] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.postText] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun postText(postText: JsonField<String>) = apply { this.postText = postText }
+
+            /** Post thumbnail URL */
+            fun postThumbnailUrl(postThumbnailUrl: String?) =
+                postThumbnailUrl(JsonField.ofNullable(postThumbnailUrl))
+
+            /**
+             * Alias for calling [Builder.postThumbnailUrl] with `postThumbnailUrl.orElse(null)`.
+             */
+            fun postThumbnailUrl(postThumbnailUrl: Optional<String>) =
+                postThumbnailUrl(postThumbnailUrl.getOrNull())
+
+            /**
+             * Sets [Builder.postThumbnailUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.postThumbnailUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun postThumbnailUrl(postThumbnailUrl: JsonField<String>) = apply {
+                this.postThumbnailUrl = postThumbnailUrl
+            }
 
             /** Reply count */
             fun repliesCount(repliesCount: Double) = repliesCount(JsonField.of(repliesCount))
@@ -712,9 +906,14 @@ private constructor(
                     checkRequired("createdAt", createdAt),
                     checkRequired("platform", platform),
                     checkRequired("text", text),
+                    accountId,
                     authorAvatar,
                     hidden,
                     likes,
+                    postId,
+                    postPlatformUrl,
+                    postText,
+                    postThumbnailUrl,
                     repliesCount,
                     additionalProperties.toMutableMap(),
                 )
@@ -732,9 +931,14 @@ private constructor(
             createdAt()
             platform().validate()
             text()
+            accountId()
             authorAvatar()
             hidden()
             likes()
+            postId()
+            postPlatformUrl()
+            postText()
+            postThumbnailUrl()
             repliesCount()
             validated = true
         }
@@ -760,9 +964,14 @@ private constructor(
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (platform.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (text.asKnown().isPresent) 1 else 0) +
+                (if (accountId.asKnown().isPresent) 1 else 0) +
                 (if (authorAvatar.asKnown().isPresent) 1 else 0) +
                 (if (hidden.asKnown().isPresent) 1 else 0) +
                 (if (likes.asKnown().isPresent) 1 else 0) +
+                (if (postId.asKnown().isPresent) 1 else 0) +
+                (if (postPlatformUrl.asKnown().isPresent) 1 else 0) +
+                (if (postText.asKnown().isPresent) 1 else 0) +
+                (if (postThumbnailUrl.asKnown().isPresent) 1 else 0) +
                 (if (repliesCount.asKnown().isPresent) 1 else 0)
 
         class Platform @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -996,9 +1205,14 @@ private constructor(
                 createdAt == other.createdAt &&
                 platform == other.platform &&
                 text == other.text &&
+                accountId == other.accountId &&
                 authorAvatar == other.authorAvatar &&
                 hidden == other.hidden &&
                 likes == other.likes &&
+                postId == other.postId &&
+                postPlatformUrl == other.postPlatformUrl &&
+                postText == other.postText &&
+                postThumbnailUrl == other.postThumbnailUrl &&
                 repliesCount == other.repliesCount &&
                 additionalProperties == other.additionalProperties
         }
@@ -1010,9 +1224,14 @@ private constructor(
                 createdAt,
                 platform,
                 text,
+                accountId,
                 authorAvatar,
                 hidden,
                 likes,
+                postId,
+                postPlatformUrl,
+                postText,
+                postThumbnailUrl,
                 repliesCount,
                 additionalProperties,
             )
@@ -1021,7 +1240,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
+            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, accountId=$accountId, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, postId=$postId, postPlatformUrl=$postPlatformUrl, postText=$postText, postThumbnailUrl=$postThumbnailUrl, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
     }
 
     class Platform @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
