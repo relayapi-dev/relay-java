@@ -469,7 +469,7 @@ private constructor(
         fun scheduledAt(): String = scheduledAt.getRequired("scheduled_at")
 
         /**
-         * Account IDs or platform names to publish to
+         * Account IDs, platform names, or group IDs to publish to
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -620,7 +620,7 @@ private constructor(
                 this.scheduledAt = scheduledAt
             }
 
-            /** Account IDs or platform names to publish to */
+            /** Account IDs, platform names, or group IDs to publish to */
             fun targets(targets: List<String>) = targets(JsonField.of(targets))
 
             /**
