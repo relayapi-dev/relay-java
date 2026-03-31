@@ -315,6 +315,7 @@ private constructor(
         private val authorAvatar: JsonField<String>,
         private val hidden: JsonField<Boolean>,
         private val likes: JsonField<Double>,
+        private val parentId: JsonField<String>,
         private val postId: JsonField<String>,
         private val postPlatformUrl: JsonField<String>,
         private val postText: JsonField<String>,
@@ -344,6 +345,9 @@ private constructor(
             authorAvatar: JsonField<String> = JsonMissing.of(),
             @JsonProperty("hidden") @ExcludeMissing hidden: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("likes") @ExcludeMissing likes: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("parent_id")
+            @ExcludeMissing
+            parentId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("post_id") @ExcludeMissing postId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("post_platform_url")
             @ExcludeMissing
@@ -367,6 +371,7 @@ private constructor(
             authorAvatar,
             hidden,
             likes,
+            parentId,
             postId,
             postPlatformUrl,
             postText,
@@ -444,6 +449,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun likes(): Optional<Double> = likes.getOptional("likes")
+
+        /**
+         * Parent comment ID if this is a reply
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun parentId(): Optional<String> = parentId.getOptional("parent_id")
 
         /**
          * Platform post/media/video ID
@@ -557,6 +570,13 @@ private constructor(
         @JsonProperty("likes") @ExcludeMissing fun _likes(): JsonField<Double> = likes
 
         /**
+         * Returns the raw JSON value of [parentId].
+         *
+         * Unlike [parentId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("parent_id") @ExcludeMissing fun _parentId(): JsonField<String> = parentId
+
+        /**
          * Returns the raw JSON value of [postId].
          *
          * Unlike [postId], this method doesn't throw if the JSON field has an unexpected type.
@@ -641,6 +661,7 @@ private constructor(
             private var authorAvatar: JsonField<String> = JsonMissing.of()
             private var hidden: JsonField<Boolean> = JsonMissing.of()
             private var likes: JsonField<Double> = JsonMissing.of()
+            private var parentId: JsonField<String> = JsonMissing.of()
             private var postId: JsonField<String> = JsonMissing.of()
             private var postPlatformUrl: JsonField<String> = JsonMissing.of()
             private var postText: JsonField<String> = JsonMissing.of()
@@ -659,6 +680,7 @@ private constructor(
                 authorAvatar = data.authorAvatar
                 hidden = data.hidden
                 likes = data.likes
+                parentId = data.parentId
                 postId = data.postId
                 postPlatformUrl = data.postPlatformUrl
                 postText = data.postText
@@ -782,6 +804,21 @@ private constructor(
              * supported value.
              */
             fun likes(likes: JsonField<Double>) = apply { this.likes = likes }
+
+            /** Parent comment ID if this is a reply */
+            fun parentId(parentId: String?) = parentId(JsonField.ofNullable(parentId))
+
+            /** Alias for calling [Builder.parentId] with `parentId.orElse(null)`. */
+            fun parentId(parentId: Optional<String>) = parentId(parentId.getOrNull())
+
+            /**
+             * Sets [Builder.parentId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.parentId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun parentId(parentId: JsonField<String>) = apply { this.parentId = parentId }
 
             /** Platform post/media/video ID */
             fun postId(postId: String) = postId(JsonField.of(postId))
@@ -910,6 +947,7 @@ private constructor(
                     authorAvatar,
                     hidden,
                     likes,
+                    parentId,
                     postId,
                     postPlatformUrl,
                     postText,
@@ -935,6 +973,7 @@ private constructor(
             authorAvatar()
             hidden()
             likes()
+            parentId()
             postId()
             postPlatformUrl()
             postText()
@@ -968,6 +1007,7 @@ private constructor(
                 (if (authorAvatar.asKnown().isPresent) 1 else 0) +
                 (if (hidden.asKnown().isPresent) 1 else 0) +
                 (if (likes.asKnown().isPresent) 1 else 0) +
+                (if (parentId.asKnown().isPresent) 1 else 0) +
                 (if (postId.asKnown().isPresent) 1 else 0) +
                 (if (postPlatformUrl.asKnown().isPresent) 1 else 0) +
                 (if (postText.asKnown().isPresent) 1 else 0) +
@@ -1209,6 +1249,7 @@ private constructor(
                 authorAvatar == other.authorAvatar &&
                 hidden == other.hidden &&
                 likes == other.likes &&
+                parentId == other.parentId &&
                 postId == other.postId &&
                 postPlatformUrl == other.postPlatformUrl &&
                 postText == other.postText &&
@@ -1228,6 +1269,7 @@ private constructor(
                 authorAvatar,
                 hidden,
                 likes,
+                parentId,
                 postId,
                 postPlatformUrl,
                 postText,
@@ -1240,7 +1282,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, accountId=$accountId, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, postId=$postId, postPlatformUrl=$postPlatformUrl, postText=$postText, postThumbnailUrl=$postThumbnailUrl, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
+            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, accountId=$accountId, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, parentId=$parentId, postId=$postId, postPlatformUrl=$postPlatformUrl, postText=$postText, postThumbnailUrl=$postThumbnailUrl, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
     }
 
     class Platform @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
