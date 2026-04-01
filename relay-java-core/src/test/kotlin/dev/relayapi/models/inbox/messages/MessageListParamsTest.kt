@@ -15,6 +15,7 @@ internal class MessageListParamsTest {
             .cursor("cursor")
             .limit(1L)
             .platform(MessageListParams.Platform.TWITTER)
+            .workspaceId("workspace_id")
             .build()
     }
 
@@ -26,6 +27,7 @@ internal class MessageListParamsTest {
                 .cursor("cursor")
                 .limit(1L)
                 .platform(MessageListParams.Platform.TWITTER)
+                .workspaceId("workspace_id")
                 .build()
 
         val queryParams = params._queryParams()
@@ -37,6 +39,7 @@ internal class MessageListParamsTest {
                     .put("cursor", "cursor")
                     .put("limit", "1")
                     .put("platform", "twitter")
+                    .put("workspace_id", "workspace_id")
                     .build()
             )
     }

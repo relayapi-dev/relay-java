@@ -10,7 +10,9 @@ import dev.relayapi.core.ExcludeMissing
 import dev.relayapi.core.JsonField
 import dev.relayapi.core.JsonMissing
 import dev.relayapi.core.JsonValue
+import dev.relayapi.core.checkKnown
 import dev.relayapi.core.checkRequired
+import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
 import java.util.Collections
 import java.util.Objects
@@ -21,8 +23,11 @@ class HealthRetrieveResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
+    private val avatarUrl: JsonField<String>,
+    private val displayName: JsonField<String>,
     private val healthy: JsonField<Boolean>,
     private val platform: JsonField<String>,
+    private val scopes: JsonField<List<String>>,
     private val tokenExpiresAt: JsonField<String>,
     private val username: JsonField<String>,
     private val error: JsonField<Error>,
@@ -32,20 +37,48 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("avatar_url") @ExcludeMissing avatarUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("display_name")
+        @ExcludeMissing
+        displayName: JsonField<String> = JsonMissing.of(),
         @JsonProperty("healthy") @ExcludeMissing healthy: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("platform") @ExcludeMissing platform: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("scopes") @ExcludeMissing scopes: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("token_expires_at")
         @ExcludeMissing
         tokenExpiresAt: JsonField<String> = JsonMissing.of(),
         @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
         @JsonProperty("error") @ExcludeMissing error: JsonField<Error> = JsonMissing.of(),
-    ) : this(id, healthy, platform, tokenExpiresAt, username, error, mutableMapOf())
+    ) : this(
+        id,
+        avatarUrl,
+        displayName,
+        healthy,
+        platform,
+        scopes,
+        tokenExpiresAt,
+        username,
+        error,
+        mutableMapOf(),
+    )
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
+
+    /**
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun avatarUrl(): Optional<String> = avatarUrl.getOptional("avatar_url")
+
+    /**
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun displayName(): Optional<String> = displayName.getOptional("display_name")
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
@@ -58,6 +91,12 @@ private constructor(
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun platform(): String = platform.getRequired("platform")
+
+    /**
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
+     *   missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun scopes(): List<String> = scopes.getRequired("scopes")
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -85,6 +124,22 @@ private constructor(
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
     /**
+     * Returns the raw JSON value of [avatarUrl].
+     *
+     * Unlike [avatarUrl], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("avatar_url") @ExcludeMissing fun _avatarUrl(): JsonField<String> = avatarUrl
+
+    /**
+     * Returns the raw JSON value of [displayName].
+     *
+     * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("display_name")
+    @ExcludeMissing
+    fun _displayName(): JsonField<String> = displayName
+
+    /**
      * Returns the raw JSON value of [healthy].
      *
      * Unlike [healthy], this method doesn't throw if the JSON field has an unexpected type.
@@ -97,6 +152,13 @@ private constructor(
      * Unlike [platform], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("platform") @ExcludeMissing fun _platform(): JsonField<String> = platform
+
+    /**
+     * Returns the raw JSON value of [scopes].
+     *
+     * Unlike [scopes], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("scopes") @ExcludeMissing fun _scopes(): JsonField<List<String>> = scopes
 
     /**
      * Returns the raw JSON value of [tokenExpiresAt].
@@ -141,8 +203,11 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .avatarUrl()
+         * .displayName()
          * .healthy()
          * .platform()
+         * .scopes()
          * .tokenExpiresAt()
          * .username()
          * ```
@@ -154,8 +219,11 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
+        private var avatarUrl: JsonField<String>? = null
+        private var displayName: JsonField<String>? = null
         private var healthy: JsonField<Boolean>? = null
         private var platform: JsonField<String>? = null
+        private var scopes: JsonField<MutableList<String>>? = null
         private var tokenExpiresAt: JsonField<String>? = null
         private var username: JsonField<String>? = null
         private var error: JsonField<Error> = JsonMissing.of()
@@ -164,8 +232,11 @@ private constructor(
         @JvmSynthetic
         internal fun from(healthRetrieveResponse: HealthRetrieveResponse) = apply {
             id = healthRetrieveResponse.id
+            avatarUrl = healthRetrieveResponse.avatarUrl
+            displayName = healthRetrieveResponse.displayName
             healthy = healthRetrieveResponse.healthy
             platform = healthRetrieveResponse.platform
+            scopes = healthRetrieveResponse.scopes.map { it.toMutableList() }
             tokenExpiresAt = healthRetrieveResponse.tokenExpiresAt
             username = healthRetrieveResponse.username
             error = healthRetrieveResponse.error
@@ -181,6 +252,34 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
+
+        fun avatarUrl(avatarUrl: String?) = avatarUrl(JsonField.ofNullable(avatarUrl))
+
+        /** Alias for calling [Builder.avatarUrl] with `avatarUrl.orElse(null)`. */
+        fun avatarUrl(avatarUrl: Optional<String>) = avatarUrl(avatarUrl.getOrNull())
+
+        /**
+         * Sets [Builder.avatarUrl] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.avatarUrl] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun avatarUrl(avatarUrl: JsonField<String>) = apply { this.avatarUrl = avatarUrl }
+
+        fun displayName(displayName: String?) = displayName(JsonField.ofNullable(displayName))
+
+        /** Alias for calling [Builder.displayName] with `displayName.orElse(null)`. */
+        fun displayName(displayName: Optional<String>) = displayName(displayName.getOrNull())
+
+        /**
+         * Sets [Builder.displayName] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.displayName] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun displayName(displayName: JsonField<String>) = apply { this.displayName = displayName }
 
         fun healthy(healthy: Boolean) = healthy(JsonField.of(healthy))
 
@@ -201,6 +300,31 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun platform(platform: JsonField<String>) = apply { this.platform = platform }
+
+        fun scopes(scopes: List<String>) = scopes(JsonField.of(scopes))
+
+        /**
+         * Sets [Builder.scopes] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.scopes] with a well-typed `List<String>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun scopes(scopes: JsonField<List<String>>) = apply {
+            this.scopes = scopes.map { it.toMutableList() }
+        }
+
+        /**
+         * Adds a single [String] to [scopes].
+         *
+         * @throws IllegalStateException if the field was previously set to a non-list.
+         */
+        fun addScope(scope: String) = apply {
+            scopes =
+                (scopes ?: JsonField.of(mutableListOf())).also {
+                    checkKnown("scopes", it).add(scope)
+                }
+        }
 
         fun tokenExpiresAt(tokenExpiresAt: String?) =
             tokenExpiresAt(JsonField.ofNullable(tokenExpiresAt))
@@ -270,8 +394,11 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .avatarUrl()
+         * .displayName()
          * .healthy()
          * .platform()
+         * .scopes()
          * .tokenExpiresAt()
          * .username()
          * ```
@@ -281,8 +408,11 @@ private constructor(
         fun build(): HealthRetrieveResponse =
             HealthRetrieveResponse(
                 checkRequired("id", id),
+                checkRequired("avatarUrl", avatarUrl),
+                checkRequired("displayName", displayName),
                 checkRequired("healthy", healthy),
                 checkRequired("platform", platform),
+                checkRequired("scopes", scopes).map { it.toImmutable() },
                 checkRequired("tokenExpiresAt", tokenExpiresAt),
                 checkRequired("username", username),
                 error,
@@ -298,8 +428,11 @@ private constructor(
         }
 
         id()
+        avatarUrl()
+        displayName()
         healthy()
         platform()
+        scopes()
         tokenExpiresAt()
         username()
         error().ifPresent { it.validate() }
@@ -322,8 +455,11 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
+            (if (avatarUrl.asKnown().isPresent) 1 else 0) +
+            (if (displayName.asKnown().isPresent) 1 else 0) +
             (if (healthy.asKnown().isPresent) 1 else 0) +
             (if (platform.asKnown().isPresent) 1 else 0) +
+            (scopes.asKnown().getOrNull()?.size ?: 0) +
             (if (tokenExpiresAt.asKnown().isPresent) 1 else 0) +
             (if (username.asKnown().isPresent) 1 else 0) +
             (error.asKnown().getOrNull()?.validity() ?: 0)
@@ -526,8 +662,11 @@ private constructor(
 
         return other is HealthRetrieveResponse &&
             id == other.id &&
+            avatarUrl == other.avatarUrl &&
+            displayName == other.displayName &&
             healthy == other.healthy &&
             platform == other.platform &&
+            scopes == other.scopes &&
             tokenExpiresAt == other.tokenExpiresAt &&
             username == other.username &&
             error == other.error &&
@@ -535,11 +674,22 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, healthy, platform, tokenExpiresAt, username, error, additionalProperties)
+        Objects.hash(
+            id,
+            avatarUrl,
+            displayName,
+            healthy,
+            platform,
+            scopes,
+            tokenExpiresAt,
+            username,
+            error,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "HealthRetrieveResponse{id=$id, healthy=$healthy, platform=$platform, tokenExpiresAt=$tokenExpiresAt, username=$username, error=$error, additionalProperties=$additionalProperties}"
+        "HealthRetrieveResponse{id=$id, avatarUrl=$avatarUrl, displayName=$displayName, healthy=$healthy, platform=$platform, scopes=$scopes, tokenExpiresAt=$tokenExpiresAt, username=$username, error=$error, additionalProperties=$additionalProperties}"
 }

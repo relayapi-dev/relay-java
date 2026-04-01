@@ -71,6 +71,14 @@ private constructor(
     fun tags(): Optional<List<String>> = body.tags()
 
     /**
+     * Workspace ID to scope this contact to
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun workspaceId(): Optional<String> = body.workspaceId()
+
+    /**
      * Returns the raw JSON value of [accountId].
      *
      * Unlike [accountId], this method doesn't throw if the JSON field has an unexpected type.
@@ -104,6 +112,13 @@ private constructor(
      * Unlike [tags], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _tags(): JsonField<List<String>> = body._tags()
+
+    /**
+     * Returns the raw JSON value of [workspaceId].
+     *
+     * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _workspaceId(): JsonField<String> = body._workspaceId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -220,6 +235,18 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addTag(tag: String) = apply { body.addTag(tag) }
+
+        /** Workspace ID to scope this contact to */
+        fun workspaceId(workspaceId: String) = apply { body.workspaceId(workspaceId) }
+
+        /**
+         * Sets [Builder.workspaceId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.workspaceId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun workspaceId(workspaceId: JsonField<String>) = apply { body.workspaceId(workspaceId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -373,6 +400,7 @@ private constructor(
         private val email: JsonField<String>,
         private val name: JsonField<String>,
         private val tags: JsonField<List<String>>,
+        private val workspaceId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -385,7 +413,10 @@ private constructor(
             @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
-        ) : this(accountId, phone, email, name, tags, mutableMapOf())
+            @JsonProperty("workspace_id")
+            @ExcludeMissing
+            workspaceId: JsonField<String> = JsonMissing.of(),
+        ) : this(accountId, phone, email, name, tags, workspaceId, mutableMapOf())
 
         /**
          * WhatsApp account ID
@@ -428,6 +459,14 @@ private constructor(
         fun tags(): Optional<List<String>> = tags.getOptional("tags")
 
         /**
+         * Workspace ID to scope this contact to
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun workspaceId(): Optional<String> = workspaceId.getOptional("workspace_id")
+
+        /**
          * Returns the raw JSON value of [accountId].
          *
          * Unlike [accountId], this method doesn't throw if the JSON field has an unexpected type.
@@ -461,6 +500,15 @@ private constructor(
          * Unlike [tags], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("tags") @ExcludeMissing fun _tags(): JsonField<List<String>> = tags
+
+        /**
+         * Returns the raw JSON value of [workspaceId].
+         *
+         * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("workspace_id")
+        @ExcludeMissing
+        fun _workspaceId(): JsonField<String> = workspaceId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -496,6 +544,7 @@ private constructor(
             private var email: JsonField<String> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var tags: JsonField<MutableList<String>>? = null
+            private var workspaceId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -505,6 +554,7 @@ private constructor(
                 email = body.email
                 name = body.name
                 tags = body.tags.map { it.toMutableList() }
+                workspaceId = body.workspaceId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -580,6 +630,20 @@ private constructor(
                     (tags ?: JsonField.of(mutableListOf())).also { checkKnown("tags", it).add(tag) }
             }
 
+            /** Workspace ID to scope this contact to */
+            fun workspaceId(workspaceId: String) = workspaceId(JsonField.of(workspaceId))
+
+            /**
+             * Sets [Builder.workspaceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.workspaceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun workspaceId(workspaceId: JsonField<String>) = apply {
+                this.workspaceId = workspaceId
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -619,6 +683,7 @@ private constructor(
                     email,
                     name,
                     (tags ?: JsonMissing.of()).map { it.toImmutable() },
+                    workspaceId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -635,6 +700,7 @@ private constructor(
             email()
             name()
             tags()
+            workspaceId()
             validated = true
         }
 
@@ -658,7 +724,8 @@ private constructor(
                 (if (phone.asKnown().isPresent) 1 else 0) +
                 (if (email.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
-                (tags.asKnown().getOrNull()?.size ?: 0)
+                (tags.asKnown().getOrNull()?.size ?: 0) +
+                (if (workspaceId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -671,17 +738,18 @@ private constructor(
                 email == other.email &&
                 name == other.name &&
                 tags == other.tags &&
+                workspaceId == other.workspaceId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(accountId, phone, email, name, tags, additionalProperties)
+            Objects.hash(accountId, phone, email, name, tags, workspaceId, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{accountId=$accountId, phone=$phone, email=$email, name=$name, tags=$tags, additionalProperties=$additionalProperties}"
+            "Body{accountId=$accountId, phone=$phone, email=$email, name=$name, tags=$tags, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

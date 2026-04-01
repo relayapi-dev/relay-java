@@ -20,6 +20,7 @@ private constructor(
     private val cursor: String?,
     private val limit: Long?,
     private val platform: Platform?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -35,6 +36,9 @@ private constructor(
 
     /** Filter by platform */
     fun platform(): Optional<Platform> = Optional.ofNullable(platform)
+
+    /** Filter by workspace ID */
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -59,6 +63,7 @@ private constructor(
         private var cursor: String? = null
         private var limit: Long? = null
         private var platform: Platform? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -68,6 +73,7 @@ private constructor(
             cursor = messageListParams.cursor
             limit = messageListParams.limit
             platform = messageListParams.platform
+            workspaceId = messageListParams.workspaceId
             additionalHeaders = messageListParams.additionalHeaders.toBuilder()
             additionalQueryParams = messageListParams.additionalQueryParams.toBuilder()
         }
@@ -102,6 +108,12 @@ private constructor(
 
         /** Alias for calling [Builder.platform] with `platform.orElse(null)`. */
         fun platform(platform: Optional<Platform>) = platform(platform.getOrNull())
+
+        /** Filter by workspace ID */
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -212,6 +224,7 @@ private constructor(
                 cursor,
                 limit,
                 platform,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -226,6 +239,7 @@ private constructor(
                 cursor?.let { put("cursor", it) }
                 limit?.let { put("limit", it.toString()) }
                 platform?.let { put("platform", it.toString()) }
+                workspaceId?.let { put("workspace_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -455,13 +469,22 @@ private constructor(
             cursor == other.cursor &&
             limit == other.limit &&
             platform == other.platform &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(accountId, cursor, limit, platform, additionalHeaders, additionalQueryParams)
+        Objects.hash(
+            accountId,
+            cursor,
+            limit,
+            platform,
+            workspaceId,
+            additionalHeaders,
+            additionalQueryParams,
+        )
 
     override fun toString() =
-        "MessageListParams{accountId=$accountId, cursor=$cursor, limit=$limit, platform=$platform, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "MessageListParams{accountId=$accountId, cursor=$cursor, limit=$limit, platform=$platform, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

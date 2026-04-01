@@ -28,6 +28,7 @@ internal class PostBulkCreateParamsTest {
                             .build()
                     )
                     .timezone("timezone")
+                    .workspaceId("workspace_id")
                     .build()
             )
             .build()
@@ -54,6 +55,7 @@ internal class PostBulkCreateParamsTest {
                                 .build()
                         )
                         .timezone("timezone")
+                        .workspaceId("workspace_id")
                         .build()
                 )
                 .build()
@@ -78,6 +80,7 @@ internal class PostBulkCreateParamsTest {
                             .build()
                     )
                     .timezone("timezone")
+                    .workspaceId("workspace_id")
                     .build()
             )
     }

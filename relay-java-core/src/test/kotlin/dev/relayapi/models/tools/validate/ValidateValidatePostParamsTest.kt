@@ -27,6 +27,7 @@ internal class ValidateValidatePostParamsTest {
                     .build()
             )
             .timezone("timezone")
+            .workspaceId("workspace_id")
             .build()
     }
 
@@ -49,6 +50,7 @@ internal class ValidateValidatePostParamsTest {
                         .build()
                 )
                 .timezone("timezone")
+                .workspaceId("workspace_id")
                 .build()
 
         val body = params._body()
@@ -70,6 +72,7 @@ internal class ValidateValidatePostParamsTest {
                     .build()
             )
         assertThat(body.timezone()).contains("timezone")
+        assertThat(body.workspaceId()).contains("workspace_id")
     }
 
     @Test

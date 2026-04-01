@@ -39,6 +39,7 @@ internal class PostServiceTest {
                             .build()
                     )
                     .timezone("timezone")
+                    .workspaceId("workspace_id")
                     .build()
             )
 
@@ -99,10 +100,10 @@ internal class PostServiceTest {
                     .accountId("account_id")
                     .cursor("cursor")
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .groupId("group_id")
                     .limit(1L)
                     .status(PostListParams.Status.DRAFT)
                     .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .workspaceId("workspace_id")
                     .build()
             )
 
@@ -147,6 +148,7 @@ internal class PostServiceTest {
                                     .build()
                             )
                             .timezone("timezone")
+                            .workspaceId("workspace_id")
                             .build()
                     )
                     .build()

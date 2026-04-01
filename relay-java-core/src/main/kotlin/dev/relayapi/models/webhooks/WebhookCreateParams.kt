@@ -20,6 +20,7 @@ import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Create a new webhook endpoint. The signing secret is returned only once in the response. */
@@ -47,6 +48,14 @@ private constructor(
     fun url(): String = body.url()
 
     /**
+     * Workspace ID to scope this webhook to
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun workspaceId(): Optional<String> = body.workspaceId()
+
+    /**
      * Returns the raw JSON value of [events].
      *
      * Unlike [events], this method doesn't throw if the JSON field has an unexpected type.
@@ -59,6 +68,13 @@ private constructor(
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _url(): JsonField<String> = body._url()
+
+    /**
+     * Returns the raw JSON value of [workspaceId].
+     *
+     * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _workspaceId(): JsonField<String> = body._workspaceId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -105,6 +121,7 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [events]
          * - [url]
+         * - [workspaceId]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -137,6 +154,18 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun url(url: JsonField<String>) = apply { body.url(url) }
+
+        /** Workspace ID to scope this webhook to */
+        fun workspaceId(workspaceId: String) = apply { body.workspaceId(workspaceId) }
+
+        /**
+         * Sets [Builder.workspaceId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.workspaceId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun workspaceId(workspaceId: JsonField<String>) = apply { body.workspaceId(workspaceId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -287,6 +316,7 @@ private constructor(
     private constructor(
         private val events: JsonField<List<Event>>,
         private val url: JsonField<String>,
+        private val workspaceId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -296,7 +326,10 @@ private constructor(
             @ExcludeMissing
             events: JsonField<List<Event>> = JsonMissing.of(),
             @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-        ) : this(events, url, mutableMapOf())
+            @JsonProperty("workspace_id")
+            @ExcludeMissing
+            workspaceId: JsonField<String> = JsonMissing.of(),
+        ) : this(events, url, workspaceId, mutableMapOf())
 
         /**
          * Events to subscribe to
@@ -315,6 +348,14 @@ private constructor(
         fun url(): String = url.getRequired("url")
 
         /**
+         * Workspace ID to scope this webhook to
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun workspaceId(): Optional<String> = workspaceId.getOptional("workspace_id")
+
+        /**
          * Returns the raw JSON value of [events].
          *
          * Unlike [events], this method doesn't throw if the JSON field has an unexpected type.
@@ -327,6 +368,15 @@ private constructor(
          * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+        /**
+         * Returns the raw JSON value of [workspaceId].
+         *
+         * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("workspace_id")
+        @ExcludeMissing
+        fun _workspaceId(): JsonField<String> = workspaceId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -359,12 +409,14 @@ private constructor(
 
             private var events: JsonField<MutableList<Event>>? = null
             private var url: JsonField<String>? = null
+            private var workspaceId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 events = body.events.map { it.toMutableList() }
                 url = body.url
+                workspaceId = body.workspaceId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -406,6 +458,20 @@ private constructor(
              */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
+            /** Workspace ID to scope this webhook to */
+            fun workspaceId(workspaceId: String) = workspaceId(JsonField.of(workspaceId))
+
+            /**
+             * Sets [Builder.workspaceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.workspaceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun workspaceId(workspaceId: JsonField<String>) = apply {
+                this.workspaceId = workspaceId
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -442,6 +508,7 @@ private constructor(
                 Body(
                     checkRequired("events", events).map { it.toImmutable() },
                     checkRequired("url", url),
+                    workspaceId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -455,6 +522,7 @@ private constructor(
 
             events().forEach { it.validate() }
             url()
+            workspaceId()
             validated = true
         }
 
@@ -475,7 +543,8 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (events.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (url.asKnown().isPresent) 1 else 0)
+                (if (url.asKnown().isPresent) 1 else 0) +
+                (if (workspaceId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -485,15 +554,18 @@ private constructor(
             return other is Body &&
                 events == other.events &&
                 url == other.url &&
+                workspaceId == other.workspaceId &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(events, url, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(events, url, workspaceId, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{events=$events, url=$url, additionalProperties=$additionalProperties}"
+            "Body{events=$events, url=$url, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
     }
 
     class Event @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
