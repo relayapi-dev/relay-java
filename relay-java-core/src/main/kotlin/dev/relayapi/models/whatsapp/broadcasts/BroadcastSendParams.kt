@@ -11,7 +11,8 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Send a broadcast immediately */
+/** Deprecated. Use POST /v1/broadcasts/{id}/send instead. */
+@Deprecated("deprecated")
 class BroadcastSendParams
 private constructor(
     private val broadcastId: String?,

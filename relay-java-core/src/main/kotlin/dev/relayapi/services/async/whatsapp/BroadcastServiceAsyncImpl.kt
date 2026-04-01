@@ -44,6 +44,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): BroadcastServiceAsync =
         BroadcastServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
+    @Deprecated("deprecated")
     override fun create(
         params: BroadcastCreateParams,
         requestOptions: RequestOptions,
@@ -51,6 +52,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         // post /v1/whatsapp/broadcasts
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun retrieve(
         params: BroadcastRetrieveParams,
         requestOptions: RequestOptions,
@@ -58,6 +60,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         // get /v1/whatsapp/broadcasts/{broadcast_id}
         withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun list(
         params: BroadcastListParams,
         requestOptions: RequestOptions,
@@ -65,6 +68,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         // get /v1/whatsapp/broadcasts
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun delete(
         params: BroadcastDeleteParams,
         requestOptions: RequestOptions,
@@ -72,6 +76,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         // delete /v1/whatsapp/broadcasts/{broadcast_id}
         withRawResponse().delete(params, requestOptions).thenAccept {}
 
+    @Deprecated("deprecated")
     override fun schedule(
         params: BroadcastScheduleParams,
         requestOptions: RequestOptions,
@@ -79,6 +84,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         // post /v1/whatsapp/broadcasts/{broadcast_id}/schedule
         withRawResponse().schedule(params, requestOptions).thenApply { it.parse() }
 
+    @Deprecated("deprecated")
     override fun send(
         params: BroadcastSendParams,
         requestOptions: RequestOptions,
@@ -102,6 +108,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         private val createHandler: Handler<BroadcastCreateResponse> =
             jsonHandler<BroadcastCreateResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun create(
             params: BroadcastCreateParams,
             requestOptions: RequestOptions,
@@ -133,6 +140,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         private val retrieveHandler: Handler<BroadcastRetrieveResponse> =
             jsonHandler<BroadcastRetrieveResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun retrieve(
             params: BroadcastRetrieveParams,
             requestOptions: RequestOptions,
@@ -166,6 +174,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         private val listHandler: Handler<BroadcastListResponse> =
             jsonHandler<BroadcastListResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun list(
             params: BroadcastListParams,
             requestOptions: RequestOptions,
@@ -195,6 +204,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
 
         private val deleteHandler: Handler<Void?> = emptyHandler()
 
+        @Deprecated("deprecated")
         override fun delete(
             params: BroadcastDeleteParams,
             requestOptions: RequestOptions,
@@ -223,6 +233,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         private val scheduleHandler: Handler<BroadcastScheduleResponse> =
             jsonHandler<BroadcastScheduleResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun schedule(
             params: BroadcastScheduleParams,
             requestOptions: RequestOptions,
@@ -263,6 +274,7 @@ class BroadcastServiceAsyncImpl internal constructor(private val clientOptions: 
         private val sendHandler: Handler<BroadcastSendResponse> =
             jsonHandler<BroadcastSendResponse>(clientOptions.jsonMapper)
 
+        @Deprecated("deprecated")
         override fun send(
             params: BroadcastSendParams,
             requestOptions: RequestOptions,

@@ -34,21 +34,25 @@ interface BroadcastService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): BroadcastService
 
-    /** Create a broadcast */
+    /** Deprecated. Use POST /v1/broadcasts instead. */
+    @Deprecated("deprecated")
     fun create(params: BroadcastCreateParams): BroadcastCreateResponse =
         create(params, RequestOptions.none())
 
     /** @see create */
+    @Deprecated("deprecated")
     fun create(
         params: BroadcastCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BroadcastCreateResponse
 
-    /** Get broadcast details */
+    /** Deprecated. Use GET /v1/broadcasts/{id} instead. */
+    @Deprecated("deprecated")
     fun retrieve(broadcastId: String): BroadcastRetrieveResponse =
         retrieve(broadcastId, BroadcastRetrieveParams.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         broadcastId: String,
         params: BroadcastRetrieveParams = BroadcastRetrieveParams.none(),
@@ -57,39 +61,47 @@ interface BroadcastService {
         retrieve(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         broadcastId: String,
         params: BroadcastRetrieveParams = BroadcastRetrieveParams.none(),
     ): BroadcastRetrieveResponse = retrieve(broadcastId, params, RequestOptions.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         params: BroadcastRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BroadcastRetrieveResponse
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(params: BroadcastRetrieveParams): BroadcastRetrieveResponse =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(broadcastId: String, requestOptions: RequestOptions): BroadcastRetrieveResponse =
         retrieve(broadcastId, BroadcastRetrieveParams.none(), requestOptions)
 
-    /** List broadcasts */
+    /** Deprecated. Use GET /v1/broadcasts instead. */
+    @Deprecated("deprecated")
     fun list(params: BroadcastListParams): BroadcastListResponse =
         list(params, RequestOptions.none())
 
     /** @see list */
+    @Deprecated("deprecated")
     fun list(
         params: BroadcastListParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BroadcastListResponse
 
-    /** Delete a broadcast */
+    /** Deprecated. Use DELETE /v1/broadcasts/{id} instead. */
+    @Deprecated("deprecated")
     fun delete(broadcastId: String) = delete(broadcastId, BroadcastDeleteParams.none())
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(
         broadcastId: String,
         params: BroadcastDeleteParams = BroadcastDeleteParams.none(),
@@ -97,27 +109,33 @@ interface BroadcastService {
     ) = delete(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(broadcastId: String, params: BroadcastDeleteParams = BroadcastDeleteParams.none()) =
         delete(broadcastId, params, RequestOptions.none())
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(
         params: BroadcastDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     )
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(params: BroadcastDeleteParams) = delete(params, RequestOptions.none())
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(broadcastId: String, requestOptions: RequestOptions) =
         delete(broadcastId, BroadcastDeleteParams.none(), requestOptions)
 
-    /** Schedule a broadcast */
+    /** Deprecated. Use POST /v1/broadcasts/{id}/schedule instead. */
+    @Deprecated("deprecated")
     fun schedule(broadcastId: String): BroadcastScheduleResponse =
         schedule(broadcastId, BroadcastScheduleParams.none())
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(
         broadcastId: String,
         params: BroadcastScheduleParams = BroadcastScheduleParams.none(),
@@ -126,30 +144,36 @@ interface BroadcastService {
         schedule(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(
         broadcastId: String,
         params: BroadcastScheduleParams = BroadcastScheduleParams.none(),
     ): BroadcastScheduleResponse = schedule(broadcastId, params, RequestOptions.none())
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(
         params: BroadcastScheduleParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BroadcastScheduleResponse
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(params: BroadcastScheduleParams): BroadcastScheduleResponse =
         schedule(params, RequestOptions.none())
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(broadcastId: String, requestOptions: RequestOptions): BroadcastScheduleResponse =
         schedule(broadcastId, BroadcastScheduleParams.none(), requestOptions)
 
-    /** Send a broadcast immediately */
+    /** Deprecated. Use POST /v1/broadcasts/{id}/send instead. */
+    @Deprecated("deprecated")
     fun send(broadcastId: String): BroadcastSendResponse =
         send(broadcastId, BroadcastSendParams.none())
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(
         broadcastId: String,
         params: BroadcastSendParams = BroadcastSendParams.none(),
@@ -158,22 +182,26 @@ interface BroadcastService {
         send(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(
         broadcastId: String,
         params: BroadcastSendParams = BroadcastSendParams.none(),
     ): BroadcastSendResponse = send(broadcastId, params, RequestOptions.none())
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(
         params: BroadcastSendParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): BroadcastSendResponse
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(params: BroadcastSendParams): BroadcastSendResponse =
         send(params, RequestOptions.none())
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(broadcastId: String, requestOptions: RequestOptions): BroadcastSendResponse =
         send(broadcastId, BroadcastSendParams.none(), requestOptions)
 
@@ -191,11 +219,13 @@ interface BroadcastService {
          * Returns a raw HTTP response for `post /v1/whatsapp/broadcasts`, but is otherwise the same
          * as [BroadcastService.create].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun create(params: BroadcastCreateParams): HttpResponseFor<BroadcastCreateResponse> =
             create(params, RequestOptions.none())
 
         /** @see create */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun create(
             params: BroadcastCreateParams,
@@ -206,11 +236,13 @@ interface BroadcastService {
          * Returns a raw HTTP response for `get /v1/whatsapp/broadcasts/{broadcast_id}`, but is
          * otherwise the same as [BroadcastService.retrieve].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(broadcastId: String): HttpResponseFor<BroadcastRetrieveResponse> =
             retrieve(broadcastId, BroadcastRetrieveParams.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
             broadcastId: String,
@@ -220,6 +252,7 @@ interface BroadcastService {
             retrieve(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
             broadcastId: String,
@@ -228,6 +261,7 @@ interface BroadcastService {
             retrieve(broadcastId, params, RequestOptions.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
             params: BroadcastRetrieveParams,
@@ -235,11 +269,13 @@ interface BroadcastService {
         ): HttpResponseFor<BroadcastRetrieveResponse>
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(params: BroadcastRetrieveParams): HttpResponseFor<BroadcastRetrieveResponse> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun retrieve(
             broadcastId: String,
@@ -251,11 +287,13 @@ interface BroadcastService {
          * Returns a raw HTTP response for `get /v1/whatsapp/broadcasts`, but is otherwise the same
          * as [BroadcastService.list].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun list(params: BroadcastListParams): HttpResponseFor<BroadcastListResponse> =
             list(params, RequestOptions.none())
 
         /** @see list */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun list(
             params: BroadcastListParams,
@@ -266,11 +304,13 @@ interface BroadcastService {
          * Returns a raw HTTP response for `delete /v1/whatsapp/broadcasts/{broadcast_id}`, but is
          * otherwise the same as [BroadcastService.delete].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun delete(broadcastId: String): HttpResponse =
             delete(broadcastId, BroadcastDeleteParams.none())
 
         /** @see delete */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun delete(
             broadcastId: String,
@@ -280,6 +320,7 @@ interface BroadcastService {
             delete(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see delete */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun delete(
             broadcastId: String,
@@ -287,6 +328,7 @@ interface BroadcastService {
         ): HttpResponse = delete(broadcastId, params, RequestOptions.none())
 
         /** @see delete */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun delete(
             params: BroadcastDeleteParams,
@@ -294,11 +336,13 @@ interface BroadcastService {
         ): HttpResponse
 
         /** @see delete */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun delete(params: BroadcastDeleteParams): HttpResponse =
             delete(params, RequestOptions.none())
 
         /** @see delete */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun delete(broadcastId: String, requestOptions: RequestOptions): HttpResponse =
             delete(broadcastId, BroadcastDeleteParams.none(), requestOptions)
@@ -307,11 +351,13 @@ interface BroadcastService {
          * Returns a raw HTTP response for `post /v1/whatsapp/broadcasts/{broadcast_id}/schedule`,
          * but is otherwise the same as [BroadcastService.schedule].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun schedule(broadcastId: String): HttpResponseFor<BroadcastScheduleResponse> =
             schedule(broadcastId, BroadcastScheduleParams.none())
 
         /** @see schedule */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun schedule(
             broadcastId: String,
@@ -321,6 +367,7 @@ interface BroadcastService {
             schedule(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see schedule */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun schedule(
             broadcastId: String,
@@ -329,6 +376,7 @@ interface BroadcastService {
             schedule(broadcastId, params, RequestOptions.none())
 
         /** @see schedule */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun schedule(
             params: BroadcastScheduleParams,
@@ -336,11 +384,13 @@ interface BroadcastService {
         ): HttpResponseFor<BroadcastScheduleResponse>
 
         /** @see schedule */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun schedule(params: BroadcastScheduleParams): HttpResponseFor<BroadcastScheduleResponse> =
             schedule(params, RequestOptions.none())
 
         /** @see schedule */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun schedule(
             broadcastId: String,
@@ -352,11 +402,13 @@ interface BroadcastService {
          * Returns a raw HTTP response for `post /v1/whatsapp/broadcasts/{broadcast_id}/send`, but
          * is otherwise the same as [BroadcastService.send].
          */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun send(broadcastId: String): HttpResponseFor<BroadcastSendResponse> =
             send(broadcastId, BroadcastSendParams.none())
 
         /** @see send */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun send(
             broadcastId: String,
@@ -366,6 +418,7 @@ interface BroadcastService {
             send(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see send */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun send(
             broadcastId: String,
@@ -373,6 +426,7 @@ interface BroadcastService {
         ): HttpResponseFor<BroadcastSendResponse> = send(broadcastId, params, RequestOptions.none())
 
         /** @see send */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun send(
             params: BroadcastSendParams,
@@ -380,11 +434,13 @@ interface BroadcastService {
         ): HttpResponseFor<BroadcastSendResponse>
 
         /** @see send */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun send(params: BroadcastSendParams): HttpResponseFor<BroadcastSendResponse> =
             send(params, RequestOptions.none())
 
         /** @see send */
+        @Deprecated("deprecated")
         @MustBeClosed
         fun send(
             broadcastId: String,
