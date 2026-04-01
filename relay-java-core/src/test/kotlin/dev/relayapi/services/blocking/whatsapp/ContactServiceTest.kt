@@ -26,6 +26,7 @@ internal class ContactServiceTest {
                     .email("email")
                     .name("name")
                     .addTag("string")
+                    .workspaceId("workspace_id")
                     .build()
             )
 
@@ -57,6 +58,7 @@ internal class ContactServiceTest {
                     .limit(1L)
                     .search("search")
                     .tag("tag")
+                    .workspaceId("workspace_id")
                     .build()
             )
 

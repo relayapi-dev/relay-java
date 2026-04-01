@@ -14,8 +14,11 @@ internal class HealthRetrieveResponseTest {
         val healthRetrieveResponse =
             HealthRetrieveResponse.builder()
                 .id("id")
+                .avatarUrl("avatar_url")
+                .displayName("display_name")
                 .healthy(true)
                 .platform("platform")
+                .addScope("string")
                 .tokenExpiresAt("token_expires_at")
                 .username("username")
                 .error(
@@ -24,8 +27,11 @@ internal class HealthRetrieveResponseTest {
                 .build()
 
         assertThat(healthRetrieveResponse.id()).isEqualTo("id")
+        assertThat(healthRetrieveResponse.avatarUrl()).contains("avatar_url")
+        assertThat(healthRetrieveResponse.displayName()).contains("display_name")
         assertThat(healthRetrieveResponse.healthy()).isEqualTo(true)
         assertThat(healthRetrieveResponse.platform()).isEqualTo("platform")
+        assertThat(healthRetrieveResponse.scopes()).containsExactly("string")
         assertThat(healthRetrieveResponse.tokenExpiresAt()).contains("token_expires_at")
         assertThat(healthRetrieveResponse.username()).contains("username")
         assertThat(healthRetrieveResponse.error())
@@ -40,8 +46,11 @@ internal class HealthRetrieveResponseTest {
         val healthRetrieveResponse =
             HealthRetrieveResponse.builder()
                 .id("id")
+                .avatarUrl("avatar_url")
+                .displayName("display_name")
                 .healthy(true)
                 .platform("platform")
+                .addScope("string")
                 .tokenExpiresAt("token_expires_at")
                 .username("username")
                 .error(

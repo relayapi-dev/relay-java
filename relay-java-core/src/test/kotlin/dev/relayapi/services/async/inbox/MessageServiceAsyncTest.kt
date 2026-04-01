@@ -36,6 +36,7 @@ internal class MessageServiceAsyncTest {
                     .cursor("cursor")
                     .limit(1L)
                     .platform(MessageListParams.Platform.TWITTER)
+                    .workspaceId("workspace_id")
                     .build()
             )
 

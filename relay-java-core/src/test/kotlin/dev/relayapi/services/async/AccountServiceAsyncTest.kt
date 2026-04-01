@@ -35,12 +35,12 @@ internal class AccountServiceAsyncTest {
                 AccountUpdateParams.builder()
                     .id("id")
                     .displayName("display_name")
-                    .groupId("group_id")
                     .metadata(
                         AccountUpdateParams.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
+                    .workspaceId("workspace_id")
                     .build()
             )
 
@@ -59,11 +59,12 @@ internal class AccountServiceAsyncTest {
                 AccountListParams.builder()
                     .cursor("cursor")
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .groupId("group_id")
                     .limit(1L)
+                    .platforms("platforms")
                     .search("search")
                     .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .ungrouped(true)
+                    .workspaceId("workspace_id")
                     .build()
             )
 

@@ -25,6 +25,7 @@ internal class WebhookServiceTest {
                 WebhookCreateParams.builder()
                     .addEvent(WebhookCreateParams.Event.POST_PUBLISHED)
                     .url("https://example.com")
+                    .workspaceId("workspace_id")
                     .build()
             )
 
@@ -63,6 +64,7 @@ internal class WebhookServiceTest {
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .limit(1L)
                     .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .workspaceId("workspace_id")
                     .build()
             )
 

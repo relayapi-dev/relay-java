@@ -16,6 +16,7 @@ internal class ContactCreateParamsTest {
             .email("email")
             .name("name")
             .addTag("string")
+            .workspaceId("workspace_id")
             .build()
     }
 
@@ -28,6 +29,7 @@ internal class ContactCreateParamsTest {
                 .email("email")
                 .name("name")
                 .addTag("string")
+                .workspaceId("workspace_id")
                 .build()
 
         val body = params._body()
@@ -37,6 +39,7 @@ internal class ContactCreateParamsTest {
         assertThat(body.email()).contains("email")
         assertThat(body.name()).contains("name")
         assertThat(body.tags().getOrNull()).containsExactly("string")
+        assertThat(body.workspaceId()).contains("workspace_id")
     }
 
     @Test

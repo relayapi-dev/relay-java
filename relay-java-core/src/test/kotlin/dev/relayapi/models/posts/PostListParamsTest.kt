@@ -15,10 +15,10 @@ internal class PostListParamsTest {
             .accountId("account_id")
             .cursor("cursor")
             .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-            .groupId("group_id")
             .limit(1L)
             .status(PostListParams.Status.DRAFT)
             .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .workspaceId("workspace_id")
             .build()
     }
 
@@ -29,10 +29,10 @@ internal class PostListParamsTest {
                 .accountId("account_id")
                 .cursor("cursor")
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .groupId("group_id")
                 .limit(1L)
                 .status(PostListParams.Status.DRAFT)
                 .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .workspaceId("workspace_id")
                 .build()
 
         val queryParams = params._queryParams()
@@ -43,10 +43,10 @@ internal class PostListParamsTest {
                     .put("account_id", "account_id")
                     .put("cursor", "cursor")
                     .put("from", "2019-12-27T18:11:19.117Z")
-                    .put("group_id", "group_id")
                     .put("limit", "1")
                     .put("status", "draft")
                     .put("to", "2019-12-27T18:11:19.117Z")
+                    .put("workspace_id", "workspace_id")
                     .build()
             )
     }

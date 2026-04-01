@@ -18,6 +18,7 @@ private constructor(
     private val limit: Long?,
     private val search: String?,
     private val tag: String?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -36,6 +37,9 @@ private constructor(
 
     /** Filter by tag */
     fun tag(): Optional<String> = Optional.ofNullable(tag)
+
+    /** Filter by workspace ID */
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -66,6 +70,7 @@ private constructor(
         private var limit: Long? = null
         private var search: String? = null
         private var tag: String? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -76,6 +81,7 @@ private constructor(
             limit = contactListParams.limit
             search = contactListParams.search
             tag = contactListParams.tag
+            workspaceId = contactListParams.workspaceId
             additionalHeaders = contactListParams.additionalHeaders.toBuilder()
             additionalQueryParams = contactListParams.additionalQueryParams.toBuilder()
         }
@@ -113,6 +119,12 @@ private constructor(
 
         /** Alias for calling [Builder.tag] with `tag.orElse(null)`. */
         fun tag(tag: Optional<String>) = tag(tag.getOrNull())
+
+        /** Filter by workspace ID */
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -231,6 +243,7 @@ private constructor(
                 limit,
                 search,
                 tag,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -246,6 +259,7 @@ private constructor(
                 limit?.let { put("limit", it.toString()) }
                 search?.let { put("search", it) }
                 tag?.let { put("tag", it) }
+                workspaceId?.let { put("workspace_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -261,6 +275,7 @@ private constructor(
             limit == other.limit &&
             search == other.search &&
             tag == other.tag &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -272,10 +287,11 @@ private constructor(
             limit,
             search,
             tag,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "ContactListParams{accountId=$accountId, cursor=$cursor, limit=$limit, search=$search, tag=$tag, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ContactListParams{accountId=$accountId, cursor=$cursor, limit=$limit, search=$search, tag=$tag, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

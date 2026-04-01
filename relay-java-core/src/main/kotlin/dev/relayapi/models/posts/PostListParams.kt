@@ -21,10 +21,10 @@ private constructor(
     private val accountId: String?,
     private val cursor: String?,
     private val from: OffsetDateTime?,
-    private val groupId: String?,
     private val limit: Long?,
     private val status: Status?,
     private val to: OffsetDateTime?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -38,9 +38,6 @@ private constructor(
     /** Filter: start date (ISO 8601) */
     fun from(): Optional<OffsetDateTime> = Optional.ofNullable(from)
 
-    /** Filter by account group ID */
-    fun groupId(): Optional<String> = Optional.ofNullable(groupId)
-
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
@@ -49,6 +46,9 @@ private constructor(
 
     /** Filter: end date (ISO 8601) */
     fun to(): Optional<OffsetDateTime> = Optional.ofNullable(to)
+
+    /** Filter by workspace ID */
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -72,10 +72,10 @@ private constructor(
         private var accountId: String? = null
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
-        private var groupId: String? = null
         private var limit: Long? = null
         private var status: Status? = null
         private var to: OffsetDateTime? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -84,10 +84,10 @@ private constructor(
             accountId = postListParams.accountId
             cursor = postListParams.cursor
             from = postListParams.from
-            groupId = postListParams.groupId
             limit = postListParams.limit
             status = postListParams.status
             to = postListParams.to
+            workspaceId = postListParams.workspaceId
             additionalHeaders = postListParams.additionalHeaders.toBuilder()
             additionalQueryParams = postListParams.additionalQueryParams.toBuilder()
         }
@@ -109,12 +109,6 @@ private constructor(
 
         /** Alias for calling [Builder.from] with `from.orElse(null)`. */
         fun from(from: Optional<OffsetDateTime>) = from(from.getOrNull())
-
-        /** Filter by account group ID */
-        fun groupId(groupId: String?) = apply { this.groupId = groupId }
-
-        /** Alias for calling [Builder.groupId] with `groupId.orElse(null)`. */
-        fun groupId(groupId: Optional<String>) = groupId(groupId.getOrNull())
 
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
@@ -140,6 +134,12 @@ private constructor(
 
         /** Alias for calling [Builder.to] with `to.orElse(null)`. */
         fun to(to: Optional<OffsetDateTime>) = to(to.getOrNull())
+
+        /** Filter by workspace ID */
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -249,10 +249,10 @@ private constructor(
                 accountId,
                 cursor,
                 from,
-                groupId,
                 limit,
                 status,
                 to,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -266,10 +266,10 @@ private constructor(
                 accountId?.let { put("account_id", it) }
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
-                groupId?.let { put("group_id", it) }
                 limit?.let { put("limit", it.toString()) }
                 status?.let { put("status", it.toString()) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                workspaceId?.let { put("workspace_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -426,10 +426,10 @@ private constructor(
             accountId == other.accountId &&
             cursor == other.cursor &&
             from == other.from &&
-            groupId == other.groupId &&
             limit == other.limit &&
             status == other.status &&
             to == other.to &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -439,14 +439,14 @@ private constructor(
             accountId,
             cursor,
             from,
-            groupId,
             limit,
             status,
             to,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, groupId=$groupId, limit=$limit, status=$status, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

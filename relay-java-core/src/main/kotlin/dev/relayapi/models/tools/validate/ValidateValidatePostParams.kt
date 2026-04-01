@@ -41,7 +41,7 @@ private constructor(
     fun scheduledAt(): String = body.scheduledAt()
 
     /**
-     * Account IDs, platform names, or group IDs to publish to
+     * Account IDs, platform names, or workspace IDs to publish to
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
      *   missing or null (e.g. if the server responded with an unexpected value).
@@ -79,6 +79,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun timezone(): Optional<String> = body.timezone()
+
+    /**
+     * Workspace ID to scope this post to
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun workspaceId(): Optional<String> = body.workspaceId()
 
     /**
      * Returns the raw JSON value of [scheduledAt].
@@ -121,6 +129,13 @@ private constructor(
      * Unlike [timezone], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _timezone(): JsonField<String> = body._timezone()
+
+    /**
+     * Returns the raw JSON value of [workspaceId].
+     *
+     * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _workspaceId(): JsonField<String> = body._workspaceId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -189,7 +204,7 @@ private constructor(
          */
         fun scheduledAt(scheduledAt: JsonField<String>) = apply { body.scheduledAt(scheduledAt) }
 
-        /** Account IDs, platform names, or group IDs to publish to */
+        /** Account IDs, platform names, or workspace IDs to publish to */
         fun targets(targets: List<String>) = apply { body.targets(targets) }
 
         /**
@@ -264,6 +279,18 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun timezone(timezone: JsonField<String>) = apply { body.timezone(timezone) }
+
+        /** Workspace ID to scope this post to */
+        fun workspaceId(workspaceId: String) = apply { body.workspaceId(workspaceId) }
+
+        /**
+         * Sets [Builder.workspaceId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.workspaceId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun workspaceId(workspaceId: JsonField<String>) = apply { body.workspaceId(workspaceId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -418,6 +445,7 @@ private constructor(
         private val media: JsonField<List<Media>>,
         private val targetOptions: JsonField<TargetOptions>,
         private val timezone: JsonField<String>,
+        private val workspaceId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -434,8 +462,22 @@ private constructor(
             @JsonProperty("target_options")
             @ExcludeMissing
             targetOptions: JsonField<TargetOptions> = JsonMissing.of(),
-            @JsonProperty("timezone") @ExcludeMissing timezone: JsonField<String> = JsonMissing.of(),
-        ) : this(scheduledAt, targets, content, media, targetOptions, timezone, mutableMapOf())
+            @JsonProperty("timezone")
+            @ExcludeMissing
+            timezone: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("workspace_id")
+            @ExcludeMissing
+            workspaceId: JsonField<String> = JsonMissing.of(),
+        ) : this(
+            scheduledAt,
+            targets,
+            content,
+            media,
+            targetOptions,
+            timezone,
+            workspaceId,
+            mutableMapOf(),
+        )
 
         /**
          * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
@@ -447,7 +489,7 @@ private constructor(
         fun scheduledAt(): String = scheduledAt.getRequired("scheduled_at")
 
         /**
-         * Account IDs, platform names, or group IDs to publish to
+         * Account IDs, platform names, or workspace IDs to publish to
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -485,6 +527,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun timezone(): Optional<String> = timezone.getOptional("timezone")
+
+        /**
+         * Workspace ID to scope this post to
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun workspaceId(): Optional<String> = workspaceId.getOptional("workspace_id")
 
         /**
          * Returns the raw JSON value of [scheduledAt].
@@ -533,6 +583,15 @@ private constructor(
          */
         @JsonProperty("timezone") @ExcludeMissing fun _timezone(): JsonField<String> = timezone
 
+        /**
+         * Returns the raw JSON value of [workspaceId].
+         *
+         * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("workspace_id")
+        @ExcludeMissing
+        fun _workspaceId(): JsonField<String> = workspaceId
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -568,6 +627,7 @@ private constructor(
             private var media: JsonField<MutableList<Media>>? = null
             private var targetOptions: JsonField<TargetOptions> = JsonMissing.of()
             private var timezone: JsonField<String> = JsonMissing.of()
+            private var workspaceId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -578,6 +638,7 @@ private constructor(
                 media = body.media.map { it.toMutableList() }
                 targetOptions = body.targetOptions
                 timezone = body.timezone
+                workspaceId = body.workspaceId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -598,7 +659,7 @@ private constructor(
                 this.scheduledAt = scheduledAt
             }
 
-            /** Account IDs, platform names, or group IDs to publish to */
+            /** Account IDs, platform names, or workspace IDs to publish to */
             fun targets(targets: List<String>) = targets(JsonField.of(targets))
 
             /**
@@ -689,6 +750,20 @@ private constructor(
              */
             fun timezone(timezone: JsonField<String>) = apply { this.timezone = timezone }
 
+            /** Workspace ID to scope this post to */
+            fun workspaceId(workspaceId: String) = workspaceId(JsonField.of(workspaceId))
+
+            /**
+             * Sets [Builder.workspaceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.workspaceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun workspaceId(workspaceId: JsonField<String>) = apply {
+                this.workspaceId = workspaceId
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -729,6 +804,7 @@ private constructor(
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
                     targetOptions,
                     timezone,
+                    workspaceId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -746,6 +822,7 @@ private constructor(
             media().ifPresent { it.forEach { it.validate() } }
             targetOptions().ifPresent { it.validate() }
             timezone()
+            workspaceId()
             validated = true
         }
 
@@ -770,7 +847,8 @@ private constructor(
                 (if (content.asKnown().isPresent) 1 else 0) +
                 (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (targetOptions.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (timezone.asKnown().isPresent) 1 else 0)
+                (if (timezone.asKnown().isPresent) 1 else 0) +
+                (if (workspaceId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -784,6 +862,7 @@ private constructor(
                 media == other.media &&
                 targetOptions == other.targetOptions &&
                 timezone == other.timezone &&
+                workspaceId == other.workspaceId &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -795,6 +874,7 @@ private constructor(
                 media,
                 targetOptions,
                 timezone,
+                workspaceId,
                 additionalProperties,
             )
         }
@@ -802,7 +882,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{scheduledAt=$scheduledAt, targets=$targets, content=$content, media=$media, targetOptions=$targetOptions, timezone=$timezone, additionalProperties=$additionalProperties}"
+            "Body{scheduledAt=$scheduledAt, targets=$targets, content=$content, media=$media, targetOptions=$targetOptions, timezone=$timezone, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
     }
 
     class Media

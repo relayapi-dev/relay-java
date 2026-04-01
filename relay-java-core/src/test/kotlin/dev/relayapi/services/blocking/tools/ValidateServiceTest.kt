@@ -79,6 +79,7 @@ internal class ValidateServiceTest {
                             .build()
                     )
                     .timezone("timezone")
+                    .workspaceId("workspace_id")
                     .build()
             )
 
