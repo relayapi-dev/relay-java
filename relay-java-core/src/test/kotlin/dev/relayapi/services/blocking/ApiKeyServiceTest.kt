@@ -18,7 +18,14 @@ internal class ApiKeyServiceTest {
         val apiKeyService = client.apiKeys()
 
         val apiKey =
-            apiKeyService.create(ApiKeyCreateParams.builder().name("x").expiresInDays(1L).build())
+            apiKeyService.create(
+                ApiKeyCreateParams.builder()
+                    .name("x")
+                    .expiresInDays(1L)
+                    .permission(ApiKeyCreateParams.Permission.READ_WRITE)
+                    .workspaceScope(ApiKeyCreateParams.WorkspaceScope.UnionMember0.ALL)
+                    .build()
+            )
 
         apiKey.validate()
     }
