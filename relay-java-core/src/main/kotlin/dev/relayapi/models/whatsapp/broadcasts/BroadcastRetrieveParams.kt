@@ -9,7 +9,8 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Get broadcast details */
+/** Deprecated. Use GET /v1/broadcasts/{id} instead. */
+@Deprecated("deprecated")
 class BroadcastRetrieveParams
 private constructor(
     private val broadcastId: String?,

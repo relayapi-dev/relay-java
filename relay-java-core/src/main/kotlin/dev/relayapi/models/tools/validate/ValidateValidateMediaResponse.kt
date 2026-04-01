@@ -965,6 +965,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -976,7 +977,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -997,6 +1001,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -1012,6 +1025,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1044,12 +1067,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(bluesky: Bluesky) = apply {
                     maxSize = bluesky.maxSize
                     withinLimit = bluesky.withinLimit
+                    mimeTypeSupported = bluesky.mimeTypeSupported
                     additionalProperties = bluesky.additionalProperties.toMutableMap()
                 }
 
@@ -1077,6 +1102,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1118,6 +1158,7 @@ private constructor(
                     Bluesky(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -1131,6 +1172,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -1151,7 +1193,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -1161,17 +1204,18 @@ private constructor(
                 return other is Bluesky &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Bluesky{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Bluesky{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Discord
@@ -1179,6 +1223,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1190,7 +1235,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -1211,6 +1259,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -1226,6 +1283,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1258,12 +1325,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(discord: Discord) = apply {
                     maxSize = discord.maxSize
                     withinLimit = discord.withinLimit
+                    mimeTypeSupported = discord.mimeTypeSupported
                     additionalProperties = discord.additionalProperties.toMutableMap()
                 }
 
@@ -1291,6 +1360,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1332,6 +1416,7 @@ private constructor(
                     Discord(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -1345,6 +1430,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -1365,7 +1451,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -1375,17 +1462,18 @@ private constructor(
                 return other is Discord &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Discord{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Discord{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Facebook
@@ -1393,6 +1481,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1404,7 +1493,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -1425,6 +1517,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -1440,6 +1541,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1472,12 +1583,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(facebook: Facebook) = apply {
                     maxSize = facebook.maxSize
                     withinLimit = facebook.withinLimit
+                    mimeTypeSupported = facebook.mimeTypeSupported
                     additionalProperties = facebook.additionalProperties.toMutableMap()
                 }
 
@@ -1505,6 +1618,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1546,6 +1674,7 @@ private constructor(
                     Facebook(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -1559,6 +1688,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -1579,7 +1709,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -1589,17 +1720,18 @@ private constructor(
                 return other is Facebook &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Facebook{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Facebook{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Googlebusiness
@@ -1607,6 +1739,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1618,7 +1751,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -1639,6 +1775,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -1654,6 +1799,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1686,12 +1841,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(googlebusiness: Googlebusiness) = apply {
                     maxSize = googlebusiness.maxSize
                     withinLimit = googlebusiness.withinLimit
+                    mimeTypeSupported = googlebusiness.mimeTypeSupported
                     additionalProperties = googlebusiness.additionalProperties.toMutableMap()
                 }
 
@@ -1719,6 +1876,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1760,6 +1932,7 @@ private constructor(
                     Googlebusiness(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -1773,6 +1946,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -1793,7 +1967,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -1803,17 +1978,18 @@ private constructor(
                 return other is Googlebusiness &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Googlebusiness{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Googlebusiness{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Instagram
@@ -1821,6 +1997,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -1832,7 +2009,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -1853,6 +2033,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -1868,6 +2057,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1900,12 +2099,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(instagram: Instagram) = apply {
                     maxSize = instagram.maxSize
                     withinLimit = instagram.withinLimit
+                    mimeTypeSupported = instagram.mimeTypeSupported
                     additionalProperties = instagram.additionalProperties.toMutableMap()
                 }
 
@@ -1933,6 +2134,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -1974,6 +2190,7 @@ private constructor(
                     Instagram(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -1987,6 +2204,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -2007,7 +2225,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2017,17 +2236,18 @@ private constructor(
                 return other is Instagram &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Instagram{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Instagram{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Linkedin
@@ -2035,6 +2255,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -2046,7 +2267,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -2067,6 +2291,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -2082,6 +2315,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2114,12 +2357,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(linkedin: Linkedin) = apply {
                     maxSize = linkedin.maxSize
                     withinLimit = linkedin.withinLimit
+                    mimeTypeSupported = linkedin.mimeTypeSupported
                     additionalProperties = linkedin.additionalProperties.toMutableMap()
                 }
 
@@ -2147,6 +2392,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -2188,6 +2448,7 @@ private constructor(
                     Linkedin(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -2201,6 +2462,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -2221,7 +2483,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2231,17 +2494,18 @@ private constructor(
                 return other is Linkedin &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Linkedin{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Linkedin{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Mastodon
@@ -2249,6 +2513,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -2260,7 +2525,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -2281,6 +2549,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -2296,6 +2573,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2328,12 +2615,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(mastodon: Mastodon) = apply {
                     maxSize = mastodon.maxSize
                     withinLimit = mastodon.withinLimit
+                    mimeTypeSupported = mastodon.mimeTypeSupported
                     additionalProperties = mastodon.additionalProperties.toMutableMap()
                 }
 
@@ -2361,6 +2650,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -2402,6 +2706,7 @@ private constructor(
                     Mastodon(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -2415,6 +2720,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -2435,7 +2741,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2445,17 +2752,18 @@ private constructor(
                 return other is Mastodon &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Mastodon{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Mastodon{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Pinterest
@@ -2463,6 +2771,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -2474,7 +2783,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -2495,6 +2807,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -2510,6 +2831,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2542,12 +2873,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(pinterest: Pinterest) = apply {
                     maxSize = pinterest.maxSize
                     withinLimit = pinterest.withinLimit
+                    mimeTypeSupported = pinterest.mimeTypeSupported
                     additionalProperties = pinterest.additionalProperties.toMutableMap()
                 }
 
@@ -2575,6 +2908,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -2616,6 +2964,7 @@ private constructor(
                     Pinterest(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -2629,6 +2978,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -2649,7 +2999,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2659,17 +3010,18 @@ private constructor(
                 return other is Pinterest &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Pinterest{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Pinterest{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Reddit
@@ -2677,6 +3029,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -2688,7 +3041,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -2709,6 +3065,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -2724,6 +3089,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2756,12 +3131,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(reddit: Reddit) = apply {
                     maxSize = reddit.maxSize
                     withinLimit = reddit.withinLimit
+                    mimeTypeSupported = reddit.mimeTypeSupported
                     additionalProperties = reddit.additionalProperties.toMutableMap()
                 }
 
@@ -2789,6 +3166,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -2830,6 +3222,7 @@ private constructor(
                     Reddit(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -2843,6 +3236,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -2863,7 +3257,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2873,17 +3268,18 @@ private constructor(
                 return other is Reddit &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Reddit{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Reddit{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Sms
@@ -2891,6 +3287,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -2902,7 +3299,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -2923,6 +3323,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -2938,6 +3347,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2970,12 +3389,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(sms: Sms) = apply {
                     maxSize = sms.maxSize
                     withinLimit = sms.withinLimit
+                    mimeTypeSupported = sms.mimeTypeSupported
                     additionalProperties = sms.additionalProperties.toMutableMap()
                 }
 
@@ -3003,6 +3424,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3044,6 +3480,7 @@ private constructor(
                     Sms(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -3057,6 +3494,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -3077,7 +3515,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -3087,17 +3526,18 @@ private constructor(
                 return other is Sms &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Sms{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Sms{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Snapchat
@@ -3105,6 +3545,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3116,7 +3557,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -3137,6 +3581,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -3152,6 +3605,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3184,12 +3647,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(snapchat: Snapchat) = apply {
                     maxSize = snapchat.maxSize
                     withinLimit = snapchat.withinLimit
+                    mimeTypeSupported = snapchat.mimeTypeSupported
                     additionalProperties = snapchat.additionalProperties.toMutableMap()
                 }
 
@@ -3217,6 +3682,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3258,6 +3738,7 @@ private constructor(
                     Snapchat(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -3271,6 +3752,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -3291,7 +3773,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -3301,17 +3784,18 @@ private constructor(
                 return other is Snapchat &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Snapchat{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Snapchat{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Telegram
@@ -3319,6 +3803,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3330,7 +3815,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -3351,6 +3839,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -3366,6 +3863,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3398,12 +3905,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(telegram: Telegram) = apply {
                     maxSize = telegram.maxSize
                     withinLimit = telegram.withinLimit
+                    mimeTypeSupported = telegram.mimeTypeSupported
                     additionalProperties = telegram.additionalProperties.toMutableMap()
                 }
 
@@ -3431,6 +3940,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3472,6 +3996,7 @@ private constructor(
                     Telegram(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -3485,6 +4010,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -3505,7 +4031,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -3515,17 +4042,18 @@ private constructor(
                 return other is Telegram &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Telegram{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Telegram{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Threads
@@ -3533,6 +4061,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3544,7 +4073,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -3565,6 +4097,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -3580,6 +4121,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3612,12 +4163,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(threads: Threads) = apply {
                     maxSize = threads.maxSize
                     withinLimit = threads.withinLimit
+                    mimeTypeSupported = threads.mimeTypeSupported
                     additionalProperties = threads.additionalProperties.toMutableMap()
                 }
 
@@ -3645,6 +4198,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3686,6 +4254,7 @@ private constructor(
                     Threads(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -3699,6 +4268,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -3719,7 +4289,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -3729,17 +4300,18 @@ private constructor(
                 return other is Threads &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Threads{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Threads{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Tiktok
@@ -3747,6 +4319,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3758,7 +4331,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -3779,6 +4355,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -3794,6 +4379,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3826,12 +4421,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(tiktok: Tiktok) = apply {
                     maxSize = tiktok.maxSize
                     withinLimit = tiktok.withinLimit
+                    mimeTypeSupported = tiktok.mimeTypeSupported
                     additionalProperties = tiktok.additionalProperties.toMutableMap()
                 }
 
@@ -3859,6 +4456,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3900,6 +4512,7 @@ private constructor(
                     Tiktok(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -3913,6 +4526,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -3933,7 +4547,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -3943,17 +4558,18 @@ private constructor(
                 return other is Tiktok &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Tiktok{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Tiktok{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Twitter
@@ -3961,6 +4577,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3972,7 +4589,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -3993,6 +4613,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -4008,6 +4637,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -4040,12 +4679,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(twitter: Twitter) = apply {
                     maxSize = twitter.maxSize
                     withinLimit = twitter.withinLimit
+                    mimeTypeSupported = twitter.mimeTypeSupported
                     additionalProperties = twitter.additionalProperties.toMutableMap()
                 }
 
@@ -4073,6 +4714,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -4114,6 +4770,7 @@ private constructor(
                     Twitter(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -4127,6 +4784,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -4147,7 +4805,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -4157,17 +4816,18 @@ private constructor(
                 return other is Twitter &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Twitter{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Twitter{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Whatsapp
@@ -4175,6 +4835,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -4186,7 +4847,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -4207,6 +4871,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -4222,6 +4895,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -4254,12 +4937,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(whatsapp: Whatsapp) = apply {
                     maxSize = whatsapp.maxSize
                     withinLimit = whatsapp.withinLimit
+                    mimeTypeSupported = whatsapp.mimeTypeSupported
                     additionalProperties = whatsapp.additionalProperties.toMutableMap()
                 }
 
@@ -4287,6 +4972,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -4328,6 +5028,7 @@ private constructor(
                     Whatsapp(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -4341,6 +5042,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -4361,7 +5063,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -4371,17 +5074,18 @@ private constructor(
                 return other is Whatsapp &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Whatsapp{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Whatsapp{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Youtube
@@ -4389,6 +5093,7 @@ private constructor(
         private constructor(
             private val maxSize: JsonField<Double>,
             private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -4400,7 +5105,10 @@ private constructor(
                 @JsonProperty("within_limit")
                 @ExcludeMissing
                 withinLimit: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(maxSize, withinLimit, mutableMapOf())
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
 
             /**
              * Maximum file size in bytes
@@ -4421,6 +5129,15 @@ private constructor(
             fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
 
             /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
              * Returns the raw JSON value of [maxSize].
              *
              * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
@@ -4436,6 +5153,16 @@ private constructor(
             @JsonProperty("within_limit")
             @ExcludeMissing
             fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -4468,12 +5195,14 @@ private constructor(
 
                 private var maxSize: JsonField<Double>? = null
                 private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(youtube: Youtube) = apply {
                     maxSize = youtube.maxSize
                     withinLimit = youtube.withinLimit
+                    mimeTypeSupported = youtube.mimeTypeSupported
                     additionalProperties = youtube.additionalProperties.toMutableMap()
                 }
 
@@ -4501,6 +5230,21 @@ private constructor(
                  */
                 fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
                     this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
                 }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -4542,6 +5286,7 @@ private constructor(
                     Youtube(
                         checkRequired("maxSize", maxSize),
                         checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -4555,6 +5300,7 @@ private constructor(
 
                 maxSize()
                 withinLimit()
+                mimeTypeSupported()
                 validated = true
             }
 
@@ -4575,7 +5321,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (maxSize.asKnown().isPresent) 1 else 0) +
-                    (if (withinLimit.asKnown().isPresent) 1 else 0)
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -4585,17 +5332,18 @@ private constructor(
                 return other is Youtube &&
                     maxSize == other.maxSize &&
                     withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(maxSize, withinLimit, additionalProperties)
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Youtube{maxSize=$maxSize, withinLimit=$withinLimit, additionalProperties=$additionalProperties}"
+                "Youtube{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {

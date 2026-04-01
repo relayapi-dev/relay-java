@@ -11,7 +11,8 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Delete a broadcast */
+/** Deprecated. Use DELETE /v1/broadcasts/{id} instead. */
+@Deprecated("deprecated")
 class BroadcastDeleteParams
 private constructor(
     private val broadcastId: String?,

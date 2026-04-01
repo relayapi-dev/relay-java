@@ -11,7 +11,8 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Schedule a broadcast */
+/** Deprecated. Use POST /v1/broadcasts/{id}/schedule instead. */
+@Deprecated("deprecated")
 class BroadcastScheduleParams
 private constructor(
     private val broadcastId: String?,

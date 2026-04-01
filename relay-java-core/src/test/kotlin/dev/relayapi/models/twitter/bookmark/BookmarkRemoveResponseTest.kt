@@ -11,15 +11,68 @@ internal class BookmarkRemoveResponseTest {
 
     @Test
     fun create() {
-        val bookmarkRemoveResponse = BookmarkRemoveResponse.builder().success(true).build()
+        val bookmarkRemoveResponse =
+            BookmarkRemoveResponse.builder()
+                .success(true)
+                .data(
+                    BookmarkRemoveResponse.Data.builder()
+                        .bookmarked(true)
+                        .following(true)
+                        .pendingFollow(true)
+                        .retweeted(true)
+                        .build()
+                )
+                .error(
+                    BookmarkRemoveResponse.Error.builder()
+                        .code("code")
+                        .message("message")
+                        .twitterErrorCode(0.0)
+                        .build()
+                )
+                .build()
 
         assertThat(bookmarkRemoveResponse.success()).isEqualTo(true)
+        assertThat(bookmarkRemoveResponse.data())
+            .contains(
+                BookmarkRemoveResponse.Data.builder()
+                    .bookmarked(true)
+                    .following(true)
+                    .pendingFollow(true)
+                    .retweeted(true)
+                    .build()
+            )
+        assertThat(bookmarkRemoveResponse.error())
+            .contains(
+                BookmarkRemoveResponse.Error.builder()
+                    .code("code")
+                    .message("message")
+                    .twitterErrorCode(0.0)
+                    .build()
+            )
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val bookmarkRemoveResponse = BookmarkRemoveResponse.builder().success(true).build()
+        val bookmarkRemoveResponse =
+            BookmarkRemoveResponse.builder()
+                .success(true)
+                .data(
+                    BookmarkRemoveResponse.Data.builder()
+                        .bookmarked(true)
+                        .following(true)
+                        .pendingFollow(true)
+                        .retweeted(true)
+                        .build()
+                )
+                .error(
+                    BookmarkRemoveResponse.Error.builder()
+                        .code("code")
+                        .message("message")
+                        .twitterErrorCode(0.0)
+                        .build()
+                )
+                .build()
 
         val roundtrippedBookmarkRemoveResponse =
             jsonMapper.readValue(

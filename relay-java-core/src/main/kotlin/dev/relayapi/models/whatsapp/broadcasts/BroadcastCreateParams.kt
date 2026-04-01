@@ -23,7 +23,8 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Create a broadcast */
+/** Deprecated. Use POST /v1/broadcasts instead. */
+@Deprecated("deprecated")
 class BroadcastCreateParams
 private constructor(
     private val body: Body,
