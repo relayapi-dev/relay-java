@@ -21,6 +21,7 @@ private constructor(
     private val accountId: String?,
     private val cursor: String?,
     private val from: OffsetDateTime?,
+    private val include: String?,
     private val limit: Long?,
     private val status: Status?,
     private val to: OffsetDateTime?,
@@ -37,6 +38,9 @@ private constructor(
 
     /** Filter: start date (ISO 8601) */
     fun from(): Optional<OffsetDateTime> = Optional.ofNullable(from)
+
+    /** Comma-separated list of fields to include in the response (e.g. 'targets,media') */
+    fun include(): Optional<String> = Optional.ofNullable(include)
 
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
@@ -72,6 +76,7 @@ private constructor(
         private var accountId: String? = null
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
+        private var include: String? = null
         private var limit: Long? = null
         private var status: Status? = null
         private var to: OffsetDateTime? = null
@@ -84,6 +89,7 @@ private constructor(
             accountId = postListParams.accountId
             cursor = postListParams.cursor
             from = postListParams.from
+            include = postListParams.include
             limit = postListParams.limit
             status = postListParams.status
             to = postListParams.to
@@ -109,6 +115,12 @@ private constructor(
 
         /** Alias for calling [Builder.from] with `from.orElse(null)`. */
         fun from(from: Optional<OffsetDateTime>) = from(from.getOrNull())
+
+        /** Comma-separated list of fields to include in the response (e.g. 'targets,media') */
+        fun include(include: String?) = apply { this.include = include }
+
+        /** Alias for calling [Builder.include] with `include.orElse(null)`. */
+        fun include(include: Optional<String>) = include(include.getOrNull())
 
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
@@ -249,6 +261,7 @@ private constructor(
                 accountId,
                 cursor,
                 from,
+                include,
                 limit,
                 status,
                 to,
@@ -266,6 +279,7 @@ private constructor(
                 accountId?.let { put("account_id", it) }
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                include?.let { put("include", it) }
                 limit?.let { put("limit", it.toString()) }
                 status?.let { put("status", it.toString()) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
@@ -426,6 +440,7 @@ private constructor(
             accountId == other.accountId &&
             cursor == other.cursor &&
             from == other.from &&
+            include == other.include &&
             limit == other.limit &&
             status == other.status &&
             to == other.to &&
@@ -439,6 +454,7 @@ private constructor(
             accountId,
             cursor,
             from,
+            include,
             limit,
             status,
             to,
@@ -448,5 +464,5 @@ private constructor(
         )
 
     override fun toString() =
-        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, include=$include, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -25,6 +25,7 @@ internal class PostUpdateResponseTest {
                         .type(PostUpdateResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
                 .recycledFromId("recycled_from_id")
                 .recycling(
                     PostUpdateResponse.Recycling.builder()
@@ -58,6 +59,9 @@ internal class PostUpdateResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -82,6 +86,7 @@ internal class PostUpdateResponseTest {
                     .type(PostUpdateResponse.Media.Type.IMAGE)
                     .build()
             )
+        assertThat(postUpdateResponse.publishedAt()).contains("published_at")
         assertThat(postUpdateResponse.recycledFromId()).contains("recycled_from_id")
         assertThat(postUpdateResponse.recycling())
             .contains(
@@ -117,6 +122,9 @@ internal class PostUpdateResponseTest {
                                     listOf(
                                         mapOf(
                                             "id" to "id",
+                                            "avatar_url" to "avatar_url",
+                                            "display_name" to "display_name",
+                                            "platform_post_id" to "platform_post_id",
                                             "url" to "url",
                                             "username" to "username",
                                         )
@@ -145,6 +153,7 @@ internal class PostUpdateResponseTest {
                         .type(PostUpdateResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
                 .recycledFromId("recycled_from_id")
                 .recycling(
                     PostUpdateResponse.Recycling.builder()
@@ -178,6 +187,9 @@ internal class PostUpdateResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )

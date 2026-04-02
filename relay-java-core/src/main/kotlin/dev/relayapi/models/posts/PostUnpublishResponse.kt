@@ -28,6 +28,7 @@ private constructor(
     private val content: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val media: JsonField<List<Media>>,
+    private val publishedAt: JsonField<String>,
     private val recycledFromId: JsonField<String>,
     private val recycling: JsonField<Recycling>,
     private val scheduledAt: JsonField<String>,
@@ -45,6 +46,9 @@ private constructor(
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("media") @ExcludeMissing media: JsonField<List<Media>> = JsonMissing.of(),
+        @JsonProperty("published_at")
+        @ExcludeMissing
+        publishedAt: JsonField<String> = JsonMissing.of(),
         @JsonProperty("recycled_from_id")
         @ExcludeMissing
         recycledFromId: JsonField<String> = JsonMissing.of(),
@@ -64,6 +68,7 @@ private constructor(
         content,
         createdAt,
         media,
+        publishedAt,
         recycledFromId,
         recycling,
         scheduledAt,
@@ -98,6 +103,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun media(): Optional<List<Media>> = media.getOptional("media")
+
+    /**
+     * When the post was published
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun publishedAt(): Optional<String> = publishedAt.getOptional("published_at")
 
     /**
      * Source post ID if this is a recycled copy
@@ -172,6 +185,15 @@ private constructor(
     @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<Media>> = media
 
     /**
+     * Returns the raw JSON value of [publishedAt].
+     *
+     * Unlike [publishedAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("published_at")
+    @ExcludeMissing
+    fun _publishedAt(): JsonField<String> = publishedAt
+
+    /**
      * Returns the raw JSON value of [recycledFromId].
      *
      * Unlike [recycledFromId], this method doesn't throw if the JSON field has an unexpected type.
@@ -242,6 +264,7 @@ private constructor(
          * .content()
          * .createdAt()
          * .media()
+         * .publishedAt()
          * .recycledFromId()
          * .recycling()
          * .scheduledAt()
@@ -260,6 +283,7 @@ private constructor(
         private var content: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var media: JsonField<MutableList<Media>>? = null
+        private var publishedAt: JsonField<String>? = null
         private var recycledFromId: JsonField<String>? = null
         private var recycling: JsonField<Recycling>? = null
         private var scheduledAt: JsonField<String>? = null
@@ -274,6 +298,7 @@ private constructor(
             content = postUnpublishResponse.content
             createdAt = postUnpublishResponse.createdAt
             media = postUnpublishResponse.media.map { it.toMutableList() }
+            publishedAt = postUnpublishResponse.publishedAt
             recycledFromId = postUnpublishResponse.recycledFromId
             recycling = postUnpublishResponse.recycling
             scheduledAt = postUnpublishResponse.scheduledAt
@@ -345,6 +370,21 @@ private constructor(
                     checkKnown("media", it).add(media)
                 }
         }
+
+        /** When the post was published */
+        fun publishedAt(publishedAt: String?) = publishedAt(JsonField.ofNullable(publishedAt))
+
+        /** Alias for calling [Builder.publishedAt] with `publishedAt.orElse(null)`. */
+        fun publishedAt(publishedAt: Optional<String>) = publishedAt(publishedAt.getOrNull())
+
+        /**
+         * Sets [Builder.publishedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.publishedAt] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun publishedAt(publishedAt: JsonField<String>) = apply { this.publishedAt = publishedAt }
 
         /** Source post ID if this is a recycled copy */
         fun recycledFromId(recycledFromId: String?) =
@@ -456,6 +496,7 @@ private constructor(
          * .content()
          * .createdAt()
          * .media()
+         * .publishedAt()
          * .recycledFromId()
          * .recycling()
          * .scheduledAt()
@@ -472,6 +513,7 @@ private constructor(
                 checkRequired("content", content),
                 checkRequired("createdAt", createdAt),
                 checkRequired("media", media).map { it.toImmutable() },
+                checkRequired("publishedAt", publishedAt),
                 checkRequired("recycledFromId", recycledFromId),
                 checkRequired("recycling", recycling),
                 checkRequired("scheduledAt", scheduledAt),
@@ -493,6 +535,7 @@ private constructor(
         content()
         createdAt()
         media().ifPresent { it.forEach { it.validate() } }
+        publishedAt()
         recycledFromId()
         recycling().ifPresent { it.validate() }
         scheduledAt()
@@ -521,6 +564,7 @@ private constructor(
             (if (content.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (publishedAt.asKnown().isPresent) 1 else 0) +
             (if (recycledFromId.asKnown().isPresent) 1 else 0) +
             (recycling.asKnown().getOrNull()?.validity() ?: 0) +
             (if (scheduledAt.asKnown().isPresent) 1 else 0) +
@@ -1996,6 +2040,7 @@ private constructor(
             content == other.content &&
             createdAt == other.createdAt &&
             media == other.media &&
+            publishedAt == other.publishedAt &&
             recycledFromId == other.recycledFromId &&
             recycling == other.recycling &&
             scheduledAt == other.scheduledAt &&
@@ -2011,6 +2056,7 @@ private constructor(
             content,
             createdAt,
             media,
+            publishedAt,
             recycledFromId,
             recycling,
             scheduledAt,
@@ -2024,5 +2070,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PostUnpublishResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "PostUnpublishResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }
