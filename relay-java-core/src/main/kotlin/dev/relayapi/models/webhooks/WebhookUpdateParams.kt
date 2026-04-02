@@ -571,6 +571,8 @@ private constructor(
 
             @JvmField val POST_SCHEDULED = of("post.scheduled")
 
+            @JvmField val POST_RECYCLED = of("post.recycled")
+
             @JvmField val ACCOUNT_CONNECTED = of("account.connected")
 
             @JvmField val ACCOUNT_DISCONNECTED = of("account.disconnected")
@@ -588,6 +590,7 @@ private constructor(
             POST_PARTIAL,
             POST_FAILED,
             POST_SCHEDULED,
+            POST_RECYCLED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
@@ -608,6 +611,7 @@ private constructor(
             POST_PARTIAL,
             POST_FAILED,
             POST_SCHEDULED,
+            POST_RECYCLED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
@@ -629,6 +633,7 @@ private constructor(
                 POST_PARTIAL -> Value.POST_PARTIAL
                 POST_FAILED -> Value.POST_FAILED
                 POST_SCHEDULED -> Value.POST_SCHEDULED
+                POST_RECYCLED -> Value.POST_RECYCLED
                 ACCOUNT_CONNECTED -> Value.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Value.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Value.COMMENT_RECEIVED
@@ -650,6 +655,7 @@ private constructor(
                 POST_PARTIAL -> Known.POST_PARTIAL
                 POST_FAILED -> Known.POST_FAILED
                 POST_SCHEDULED -> Known.POST_SCHEDULED
+                POST_RECYCLED -> Known.POST_RECYCLED
                 ACCOUNT_CONNECTED -> Known.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Known.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Known.COMMENT_RECEIVED

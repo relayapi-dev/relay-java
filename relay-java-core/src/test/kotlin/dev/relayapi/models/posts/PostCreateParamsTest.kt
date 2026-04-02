@@ -3,6 +3,7 @@
 package dev.relayapi.models.posts
 
 import dev.relayapi.core.JsonValue
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -19,6 +20,17 @@ internal class PostCreateParamsTest {
                 PostCreateParams.Media.builder()
                     .url("https://example.com")
                     .type(PostCreateParams.Media.Type.IMAGE)
+                    .build()
+            )
+            .recycling(
+                PostCreateParams.Recycling.builder()
+                    .gap(1L)
+                    .gapFreq(PostCreateParams.Recycling.GapFreq.DAY)
+                    .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .addContentVariation("string")
+                    .enabled(true)
+                    .expireCount(1L)
+                    .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
             .targetOptions(
@@ -44,6 +56,17 @@ internal class PostCreateParamsTest {
                         .type(PostCreateParams.Media.Type.IMAGE)
                         .build()
                 )
+                .recycling(
+                    PostCreateParams.Recycling.builder()
+                        .gap(1L)
+                        .gapFreq(PostCreateParams.Recycling.GapFreq.DAY)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addContentVariation("string")
+                        .enabled(true)
+                        .expireCount(1L)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .targetOptions(
                     PostCreateParams.TargetOptions.builder()
                         .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
@@ -63,6 +86,18 @@ internal class PostCreateParamsTest {
                 PostCreateParams.Media.builder()
                     .url("https://example.com")
                     .type(PostCreateParams.Media.Type.IMAGE)
+                    .build()
+            )
+        assertThat(body.recycling())
+            .contains(
+                PostCreateParams.Recycling.builder()
+                    .gap(1L)
+                    .gapFreq(PostCreateParams.Recycling.GapFreq.DAY)
+                    .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .addContentVariation("string")
+                    .enabled(true)
+                    .expireCount(1L)
+                    .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
         assertThat(body.targetOptions())
