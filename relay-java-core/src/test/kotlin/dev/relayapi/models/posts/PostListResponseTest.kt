@@ -26,6 +26,7 @@ internal class PostListResponseTest {
                                 .type(PostListResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
+                        .publishedAt("published_at")
                         .recycledFromId("recycled_from_id")
                         .recycling(
                             PostListResponse.Data.Recycling.builder()
@@ -59,6 +60,9 @@ internal class PostListResponseTest {
                                                 listOf(
                                                     mapOf(
                                                         "id" to "id",
+                                                        "avatar_url" to "avatar_url",
+                                                        "display_name" to "display_name",
+                                                        "platform_post_id" to "platform_post_id",
                                                         "url" to "url",
                                                         "username" to "username",
                                                     )
@@ -89,6 +93,7 @@ internal class PostListResponseTest {
                             .type(PostListResponse.Data.Media.Type.IMAGE)
                             .build()
                     )
+                    .publishedAt("published_at")
                     .recycledFromId("recycled_from_id")
                     .recycling(
                         PostListResponse.Data.Recycling.builder()
@@ -122,6 +127,9 @@ internal class PostListResponseTest {
                                             listOf(
                                                 mapOf(
                                                     "id" to "id",
+                                                    "avatar_url" to "avatar_url",
+                                                    "display_name" to "display_name",
+                                                    "platform_post_id" to "platform_post_id",
                                                     "url" to "url",
                                                     "username" to "username",
                                                 )
@@ -155,6 +163,7 @@ internal class PostListResponseTest {
                                 .type(PostListResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
+                        .publishedAt("published_at")
                         .recycledFromId("recycled_from_id")
                         .recycling(
                             PostListResponse.Data.Recycling.builder()
@@ -188,6 +197,9 @@ internal class PostListResponseTest {
                                                 listOf(
                                                     mapOf(
                                                         "id" to "id",
+                                                        "avatar_url" to "avatar_url",
+                                                        "display_name" to "display_name",
+                                                        "platform_post_id" to "platform_post_id",
                                                         "url" to "url",
                                                         "username" to "username",
                                                     )

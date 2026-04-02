@@ -26,6 +26,7 @@ internal class PostBulkCreateResponseTest {
                                 .type(PostBulkCreateResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
+                        .publishedAt("published_at")
                         .recycledFromId("recycled_from_id")
                         .recycling(
                             PostBulkCreateResponse.Data.Recycling.builder()
@@ -59,6 +60,9 @@ internal class PostBulkCreateResponseTest {
                                                 listOf(
                                                     mapOf(
                                                         "id" to "id",
+                                                        "avatar_url" to "avatar_url",
+                                                        "display_name" to "display_name",
+                                                        "platform_post_id" to "platform_post_id",
                                                         "url" to "url",
                                                         "username" to "username",
                                                     )
@@ -94,6 +98,7 @@ internal class PostBulkCreateResponseTest {
                             .type(PostBulkCreateResponse.Data.Media.Type.IMAGE)
                             .build()
                     )
+                    .publishedAt("published_at")
                     .recycledFromId("recycled_from_id")
                     .recycling(
                         PostBulkCreateResponse.Data.Recycling.builder()
@@ -127,6 +132,9 @@ internal class PostBulkCreateResponseTest {
                                             listOf(
                                                 mapOf(
                                                     "id" to "id",
+                                                    "avatar_url" to "avatar_url",
+                                                    "display_name" to "display_name",
+                                                    "platform_post_id" to "platform_post_id",
                                                     "url" to "url",
                                                     "username" to "username",
                                                 )
@@ -166,6 +174,7 @@ internal class PostBulkCreateResponseTest {
                                 .type(PostBulkCreateResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
+                        .publishedAt("published_at")
                         .recycledFromId("recycled_from_id")
                         .recycling(
                             PostBulkCreateResponse.Data.Recycling.builder()
@@ -199,6 +208,9 @@ internal class PostBulkCreateResponseTest {
                                                 listOf(
                                                     mapOf(
                                                         "id" to "id",
+                                                        "avatar_url" to "avatar_url",
+                                                        "display_name" to "display_name",
+                                                        "platform_post_id" to "platform_post_id",
                                                         "url" to "url",
                                                         "username" to "username",
                                                     )

@@ -25,6 +25,7 @@ internal class PostUnpublishResponseTest {
                         .type(PostUnpublishResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
                 .recycledFromId("recycled_from_id")
                 .recycling(
                     PostUnpublishResponse.Recycling.builder()
@@ -58,6 +59,9 @@ internal class PostUnpublishResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -82,6 +86,7 @@ internal class PostUnpublishResponseTest {
                     .type(PostUnpublishResponse.Media.Type.IMAGE)
                     .build()
             )
+        assertThat(postUnpublishResponse.publishedAt()).contains("published_at")
         assertThat(postUnpublishResponse.recycledFromId()).contains("recycled_from_id")
         assertThat(postUnpublishResponse.recycling())
             .contains(
@@ -117,6 +122,9 @@ internal class PostUnpublishResponseTest {
                                     listOf(
                                         mapOf(
                                             "id" to "id",
+                                            "avatar_url" to "avatar_url",
+                                            "display_name" to "display_name",
+                                            "platform_post_id" to "platform_post_id",
                                             "url" to "url",
                                             "username" to "username",
                                         )
@@ -145,6 +153,7 @@ internal class PostUnpublishResponseTest {
                         .type(PostUnpublishResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
                 .recycledFromId("recycled_from_id")
                 .recycling(
                     PostUnpublishResponse.Recycling.builder()
@@ -178,6 +187,9 @@ internal class PostUnpublishResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )

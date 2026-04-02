@@ -81,6 +81,7 @@ internal class ProGuardCompatibilityTest {
                         .type(PostCreateResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
                 .recycledFromId("recycled_from_id")
                 .recycling(
                     PostCreateResponse.Recycling.builder()
@@ -114,6 +115,9 @@ internal class ProGuardCompatibilityTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
