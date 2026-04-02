@@ -443,10 +443,10 @@ To set undocumented parameters on _nested_ headers, query params, or body classe
 
 ```java
 import dev.relayapi.core.JsonValue;
-import dev.relayapi.models.whatsapp.WhatsappBulkSendParams;
+import dev.relayapi.models.posts.PostCreateParams;
 
-WhatsappBulkSendParams params = WhatsappBulkSendParams.builder()
-    .template(WhatsappBulkSendParams.Template.builder()
+PostCreateParams params = PostCreateParams.builder()
+    .recycling(PostCreateParams.Recycling.builder()
         .putAdditionalProperty("secretProperty", JsonValue.from("42"))
         .build())
     .build();

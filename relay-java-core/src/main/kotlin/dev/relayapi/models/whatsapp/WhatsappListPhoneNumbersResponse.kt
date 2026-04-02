@@ -15,6 +15,7 @@ import dev.relayapi.core.checkKnown
 import dev.relayapi.core.checkRequired
 import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -179,26 +180,55 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
+        private val country: JsonField<String>,
+        private val createdAt: JsonField<OffsetDateTime>,
+        private val monthlyCostCents: JsonField<Double>,
         private val phoneNumber: JsonField<String>,
+        private val provider: JsonField<String>,
         private val status: JsonField<Status>,
-        private val displayName: JsonField<String>,
+        private val socialAccountId: JsonField<String>,
+        private val waPhoneNumberId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
             @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("country") @ExcludeMissing country: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("created_at")
+            @ExcludeMissing
+            createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("monthly_cost_cents")
+            @ExcludeMissing
+            monthlyCostCents: JsonField<Double> = JsonMissing.of(),
             @JsonProperty("phone_number")
             @ExcludeMissing
             phoneNumber: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
-            @JsonProperty("display_name")
+            @JsonProperty("provider")
             @ExcludeMissing
-            displayName: JsonField<String> = JsonMissing.of(),
-        ) : this(id, phoneNumber, status, displayName, mutableMapOf())
+            provider: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("status") @ExcludeMissing status: JsonField<Status> = JsonMissing.of(),
+            @JsonProperty("social_account_id")
+            @ExcludeMissing
+            socialAccountId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("wa_phone_number_id")
+            @ExcludeMissing
+            waPhoneNumberId: JsonField<String> = JsonMissing.of(),
+        ) : this(
+            id,
+            country,
+            createdAt,
+            monthlyCostCents,
+            phoneNumber,
+            provider,
+            status,
+            socialAccountId,
+            waPhoneNumberId,
+            mutableMapOf(),
+        )
 
         /**
-         * Phone number ID
+         * Phone number resource ID
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -206,7 +236,31 @@ private constructor(
         fun id(): String = id.getRequired("id")
 
         /**
-         * Phone number
+         * ISO country code
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun country(): String = country.getRequired("country")
+
+        /**
+         * Created timestamp
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+        /**
+         * Monthly cost in cents
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun monthlyCostCents(): Double = monthlyCostCents.getRequired("monthly_cost_cents")
+
+        /**
+         * E.164 phone number
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -214,7 +268,15 @@ private constructor(
         fun phoneNumber(): String = phoneNumber.getRequired("phone_number")
 
         /**
-         * Registration status
+         * Carrier provider
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun provider(): String = provider.getRequired("provider")
+
+        /**
+         * Provisioning status
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -222,12 +284,20 @@ private constructor(
         fun status(): Status = status.getRequired("status")
 
         /**
-         * Display name
+         * Linked RelayAPI social account ID
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
-        fun displayName(): Optional<String> = displayName.getOptional("display_name")
+        fun socialAccountId(): Optional<String> = socialAccountId.getOptional("social_account_id")
+
+        /**
+         * Meta WhatsApp phone number ID
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun waPhoneNumberId(): Optional<String> = waPhoneNumberId.getOptional("wa_phone_number_id")
 
         /**
          * Returns the raw JSON value of [id].
@@ -235,6 +305,32 @@ private constructor(
          * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [country].
+         *
+         * Unlike [country], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("country") @ExcludeMissing fun _country(): JsonField<String> = country
+
+        /**
+         * Returns the raw JSON value of [createdAt].
+         *
+         * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("created_at")
+        @ExcludeMissing
+        fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+        /**
+         * Returns the raw JSON value of [monthlyCostCents].
+         *
+         * Unlike [monthlyCostCents], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("monthly_cost_cents")
+        @ExcludeMissing
+        fun _monthlyCostCents(): JsonField<Double> = monthlyCostCents
 
         /**
          * Returns the raw JSON value of [phoneNumber].
@@ -246,6 +342,13 @@ private constructor(
         fun _phoneNumber(): JsonField<String> = phoneNumber
 
         /**
+         * Returns the raw JSON value of [provider].
+         *
+         * Unlike [provider], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("provider") @ExcludeMissing fun _provider(): JsonField<String> = provider
+
+        /**
          * Returns the raw JSON value of [status].
          *
          * Unlike [status], this method doesn't throw if the JSON field has an unexpected type.
@@ -253,13 +356,24 @@ private constructor(
         @JsonProperty("status") @ExcludeMissing fun _status(): JsonField<Status> = status
 
         /**
-         * Returns the raw JSON value of [displayName].
+         * Returns the raw JSON value of [socialAccountId].
          *
-         * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [socialAccountId], this method doesn't throw if the JSON field has an unexpected
+         * type.
          */
-        @JsonProperty("display_name")
+        @JsonProperty("social_account_id")
         @ExcludeMissing
-        fun _displayName(): JsonField<String> = displayName
+        fun _socialAccountId(): JsonField<String> = socialAccountId
+
+        /**
+         * Returns the raw JSON value of [waPhoneNumberId].
+         *
+         * Unlike [waPhoneNumberId], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("wa_phone_number_id")
+        @ExcludeMissing
+        fun _waPhoneNumberId(): JsonField<String> = waPhoneNumberId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -281,7 +395,11 @@ private constructor(
              * The following fields are required:
              * ```java
              * .id()
+             * .country()
+             * .createdAt()
+             * .monthlyCostCents()
              * .phoneNumber()
+             * .provider()
              * .status()
              * ```
              */
@@ -292,21 +410,31 @@ private constructor(
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
+            private var country: JsonField<String>? = null
+            private var createdAt: JsonField<OffsetDateTime>? = null
+            private var monthlyCostCents: JsonField<Double>? = null
             private var phoneNumber: JsonField<String>? = null
+            private var provider: JsonField<String>? = null
             private var status: JsonField<Status>? = null
-            private var displayName: JsonField<String> = JsonMissing.of()
+            private var socialAccountId: JsonField<String> = JsonMissing.of()
+            private var waPhoneNumberId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(data: Data) = apply {
                 id = data.id
+                country = data.country
+                createdAt = data.createdAt
+                monthlyCostCents = data.monthlyCostCents
                 phoneNumber = data.phoneNumber
+                provider = data.provider
                 status = data.status
-                displayName = data.displayName
+                socialAccountId = data.socialAccountId
+                waPhoneNumberId = data.waPhoneNumberId
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
-            /** Phone number ID */
+            /** Phone number resource ID */
             fun id(id: String) = id(JsonField.of(id))
 
             /**
@@ -318,7 +446,48 @@ private constructor(
              */
             fun id(id: JsonField<String>) = apply { this.id = id }
 
-            /** Phone number */
+            /** ISO country code */
+            fun country(country: String) = country(JsonField.of(country))
+
+            /**
+             * Sets [Builder.country] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.country] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun country(country: JsonField<String>) = apply { this.country = country }
+
+            /** Created timestamp */
+            fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
+
+            /**
+             * Sets [Builder.createdAt] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
+                this.createdAt = createdAt
+            }
+
+            /** Monthly cost in cents */
+            fun monthlyCostCents(monthlyCostCents: Double) =
+                monthlyCostCents(JsonField.of(monthlyCostCents))
+
+            /**
+             * Sets [Builder.monthlyCostCents] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.monthlyCostCents] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun monthlyCostCents(monthlyCostCents: JsonField<Double>) = apply {
+                this.monthlyCostCents = monthlyCostCents
+            }
+
+            /** E.164 phone number */
             fun phoneNumber(phoneNumber: String) = phoneNumber(JsonField.of(phoneNumber))
 
             /**
@@ -332,7 +501,19 @@ private constructor(
                 this.phoneNumber = phoneNumber
             }
 
-            /** Registration status */
+            /** Carrier provider */
+            fun provider(provider: String) = provider(JsonField.of(provider))
+
+            /**
+             * Sets [Builder.provider] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.provider] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun provider(provider: JsonField<String>) = apply { this.provider = provider }
+
+            /** Provisioning status */
             fun status(status: Status) = status(JsonField.of(status))
 
             /**
@@ -344,21 +525,42 @@ private constructor(
              */
             fun status(status: JsonField<Status>) = apply { this.status = status }
 
-            /** Display name */
-            fun displayName(displayName: String?) = displayName(JsonField.ofNullable(displayName))
+            /** Linked RelayAPI social account ID */
+            fun socialAccountId(socialAccountId: String?) =
+                socialAccountId(JsonField.ofNullable(socialAccountId))
 
-            /** Alias for calling [Builder.displayName] with `displayName.orElse(null)`. */
-            fun displayName(displayName: Optional<String>) = displayName(displayName.getOrNull())
+            /** Alias for calling [Builder.socialAccountId] with `socialAccountId.orElse(null)`. */
+            fun socialAccountId(socialAccountId: Optional<String>) =
+                socialAccountId(socialAccountId.getOrNull())
 
             /**
-             * Sets [Builder.displayName] to an arbitrary JSON value.
+             * Sets [Builder.socialAccountId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.displayName] with a well-typed [String] value
+             * You should usually call [Builder.socialAccountId] with a well-typed [String] value
              * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun displayName(displayName: JsonField<String>) = apply {
-                this.displayName = displayName
+            fun socialAccountId(socialAccountId: JsonField<String>) = apply {
+                this.socialAccountId = socialAccountId
+            }
+
+            /** Meta WhatsApp phone number ID */
+            fun waPhoneNumberId(waPhoneNumberId: String?) =
+                waPhoneNumberId(JsonField.ofNullable(waPhoneNumberId))
+
+            /** Alias for calling [Builder.waPhoneNumberId] with `waPhoneNumberId.orElse(null)`. */
+            fun waPhoneNumberId(waPhoneNumberId: Optional<String>) =
+                waPhoneNumberId(waPhoneNumberId.getOrNull())
+
+            /**
+             * Sets [Builder.waPhoneNumberId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.waPhoneNumberId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun waPhoneNumberId(waPhoneNumberId: JsonField<String>) = apply {
+                this.waPhoneNumberId = waPhoneNumberId
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -388,7 +590,11 @@ private constructor(
              * The following fields are required:
              * ```java
              * .id()
+             * .country()
+             * .createdAt()
+             * .monthlyCostCents()
              * .phoneNumber()
+             * .provider()
              * .status()
              * ```
              *
@@ -397,9 +603,14 @@ private constructor(
             fun build(): Data =
                 Data(
                     checkRequired("id", id),
+                    checkRequired("country", country),
+                    checkRequired("createdAt", createdAt),
+                    checkRequired("monthlyCostCents", monthlyCostCents),
                     checkRequired("phoneNumber", phoneNumber),
+                    checkRequired("provider", provider),
                     checkRequired("status", status),
-                    displayName,
+                    socialAccountId,
+                    waPhoneNumberId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -412,9 +623,14 @@ private constructor(
             }
 
             id()
+            country()
+            createdAt()
+            monthlyCostCents()
             phoneNumber()
+            provider()
             status().validate()
-            displayName()
+            socialAccountId()
+            waPhoneNumberId()
             validated = true
         }
 
@@ -435,11 +651,16 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
+                (if (country.asKnown().isPresent) 1 else 0) +
+                (if (createdAt.asKnown().isPresent) 1 else 0) +
+                (if (monthlyCostCents.asKnown().isPresent) 1 else 0) +
                 (if (phoneNumber.asKnown().isPresent) 1 else 0) +
+                (if (provider.asKnown().isPresent) 1 else 0) +
                 (status.asKnown().getOrNull()?.validity() ?: 0) +
-                (if (displayName.asKnown().isPresent) 1 else 0)
+                (if (socialAccountId.asKnown().isPresent) 1 else 0) +
+                (if (waPhoneNumberId.asKnown().isPresent) 1 else 0)
 
-        /** Registration status */
+        /** Provisioning status */
         class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
             /**
@@ -454,20 +675,29 @@ private constructor(
 
             companion object {
 
+                @JvmField val PURCHASING = of("purchasing")
+
+                @JvmField val PENDING_VERIFICATION = of("pending_verification")
+
+                @JvmField val VERIFIED = of("verified")
+
                 @JvmField val ACTIVE = of("active")
 
-                @JvmField val INACTIVE = of("inactive")
+                @JvmField val RELEASING = of("releasing")
 
-                @JvmField val PENDING = of("pending")
+                @JvmField val RELEASED = of("released")
 
                 @JvmStatic fun of(value: String) = Status(JsonField.of(value))
             }
 
             /** An enum containing [Status]'s known values. */
             enum class Known {
+                PURCHASING,
+                PENDING_VERIFICATION,
+                VERIFIED,
                 ACTIVE,
-                INACTIVE,
-                PENDING,
+                RELEASING,
+                RELEASED,
             }
 
             /**
@@ -480,9 +710,12 @@ private constructor(
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
+                PURCHASING,
+                PENDING_VERIFICATION,
+                VERIFIED,
                 ACTIVE,
-                INACTIVE,
-                PENDING,
+                RELEASING,
+                RELEASED,
                 /**
                  * An enum member indicating that [Status] was instantiated with an unknown value.
                  */
@@ -498,9 +731,12 @@ private constructor(
              */
             fun value(): Value =
                 when (this) {
+                    PURCHASING -> Value.PURCHASING
+                    PENDING_VERIFICATION -> Value.PENDING_VERIFICATION
+                    VERIFIED -> Value.VERIFIED
                     ACTIVE -> Value.ACTIVE
-                    INACTIVE -> Value.INACTIVE
-                    PENDING -> Value.PENDING
+                    RELEASING -> Value.RELEASING
+                    RELEASED -> Value.RELEASED
                     else -> Value._UNKNOWN
                 }
 
@@ -515,9 +751,12 @@ private constructor(
              */
             fun known(): Known =
                 when (this) {
+                    PURCHASING -> Known.PURCHASING
+                    PENDING_VERIFICATION -> Known.PENDING_VERIFICATION
+                    VERIFIED -> Known.VERIFIED
                     ACTIVE -> Known.ACTIVE
-                    INACTIVE -> Known.INACTIVE
-                    PENDING -> Known.PENDING
+                    RELEASING -> Known.RELEASING
+                    RELEASED -> Known.RELEASED
                     else -> throw RelayInvalidDataException("Unknown Status: $value")
                 }
 
@@ -582,20 +821,36 @@ private constructor(
 
             return other is Data &&
                 id == other.id &&
+                country == other.country &&
+                createdAt == other.createdAt &&
+                monthlyCostCents == other.monthlyCostCents &&
                 phoneNumber == other.phoneNumber &&
+                provider == other.provider &&
                 status == other.status &&
-                displayName == other.displayName &&
+                socialAccountId == other.socialAccountId &&
+                waPhoneNumberId == other.waPhoneNumberId &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(id, phoneNumber, status, displayName, additionalProperties)
+            Objects.hash(
+                id,
+                country,
+                createdAt,
+                monthlyCostCents,
+                phoneNumber,
+                provider,
+                status,
+                socialAccountId,
+                waPhoneNumberId,
+                additionalProperties,
+            )
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, phoneNumber=$phoneNumber, status=$status, displayName=$displayName, additionalProperties=$additionalProperties}"
+            "Data{id=$id, country=$country, createdAt=$createdAt, monthlyCostCents=$monthlyCostCents, phoneNumber=$phoneNumber, provider=$provider, status=$status, socialAccountId=$socialAccountId, waPhoneNumberId=$waPhoneNumberId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

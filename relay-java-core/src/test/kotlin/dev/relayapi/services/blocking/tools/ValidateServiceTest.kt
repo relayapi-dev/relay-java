@@ -8,6 +8,7 @@ import dev.relayapi.models.tools.validate.ValidateCheckPostLengthParams
 import dev.relayapi.models.tools.validate.ValidateRetrieveSubredditParams
 import dev.relayapi.models.tools.validate.ValidateValidateMediaParams
 import dev.relayapi.models.tools.validate.ValidateValidatePostParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -71,6 +72,17 @@ internal class ValidateServiceTest {
                         ValidateValidatePostParams.Media.builder()
                             .url("https://example.com")
                             .type(ValidateValidatePostParams.Media.Type.IMAGE)
+                            .build()
+                    )
+                    .recycling(
+                        ValidateValidatePostParams.Recycling.builder()
+                            .gap(1L)
+                            .gapFreq(ValidateValidatePostParams.Recycling.GapFreq.DAY)
+                            .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addContentVariation("string")
+                            .enabled(true)
+                            .expireCount(1L)
+                            .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
                     )
                     .targetOptions(

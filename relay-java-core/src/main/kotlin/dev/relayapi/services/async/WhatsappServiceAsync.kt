@@ -51,17 +51,27 @@ interface WhatsappServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<WhatsappBulkSendResponse>
 
-    /** List registered phone numbers */
+    /** List purchased phone numbers */
+    fun listPhoneNumbers(): CompletableFuture<WhatsappListPhoneNumbersResponse> =
+        listPhoneNumbers(WhatsappListPhoneNumbersParams.none())
+
+    /** @see listPhoneNumbers */
     fun listPhoneNumbers(
-        params: WhatsappListPhoneNumbersParams
+        params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<WhatsappListPhoneNumbersResponse>
+
+    /** @see listPhoneNumbers */
+    fun listPhoneNumbers(
+        params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none()
     ): CompletableFuture<WhatsappListPhoneNumbersResponse> =
         listPhoneNumbers(params, RequestOptions.none())
 
     /** @see listPhoneNumbers */
     fun listPhoneNumbers(
-        params: WhatsappListPhoneNumbersParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<WhatsappListPhoneNumbersResponse>
+        requestOptions: RequestOptions
+    ): CompletableFuture<WhatsappListPhoneNumbersResponse> =
+        listPhoneNumbers(WhatsappListPhoneNumbersParams.none(), requestOptions)
 
     /**
      * A view of [WhatsappServiceAsync] that provides access to raw HTTP responses for each method.
@@ -106,15 +116,26 @@ interface WhatsappServiceAsync {
          * Returns a raw HTTP response for `get /v1/whatsapp/phone-numbers`, but is otherwise the
          * same as [WhatsappServiceAsync.listPhoneNumbers].
          */
+        fun listPhoneNumbers():
+            CompletableFuture<HttpResponseFor<WhatsappListPhoneNumbersResponse>> =
+            listPhoneNumbers(WhatsappListPhoneNumbersParams.none())
+
+        /** @see listPhoneNumbers */
         fun listPhoneNumbers(
-            params: WhatsappListPhoneNumbersParams
+            params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<WhatsappListPhoneNumbersResponse>>
+
+        /** @see listPhoneNumbers */
+        fun listPhoneNumbers(
+            params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none()
         ): CompletableFuture<HttpResponseFor<WhatsappListPhoneNumbersResponse>> =
             listPhoneNumbers(params, RequestOptions.none())
 
         /** @see listPhoneNumbers */
         fun listPhoneNumbers(
-            params: WhatsappListPhoneNumbersParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<WhatsappListPhoneNumbersResponse>>
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<WhatsappListPhoneNumbersResponse>> =
+            listPhoneNumbers(WhatsappListPhoneNumbersParams.none(), requestOptions)
     }
 }
