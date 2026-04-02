@@ -13,15 +13,43 @@ internal class MessageSendParamsTest {
         MessageSendParams.builder()
             .conversationId("conversation_id")
             .accountId("account_id")
-            .text("x")
             .addAttachment(
                 MessageSendParams.Attachment.builder()
                     .type("type")
                     .url("https://example.com")
                     .build()
             )
-            .messageTag("message_tag")
+            .messageTag(MessageSendParams.MessageTag.HUMAN_AGENT)
+            .addQuickReply(
+                MessageSendParams.QuickReply.builder()
+                    .contentType(MessageSendParams.QuickReply.ContentType.TEXT)
+                    .imageUrl("https://example.com")
+                    .payload("payload")
+                    .title("title")
+                    .build()
+            )
             .replyTo("reply_to")
+            .template(
+                MessageSendParams.Template.builder()
+                    .addElement(
+                        MessageSendParams.Template.Element.builder()
+                            .title("title")
+                            .addButton(
+                                MessageSendParams.Template.Element.Button.builder()
+                                    .title("title")
+                                    .type(MessageSendParams.Template.Element.Button.Type.WEB_URL)
+                                    .payload("payload")
+                                    .url("https://example.com")
+                                    .build()
+                            )
+                            .imageUrl("https://example.com")
+                            .subtitle("subtitle")
+                            .build()
+                    )
+                    .type(MessageSendParams.Template.Type.GENERIC)
+                    .build()
+            )
+            .text("x")
             .build()
     }
 
@@ -31,7 +59,6 @@ internal class MessageSendParamsTest {
             MessageSendParams.builder()
                 .conversationId("conversation_id")
                 .accountId("account_id")
-                .text("x")
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("conversation_id")
@@ -45,21 +72,50 @@ internal class MessageSendParamsTest {
             MessageSendParams.builder()
                 .conversationId("conversation_id")
                 .accountId("account_id")
-                .text("x")
                 .addAttachment(
                     MessageSendParams.Attachment.builder()
                         .type("type")
                         .url("https://example.com")
                         .build()
                 )
-                .messageTag("message_tag")
+                .messageTag(MessageSendParams.MessageTag.HUMAN_AGENT)
+                .addQuickReply(
+                    MessageSendParams.QuickReply.builder()
+                        .contentType(MessageSendParams.QuickReply.ContentType.TEXT)
+                        .imageUrl("https://example.com")
+                        .payload("payload")
+                        .title("title")
+                        .build()
+                )
                 .replyTo("reply_to")
+                .template(
+                    MessageSendParams.Template.builder()
+                        .addElement(
+                            MessageSendParams.Template.Element.builder()
+                                .title("title")
+                                .addButton(
+                                    MessageSendParams.Template.Element.Button.builder()
+                                        .title("title")
+                                        .type(
+                                            MessageSendParams.Template.Element.Button.Type.WEB_URL
+                                        )
+                                        .payload("payload")
+                                        .url("https://example.com")
+                                        .build()
+                                )
+                                .imageUrl("https://example.com")
+                                .subtitle("subtitle")
+                                .build()
+                        )
+                        .type(MessageSendParams.Template.Type.GENERIC)
+                        .build()
+                )
+                .text("x")
                 .build()
 
         val body = params._body()
 
         assertThat(body.accountId()).isEqualTo("account_id")
-        assertThat(body.text()).isEqualTo("x")
         assertThat(body.attachments().getOrNull())
             .containsExactly(
                 MessageSendParams.Attachment.builder()
@@ -67,8 +123,39 @@ internal class MessageSendParamsTest {
                     .url("https://example.com")
                     .build()
             )
-        assertThat(body.messageTag()).contains("message_tag")
+        assertThat(body.messageTag()).contains(MessageSendParams.MessageTag.HUMAN_AGENT)
+        assertThat(body.quickReplies().getOrNull())
+            .containsExactly(
+                MessageSendParams.QuickReply.builder()
+                    .contentType(MessageSendParams.QuickReply.ContentType.TEXT)
+                    .imageUrl("https://example.com")
+                    .payload("payload")
+                    .title("title")
+                    .build()
+            )
         assertThat(body.replyTo()).contains("reply_to")
+        assertThat(body.template())
+            .contains(
+                MessageSendParams.Template.builder()
+                    .addElement(
+                        MessageSendParams.Template.Element.builder()
+                            .title("title")
+                            .addButton(
+                                MessageSendParams.Template.Element.Button.builder()
+                                    .title("title")
+                                    .type(MessageSendParams.Template.Element.Button.Type.WEB_URL)
+                                    .payload("payload")
+                                    .url("https://example.com")
+                                    .build()
+                            )
+                            .imageUrl("https://example.com")
+                            .subtitle("subtitle")
+                            .build()
+                    )
+                    .type(MessageSendParams.Template.Type.GENERIC)
+                    .build()
+            )
+        assertThat(body.text()).contains("x")
     }
 
     @Test
@@ -77,12 +164,10 @@ internal class MessageSendParamsTest {
             MessageSendParams.builder()
                 .conversationId("conversation_id")
                 .accountId("account_id")
-                .text("x")
                 .build()
 
         val body = params._body()
 
         assertThat(body.accountId()).isEqualTo("account_id")
-        assertThat(body.text()).isEqualTo("x")
     }
 }

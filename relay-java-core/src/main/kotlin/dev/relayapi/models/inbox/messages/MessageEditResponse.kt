@@ -20,6 +20,7 @@ class MessageEditResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val success: JsonField<Boolean>,
+    private val error: JsonField<String>,
     private val messageId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -27,8 +28,9 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("success") @ExcludeMissing success: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("error") @ExcludeMissing error: JsonField<String> = JsonMissing.of(),
         @JsonProperty("message_id") @ExcludeMissing messageId: JsonField<String> = JsonMissing.of(),
-    ) : this(success, messageId, mutableMapOf())
+    ) : this(success, error, messageId, mutableMapOf())
 
     /**
      * Whether the action succeeded
@@ -37,6 +39,14 @@ private constructor(
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun success(): Boolean = success.getRequired("success")
+
+    /**
+     * Error message if failed
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun error(): Optional<String> = error.getOptional("error")
 
     /**
      * Message ID
@@ -52,6 +62,13 @@ private constructor(
      * Unlike [success], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("success") @ExcludeMissing fun _success(): JsonField<Boolean> = success
+
+    /**
+     * Returns the raw JSON value of [error].
+     *
+     * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<String> = error
 
     /**
      * Returns the raw JSON value of [messageId].
@@ -89,12 +106,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var success: JsonField<Boolean>? = null
+        private var error: JsonField<String> = JsonMissing.of()
         private var messageId: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(messageEditResponse: MessageEditResponse) = apply {
             success = messageEditResponse.success
+            error = messageEditResponse.error
             messageId = messageEditResponse.messageId
             additionalProperties = messageEditResponse.additionalProperties.toMutableMap()
         }
@@ -109,6 +128,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun success(success: JsonField<Boolean>) = apply { this.success = success }
+
+        /** Error message if failed */
+        fun error(error: String) = error(JsonField.of(error))
+
+        /**
+         * Sets [Builder.error] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.error] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun error(error: JsonField<String>) = apply { this.error = error }
 
         /** Message ID */
         fun messageId(messageId: String) = messageId(JsonField.of(messageId))
@@ -156,6 +186,7 @@ private constructor(
         fun build(): MessageEditResponse =
             MessageEditResponse(
                 checkRequired("success", success),
+                error,
                 messageId,
                 additionalProperties.toMutableMap(),
             )
@@ -169,6 +200,7 @@ private constructor(
         }
 
         success()
+        error()
         messageId()
         validated = true
     }
@@ -188,7 +220,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (if (success.asKnown().isPresent) 1 else 0) + (if (messageId.asKnown().isPresent) 1 else 0)
+        (if (success.asKnown().isPresent) 1 else 0) +
+            (if (error.asKnown().isPresent) 1 else 0) +
+            (if (messageId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -197,14 +231,17 @@ private constructor(
 
         return other is MessageEditResponse &&
             success == other.success &&
+            error == other.error &&
             messageId == other.messageId &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(success, messageId, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(success, error, messageId, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MessageEditResponse{success=$success, messageId=$messageId, additionalProperties=$additionalProperties}"
+        "MessageEditResponse{success=$success, error=$error, messageId=$messageId, additionalProperties=$additionalProperties}"
 }

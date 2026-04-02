@@ -12,9 +12,14 @@ internal class MessageEditResponseTest {
     @Test
     fun create() {
         val messageEditResponse =
-            MessageEditResponse.builder().success(true).messageId("message_id").build()
+            MessageEditResponse.builder()
+                .success(true)
+                .error("error")
+                .messageId("message_id")
+                .build()
 
         assertThat(messageEditResponse.success()).isEqualTo(true)
+        assertThat(messageEditResponse.error()).contains("error")
         assertThat(messageEditResponse.messageId()).contains("message_id")
     }
 
@@ -22,7 +27,11 @@ internal class MessageEditResponseTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val messageEditResponse =
-            MessageEditResponse.builder().success(true).messageId("message_id").build()
+            MessageEditResponse.builder()
+                .success(true)
+                .error("error")
+                .messageId("message_id")
+                .build()
 
         val roundtrippedMessageEditResponse =
             jsonMapper.readValue(

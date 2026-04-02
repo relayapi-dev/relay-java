@@ -82,15 +82,46 @@ internal class MessageServiceTest {
                 MessageSendParams.builder()
                     .conversationId("conversation_id")
                     .accountId("account_id")
-                    .text("x")
                     .addAttachment(
                         MessageSendParams.Attachment.builder()
                             .type("type")
                             .url("https://example.com")
                             .build()
                     )
-                    .messageTag("message_tag")
+                    .messageTag(MessageSendParams.MessageTag.HUMAN_AGENT)
+                    .addQuickReply(
+                        MessageSendParams.QuickReply.builder()
+                            .contentType(MessageSendParams.QuickReply.ContentType.TEXT)
+                            .imageUrl("https://example.com")
+                            .payload("payload")
+                            .title("title")
+                            .build()
+                    )
                     .replyTo("reply_to")
+                    .template(
+                        MessageSendParams.Template.builder()
+                            .addElement(
+                                MessageSendParams.Template.Element.builder()
+                                    .title("title")
+                                    .addButton(
+                                        MessageSendParams.Template.Element.Button.builder()
+                                            .title("title")
+                                            .type(
+                                                MessageSendParams.Template.Element.Button.Type
+                                                    .WEB_URL
+                                            )
+                                            .payload("payload")
+                                            .url("https://example.com")
+                                            .build()
+                                    )
+                                    .imageUrl("https://example.com")
+                                    .subtitle("subtitle")
+                                    .build()
+                            )
+                            .type(MessageSendParams.Template.Type.GENERIC)
+                            .build()
+                    )
+                    .text("x")
                     .build()
             )
 
