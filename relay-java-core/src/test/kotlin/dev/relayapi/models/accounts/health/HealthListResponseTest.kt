@@ -29,6 +29,8 @@ internal class HealthListResponseTest {
                         )
                         .build()
                 )
+                .hasMore(true)
+                .nextCursor("next_cursor")
                 .build()
 
         assertThat(healthListResponse.data())
@@ -47,6 +49,8 @@ internal class HealthListResponseTest {
                     )
                     .build()
             )
+        assertThat(healthListResponse.hasMore()).isEqualTo(true)
+        assertThat(healthListResponse.nextCursor()).contains("next_cursor")
     }
 
     @Test
@@ -69,6 +73,8 @@ internal class HealthListResponseTest {
                         )
                         .build()
                 )
+                .hasMore(true)
+                .nextCursor("next_cursor")
                 .build()
 
         val roundtrippedHealthListResponse =

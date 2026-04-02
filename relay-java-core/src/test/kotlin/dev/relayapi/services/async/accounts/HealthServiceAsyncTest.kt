@@ -3,6 +3,7 @@
 package dev.relayapi.services.async.accounts
 
 import dev.relayapi.client.okhttp.RelayOkHttpClientAsync
+import dev.relayapi.models.accounts.health.HealthListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -26,7 +27,8 @@ internal class HealthServiceAsyncTest {
         val client = RelayOkHttpClientAsync.builder().apiKey("My API Key").build()
         val healthServiceAsync = client.accounts().health()
 
-        val healthFuture = healthServiceAsync.list()
+        val healthFuture =
+            healthServiceAsync.list(HealthListParams.builder().cursor("cursor").limit(1L).build())
 
         val health = healthFuture.get()
         health.validate()
