@@ -12,9 +12,14 @@ internal class MessageArchiveResponseTest {
     @Test
     fun create() {
         val messageArchiveResponse =
-            MessageArchiveResponse.builder().success(true).messageId("message_id").build()
+            MessageArchiveResponse.builder()
+                .success(true)
+                .error("error")
+                .messageId("message_id")
+                .build()
 
         assertThat(messageArchiveResponse.success()).isEqualTo(true)
+        assertThat(messageArchiveResponse.error()).contains("error")
         assertThat(messageArchiveResponse.messageId()).contains("message_id")
     }
 
@@ -22,7 +27,11 @@ internal class MessageArchiveResponseTest {
     fun roundtrip() {
         val jsonMapper = jsonMapper()
         val messageArchiveResponse =
-            MessageArchiveResponse.builder().success(true).messageId("message_id").build()
+            MessageArchiveResponse.builder()
+                .success(true)
+                .error("error")
+                .messageId("message_id")
+                .build()
 
         val roundtrippedMessageArchiveResponse =
             jsonMapper.readValue(
