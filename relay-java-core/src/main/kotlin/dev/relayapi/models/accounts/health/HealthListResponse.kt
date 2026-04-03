@@ -253,10 +253,14 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
+        private val avatarUrl: JsonField<String>,
+        private val displayName: JsonField<String>,
         private val healthy: JsonField<Boolean>,
         private val platform: JsonField<Platform>,
+        private val scopes: JsonField<List<String>>,
         private val tokenExpiresAt: JsonField<OffsetDateTime>,
         private val username: JsonField<String>,
+        private val workspace: JsonField<Workspace>,
         private val error: JsonField<Error>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -264,24 +268,60 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("avatar_url")
+            @ExcludeMissing
+            avatarUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("display_name")
+            @ExcludeMissing
+            displayName: JsonField<String> = JsonMissing.of(),
             @JsonProperty("healthy") @ExcludeMissing healthy: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("platform")
             @ExcludeMissing
             platform: JsonField<Platform> = JsonMissing.of(),
+            @JsonProperty("scopes")
+            @ExcludeMissing
+            scopes: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("token_expires_at")
             @ExcludeMissing
             tokenExpiresAt: JsonField<OffsetDateTime> = JsonMissing.of(),
             @JsonProperty("username")
             @ExcludeMissing
             username: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("workspace")
+            @ExcludeMissing
+            workspace: JsonField<Workspace> = JsonMissing.of(),
             @JsonProperty("error") @ExcludeMissing error: JsonField<Error> = JsonMissing.of(),
-        ) : this(id, healthy, platform, tokenExpiresAt, username, error, mutableMapOf())
+        ) : this(
+            id,
+            avatarUrl,
+            displayName,
+            healthy,
+            platform,
+            scopes,
+            tokenExpiresAt,
+            username,
+            workspace,
+            error,
+            mutableMapOf(),
+        )
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun id(): String = id.getRequired("id")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun avatarUrl(): Optional<String> = avatarUrl.getOptional("avatar_url")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun displayName(): Optional<String> = displayName.getOptional("display_name")
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
@@ -294,6 +334,12 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun platform(): Platform = platform.getRequired("platform")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun scopes(): List<String> = scopes.getRequired("scopes")
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -312,6 +358,12 @@ private constructor(
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
+        fun workspace(): Optional<Workspace> = workspace.getOptional("workspace")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
         fun error(): Optional<Error> = error.getOptional("error")
 
         /**
@@ -320,6 +372,22 @@ private constructor(
          * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [avatarUrl].
+         *
+         * Unlike [avatarUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("avatar_url") @ExcludeMissing fun _avatarUrl(): JsonField<String> = avatarUrl
+
+        /**
+         * Returns the raw JSON value of [displayName].
+         *
+         * Unlike [displayName], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("display_name")
+        @ExcludeMissing
+        fun _displayName(): JsonField<String> = displayName
 
         /**
          * Returns the raw JSON value of [healthy].
@@ -334,6 +402,13 @@ private constructor(
          * Unlike [platform], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("platform") @ExcludeMissing fun _platform(): JsonField<Platform> = platform
+
+        /**
+         * Returns the raw JSON value of [scopes].
+         *
+         * Unlike [scopes], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("scopes") @ExcludeMissing fun _scopes(): JsonField<List<String>> = scopes
 
         /**
          * Returns the raw JSON value of [tokenExpiresAt].
@@ -351,6 +426,15 @@ private constructor(
          * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
+
+        /**
+         * Returns the raw JSON value of [workspace].
+         *
+         * Unlike [workspace], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("workspace")
+        @ExcludeMissing
+        fun _workspace(): JsonField<Workspace> = workspace
 
         /**
          * Returns the raw JSON value of [error].
@@ -379,10 +463,14 @@ private constructor(
              * The following fields are required:
              * ```java
              * .id()
+             * .avatarUrl()
+             * .displayName()
              * .healthy()
              * .platform()
+             * .scopes()
              * .tokenExpiresAt()
              * .username()
+             * .workspace()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -392,20 +480,28 @@ private constructor(
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
+            private var avatarUrl: JsonField<String>? = null
+            private var displayName: JsonField<String>? = null
             private var healthy: JsonField<Boolean>? = null
             private var platform: JsonField<Platform>? = null
+            private var scopes: JsonField<MutableList<String>>? = null
             private var tokenExpiresAt: JsonField<OffsetDateTime>? = null
             private var username: JsonField<String>? = null
+            private var workspace: JsonField<Workspace>? = null
             private var error: JsonField<Error> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(data: Data) = apply {
                 id = data.id
+                avatarUrl = data.avatarUrl
+                displayName = data.displayName
                 healthy = data.healthy
                 platform = data.platform
+                scopes = data.scopes.map { it.toMutableList() }
                 tokenExpiresAt = data.tokenExpiresAt
                 username = data.username
+                workspace = data.workspace
                 error = data.error
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
@@ -420,6 +516,36 @@ private constructor(
              * value.
              */
             fun id(id: JsonField<String>) = apply { this.id = id }
+
+            fun avatarUrl(avatarUrl: String?) = avatarUrl(JsonField.ofNullable(avatarUrl))
+
+            /** Alias for calling [Builder.avatarUrl] with `avatarUrl.orElse(null)`. */
+            fun avatarUrl(avatarUrl: Optional<String>) = avatarUrl(avatarUrl.getOrNull())
+
+            /**
+             * Sets [Builder.avatarUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.avatarUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun avatarUrl(avatarUrl: JsonField<String>) = apply { this.avatarUrl = avatarUrl }
+
+            fun displayName(displayName: String?) = displayName(JsonField.ofNullable(displayName))
+
+            /** Alias for calling [Builder.displayName] with `displayName.orElse(null)`. */
+            fun displayName(displayName: Optional<String>) = displayName(displayName.getOrNull())
+
+            /**
+             * Sets [Builder.displayName] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.displayName] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun displayName(displayName: JsonField<String>) = apply {
+                this.displayName = displayName
+            }
 
             fun healthy(healthy: Boolean) = healthy(JsonField.of(healthy))
 
@@ -442,6 +568,31 @@ private constructor(
              * supported value.
              */
             fun platform(platform: JsonField<Platform>) = apply { this.platform = platform }
+
+            fun scopes(scopes: List<String>) = scopes(JsonField.of(scopes))
+
+            /**
+             * Sets [Builder.scopes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.scopes] with a well-typed `List<String>` value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun scopes(scopes: JsonField<List<String>>) = apply {
+                this.scopes = scopes.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [scopes].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addScope(scope: String) = apply {
+                scopes =
+                    (scopes ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("scopes", it).add(scope)
+                    }
+            }
 
             fun tokenExpiresAt(tokenExpiresAt: OffsetDateTime?) =
                 tokenExpiresAt(JsonField.ofNullable(tokenExpiresAt))
@@ -474,6 +625,20 @@ private constructor(
              * supported value.
              */
             fun username(username: JsonField<String>) = apply { this.username = username }
+
+            fun workspace(workspace: Workspace?) = workspace(JsonField.ofNullable(workspace))
+
+            /** Alias for calling [Builder.workspace] with `workspace.orElse(null)`. */
+            fun workspace(workspace: Optional<Workspace>) = workspace(workspace.getOrNull())
+
+            /**
+             * Sets [Builder.workspace] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.workspace] with a well-typed [Workspace] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun workspace(workspace: JsonField<Workspace>) = apply { this.workspace = workspace }
 
             fun error(error: Error) = error(JsonField.of(error))
 
@@ -513,10 +678,14 @@ private constructor(
              * The following fields are required:
              * ```java
              * .id()
+             * .avatarUrl()
+             * .displayName()
              * .healthy()
              * .platform()
+             * .scopes()
              * .tokenExpiresAt()
              * .username()
+             * .workspace()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -524,10 +693,14 @@ private constructor(
             fun build(): Data =
                 Data(
                     checkRequired("id", id),
+                    checkRequired("avatarUrl", avatarUrl),
+                    checkRequired("displayName", displayName),
                     checkRequired("healthy", healthy),
                     checkRequired("platform", platform),
+                    checkRequired("scopes", scopes).map { it.toImmutable() },
                     checkRequired("tokenExpiresAt", tokenExpiresAt),
                     checkRequired("username", username),
+                    checkRequired("workspace", workspace),
                     error,
                     additionalProperties.toMutableMap(),
                 )
@@ -541,10 +714,14 @@ private constructor(
             }
 
             id()
+            avatarUrl()
+            displayName()
             healthy()
             platform().validate()
+            scopes()
             tokenExpiresAt()
             username()
+            workspace().ifPresent { it.validate() }
             error().ifPresent { it.validate() }
             validated = true
         }
@@ -566,10 +743,14 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
+                (if (avatarUrl.asKnown().isPresent) 1 else 0) +
+                (if (displayName.asKnown().isPresent) 1 else 0) +
                 (if (healthy.asKnown().isPresent) 1 else 0) +
                 (platform.asKnown().getOrNull()?.validity() ?: 0) +
+                (scopes.asKnown().getOrNull()?.size ?: 0) +
                 (if (tokenExpiresAt.asKnown().isPresent) 1 else 0) +
                 (if (username.asKnown().isPresent) 1 else 0) +
+                (workspace.asKnown().getOrNull()?.validity() ?: 0) +
                 (error.asKnown().getOrNull()?.validity() ?: 0)
 
         class Platform @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -792,6 +973,202 @@ private constructor(
             override fun toString() = value.toString()
         }
 
+        class Workspace
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val id: JsonField<String>,
+            private val name: JsonField<String>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            ) : this(id, name, mutableMapOf())
+
+            /**
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun id(): String = id.getRequired("id")
+
+            /**
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun name(): String = name.getRequired("name")
+
+            /**
+             * Returns the raw JSON value of [id].
+             *
+             * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+            /**
+             * Returns the raw JSON value of [name].
+             *
+             * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Workspace].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * .name()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Workspace]. */
+            class Builder internal constructor() {
+
+                private var id: JsonField<String>? = null
+                private var name: JsonField<String>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(workspace: Workspace) = apply {
+                    id = workspace.id
+                    name = workspace.name
+                    additionalProperties = workspace.additionalProperties.toMutableMap()
+                }
+
+                fun id(id: String) = id(JsonField.of(id))
+
+                /**
+                 * Sets [Builder.id] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.id] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun id(id: JsonField<String>) = apply { this.id = id }
+
+                fun name(name: String) = name(JsonField.of(name))
+
+                /**
+                 * Sets [Builder.name] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.name] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun name(name: JsonField<String>) = apply { this.name = name }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Workspace].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * .name()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Workspace =
+                    Workspace(
+                        checkRequired("id", id),
+                        checkRequired("name", name),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Workspace = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                id()
+                name()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Workspace &&
+                    id == other.id &&
+                    name == other.name &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(id, name, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Workspace{id=$id, name=$name, additionalProperties=$additionalProperties}"
+        }
+
         class Error
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
@@ -998,10 +1375,14 @@ private constructor(
 
             return other is Data &&
                 id == other.id &&
+                avatarUrl == other.avatarUrl &&
+                displayName == other.displayName &&
                 healthy == other.healthy &&
                 platform == other.platform &&
+                scopes == other.scopes &&
                 tokenExpiresAt == other.tokenExpiresAt &&
                 username == other.username &&
+                workspace == other.workspace &&
                 error == other.error &&
                 additionalProperties == other.additionalProperties
         }
@@ -1009,10 +1390,14 @@ private constructor(
         private val hashCode: Int by lazy {
             Objects.hash(
                 id,
+                avatarUrl,
+                displayName,
                 healthy,
                 platform,
+                scopes,
                 tokenExpiresAt,
                 username,
+                workspace,
                 error,
                 additionalProperties,
             )
@@ -1021,7 +1406,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, healthy=$healthy, platform=$platform, tokenExpiresAt=$tokenExpiresAt, username=$username, error=$error, additionalProperties=$additionalProperties}"
+            "Data{id=$id, avatarUrl=$avatarUrl, displayName=$displayName, healthy=$healthy, platform=$platform, scopes=$scopes, tokenExpiresAt=$tokenExpiresAt, username=$username, workspace=$workspace, error=$error, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
