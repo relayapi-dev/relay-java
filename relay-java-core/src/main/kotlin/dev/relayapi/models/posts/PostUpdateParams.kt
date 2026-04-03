@@ -53,6 +53,14 @@ private constructor(
     fun media(): Optional<List<Media>> = body.media()
 
     /**
+     * Internal notes for this post
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun notes(): Optional<String> = body.notes()
+
+    /**
      * Recycling configuration (Pro plan only)
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -102,6 +110,13 @@ private constructor(
      * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _media(): JsonField<List<Media>> = body._media()
+
+    /**
+     * Returns the raw JSON value of [notes].
+     *
+     * Unlike [notes], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _notes(): JsonField<String> = body._notes()
 
     /**
      * Returns the raw JSON value of [recycling].
@@ -185,9 +200,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [content]
          * - [media]
+         * - [notes]
          * - [recycling]
          * - [scheduledAt]
-         * - [targetOptions]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -221,6 +236,20 @@ private constructor(
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
         fun addMedia(media: Media) = apply { body.addMedia(media) }
+
+        /** Internal notes for this post */
+        fun notes(notes: String?) = apply { body.notes(notes) }
+
+        /** Alias for calling [Builder.notes] with `notes.orElse(null)`. */
+        fun notes(notes: Optional<String>) = notes(notes.getOrNull())
+
+        /**
+         * Sets [Builder.notes] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.notes] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun notes(notes: JsonField<String>) = apply { body.notes(notes) }
 
         /** Recycling configuration (Pro plan only) */
         fun recycling(recycling: Recycling) = apply { body.recycling(recycling) }
@@ -441,6 +470,7 @@ private constructor(
     private constructor(
         private val content: JsonField<String>,
         private val media: JsonField<List<Media>>,
+        private val notes: JsonField<String>,
         private val recycling: JsonField<Recycling>,
         private val scheduledAt: JsonField<String>,
         private val targetOptions: JsonField<TargetOptions>,
@@ -453,6 +483,7 @@ private constructor(
         private constructor(
             @JsonProperty("content") @ExcludeMissing content: JsonField<String> = JsonMissing.of(),
             @JsonProperty("media") @ExcludeMissing media: JsonField<List<Media>> = JsonMissing.of(),
+            @JsonProperty("notes") @ExcludeMissing notes: JsonField<String> = JsonMissing.of(),
             @JsonProperty("recycling")
             @ExcludeMissing
             recycling: JsonField<Recycling> = JsonMissing.of(),
@@ -469,6 +500,7 @@ private constructor(
         ) : this(
             content,
             media,
+            notes,
             recycling,
             scheduledAt,
             targetOptions,
@@ -492,6 +524,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun media(): Optional<List<Media>> = media.getOptional("media")
+
+        /**
+         * Internal notes for this post
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun notes(): Optional<String> = notes.getOptional("notes")
 
         /**
          * Recycling configuration (Pro plan only)
@@ -543,6 +583,13 @@ private constructor(
          * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<Media>> = media
+
+        /**
+         * Returns the raw JSON value of [notes].
+         *
+         * Unlike [notes], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("notes") @ExcludeMissing fun _notes(): JsonField<String> = notes
 
         /**
          * Returns the raw JSON value of [recycling].
@@ -609,6 +656,7 @@ private constructor(
 
             private var content: JsonField<String> = JsonMissing.of()
             private var media: JsonField<MutableList<Media>>? = null
+            private var notes: JsonField<String> = JsonMissing.of()
             private var recycling: JsonField<Recycling> = JsonMissing.of()
             private var scheduledAt: JsonField<String> = JsonMissing.of()
             private var targetOptions: JsonField<TargetOptions> = JsonMissing.of()
@@ -620,6 +668,7 @@ private constructor(
             internal fun from(body: Body) = apply {
                 content = body.content
                 media = body.media.map { it.toMutableList() }
+                notes = body.notes
                 recycling = body.recycling
                 scheduledAt = body.scheduledAt
                 targetOptions = body.targetOptions
@@ -665,6 +714,21 @@ private constructor(
                         checkKnown("media", it).add(media)
                     }
             }
+
+            /** Internal notes for this post */
+            fun notes(notes: String?) = notes(JsonField.ofNullable(notes))
+
+            /** Alias for calling [Builder.notes] with `notes.orElse(null)`. */
+            fun notes(notes: Optional<String>) = notes(notes.getOrNull())
+
+            /**
+             * Sets [Builder.notes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.notes] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun notes(notes: JsonField<String>) = apply { this.notes = notes }
 
             /** Recycling configuration (Pro plan only) */
             fun recycling(recycling: Recycling) = recycling(JsonField.of(recycling))
@@ -774,6 +838,7 @@ private constructor(
                 Body(
                     content,
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
+                    notes,
                     recycling,
                     scheduledAt,
                     targetOptions,
@@ -792,6 +857,7 @@ private constructor(
 
             content()
             media().ifPresent { it.forEach { it.validate() } }
+            notes()
             recycling().ifPresent { it.validate() }
             scheduledAt()
             targetOptions().ifPresent { it.validate() }
@@ -818,6 +884,7 @@ private constructor(
         internal fun validity(): Int =
             (if (content.asKnown().isPresent) 1 else 0) +
                 (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (notes.asKnown().isPresent) 1 else 0) +
                 (recycling.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (scheduledAt.asKnown().isPresent) 1 else 0) +
                 (targetOptions.asKnown().getOrNull()?.validity() ?: 0) +
@@ -832,6 +899,7 @@ private constructor(
             return other is Body &&
                 content == other.content &&
                 media == other.media &&
+                notes == other.notes &&
                 recycling == other.recycling &&
                 scheduledAt == other.scheduledAt &&
                 targetOptions == other.targetOptions &&
@@ -844,6 +912,7 @@ private constructor(
             Objects.hash(
                 content,
                 media,
+                notes,
                 recycling,
                 scheduledAt,
                 targetOptions,
@@ -856,7 +925,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{content=$content, media=$media, recycling=$recycling, scheduledAt=$scheduledAt, targetOptions=$targetOptions, targets=$targets, timezone=$timezone, additionalProperties=$additionalProperties}"
+            "Body{content=$content, media=$media, notes=$notes, recycling=$recycling, scheduledAt=$scheduledAt, targetOptions=$targetOptions, targets=$targets, timezone=$timezone, additionalProperties=$additionalProperties}"
     }
 
     class Media
