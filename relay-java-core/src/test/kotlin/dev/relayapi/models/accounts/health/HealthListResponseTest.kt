@@ -17,10 +17,19 @@ internal class HealthListResponseTest {
                 .addData(
                     HealthListResponse.Data.builder()
                         .id("id")
+                        .avatarUrl("avatar_url")
+                        .displayName("display_name")
                         .healthy(true)
                         .platform(HealthListResponse.Data.Platform.TWITTER)
+                        .addScope("string")
                         .tokenExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            HealthListResponse.Data.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .error(
                             HealthListResponse.Data.Error.builder()
                                 .code("code")
@@ -37,10 +46,16 @@ internal class HealthListResponseTest {
             .containsExactly(
                 HealthListResponse.Data.builder()
                     .id("id")
+                    .avatarUrl("avatar_url")
+                    .displayName("display_name")
                     .healthy(true)
                     .platform(HealthListResponse.Data.Platform.TWITTER)
+                    .addScope("string")
                     .tokenExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .username("username")
+                    .workspace(
+                        HealthListResponse.Data.Workspace.builder().id("id").name("name").build()
+                    )
                     .error(
                         HealthListResponse.Data.Error.builder()
                             .code("code")
@@ -61,10 +76,19 @@ internal class HealthListResponseTest {
                 .addData(
                     HealthListResponse.Data.builder()
                         .id("id")
+                        .avatarUrl("avatar_url")
+                        .displayName("display_name")
                         .healthy(true)
                         .platform(HealthListResponse.Data.Platform.TWITTER)
+                        .addScope("string")
                         .tokenExpiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            HealthListResponse.Data.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .error(
                             HealthListResponse.Data.Error.builder()
                                 .code("code")
