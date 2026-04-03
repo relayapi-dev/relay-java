@@ -311,6 +311,7 @@ private constructor(
         private val createdAt: JsonField<OffsetDateTime>,
         private val platform: JsonField<Platform>,
         private val text: JsonField<String>,
+        private val accountAvatarUrl: JsonField<String>,
         private val accountId: JsonField<String>,
         private val authorAvatar: JsonField<String>,
         private val hidden: JsonField<Boolean>,
@@ -337,6 +338,9 @@ private constructor(
             @ExcludeMissing
             platform: JsonField<Platform> = JsonMissing.of(),
             @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("account_avatar_url")
+            @ExcludeMissing
+            accountAvatarUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("account_id")
             @ExcludeMissing
             accountId: JsonField<String> = JsonMissing.of(),
@@ -367,6 +371,7 @@ private constructor(
             createdAt,
             platform,
             text,
+            accountAvatarUrl,
             accountId,
             authorAvatar,
             hidden,
@@ -417,6 +422,15 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun text(): String = text.getRequired("text")
+
+        /**
+         * Social account avatar URL
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun accountAvatarUrl(): Optional<String> =
+            accountAvatarUrl.getOptional("account_avatar_url")
 
         /**
          * Social account ID
@@ -539,6 +553,16 @@ private constructor(
         @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
         /**
+         * Returns the raw JSON value of [accountAvatarUrl].
+         *
+         * Unlike [accountAvatarUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("account_avatar_url")
+        @ExcludeMissing
+        fun _accountAvatarUrl(): JsonField<String> = accountAvatarUrl
+
+        /**
          * Returns the raw JSON value of [accountId].
          *
          * Unlike [accountId], this method doesn't throw if the JSON field has an unexpected type.
@@ -657,6 +681,7 @@ private constructor(
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var platform: JsonField<Platform>? = null
             private var text: JsonField<String>? = null
+            private var accountAvatarUrl: JsonField<String> = JsonMissing.of()
             private var accountId: JsonField<String> = JsonMissing.of()
             private var authorAvatar: JsonField<String> = JsonMissing.of()
             private var hidden: JsonField<Boolean> = JsonMissing.of()
@@ -676,6 +701,7 @@ private constructor(
                 createdAt = data.createdAt
                 platform = data.platform
                 text = data.text
+                accountAvatarUrl = data.accountAvatarUrl
                 accountId = data.accountId
                 authorAvatar = data.authorAvatar
                 hidden = data.hidden
@@ -749,6 +775,27 @@ private constructor(
              * value.
              */
             fun text(text: JsonField<String>) = apply { this.text = text }
+
+            /** Social account avatar URL */
+            fun accountAvatarUrl(accountAvatarUrl: String?) =
+                accountAvatarUrl(JsonField.ofNullable(accountAvatarUrl))
+
+            /**
+             * Alias for calling [Builder.accountAvatarUrl] with `accountAvatarUrl.orElse(null)`.
+             */
+            fun accountAvatarUrl(accountAvatarUrl: Optional<String>) =
+                accountAvatarUrl(accountAvatarUrl.getOrNull())
+
+            /**
+             * Sets [Builder.accountAvatarUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.accountAvatarUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun accountAvatarUrl(accountAvatarUrl: JsonField<String>) = apply {
+                this.accountAvatarUrl = accountAvatarUrl
+            }
 
             /** Social account ID */
             fun accountId(accountId: String) = accountId(JsonField.of(accountId))
@@ -943,6 +990,7 @@ private constructor(
                     checkRequired("createdAt", createdAt),
                     checkRequired("platform", platform),
                     checkRequired("text", text),
+                    accountAvatarUrl,
                     accountId,
                     authorAvatar,
                     hidden,
@@ -969,6 +1017,7 @@ private constructor(
             createdAt()
             platform().validate()
             text()
+            accountAvatarUrl()
             accountId()
             authorAvatar()
             hidden()
@@ -1003,6 +1052,7 @@ private constructor(
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (platform.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (text.asKnown().isPresent) 1 else 0) +
+                (if (accountAvatarUrl.asKnown().isPresent) 1 else 0) +
                 (if (accountId.asKnown().isPresent) 1 else 0) +
                 (if (authorAvatar.asKnown().isPresent) 1 else 0) +
                 (if (hidden.asKnown().isPresent) 1 else 0) +
@@ -1245,6 +1295,7 @@ private constructor(
                 createdAt == other.createdAt &&
                 platform == other.platform &&
                 text == other.text &&
+                accountAvatarUrl == other.accountAvatarUrl &&
                 accountId == other.accountId &&
                 authorAvatar == other.authorAvatar &&
                 hidden == other.hidden &&
@@ -1265,6 +1316,7 @@ private constructor(
                 createdAt,
                 platform,
                 text,
+                accountAvatarUrl,
                 accountId,
                 authorAvatar,
                 hidden,
@@ -1282,7 +1334,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, accountId=$accountId, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, parentId=$parentId, postId=$postId, postPlatformUrl=$postPlatformUrl, postText=$postText, postThumbnailUrl=$postThumbnailUrl, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
+            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, accountAvatarUrl=$accountAvatarUrl, accountId=$accountId, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, parentId=$parentId, postId=$postId, postPlatformUrl=$postPlatformUrl, postText=$postText, postThumbnailUrl=$postThumbnailUrl, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
     }
 
     class Platform @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
