@@ -73,6 +73,19 @@ internal class PostRetrieveResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostRetrieveResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
                 .build()
 
         assertThat(postRetrieveResponse.id()).isEqualTo("id")
@@ -137,6 +150,20 @@ internal class PostRetrieveResponseTest {
             )
         assertThat(postRetrieveResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(postRetrieveResponse.metrics())
+            .contains(
+                PostRetrieveResponse.Metrics.builder()
+                    .clicks(0.0)
+                    .comments(0.0)
+                    .engagementRate(0.0)
+                    .impressions(0.0)
+                    .likes(0.0)
+                    .reach(0.0)
+                    .saves(0.0)
+                    .shares(0.0)
+                    .views(0.0)
+                    .build()
+            )
     }
 
     @Test
@@ -201,6 +228,19 @@ internal class PostRetrieveResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostRetrieveResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
                 .build()
 
         val roundtrippedPostRetrieveResponse =
