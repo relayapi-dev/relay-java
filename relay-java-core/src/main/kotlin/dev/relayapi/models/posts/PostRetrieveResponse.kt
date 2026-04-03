@@ -36,6 +36,8 @@ private constructor(
     private val targets: JsonField<Targets>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val metrics: JsonField<Metrics>,
+    private val targetOptions: JsonField<TargetOptions>,
+    private val timezone: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -65,6 +67,10 @@ private constructor(
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("metrics") @ExcludeMissing metrics: JsonField<Metrics> = JsonMissing.of(),
+        @JsonProperty("target_options")
+        @ExcludeMissing
+        targetOptions: JsonField<TargetOptions> = JsonMissing.of(),
+        @JsonProperty("timezone") @ExcludeMissing timezone: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
         content,
@@ -78,6 +84,8 @@ private constructor(
         targets,
         updatedAt,
         metrics,
+        targetOptions,
+        timezone,
         mutableMapOf(),
     )
 
@@ -164,6 +172,22 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun metrics(): Optional<Metrics> = metrics.getOptional("metrics")
+
+    /**
+     * Per-target customizations
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun targetOptions(): Optional<TargetOptions> = targetOptions.getOptional("target_options")
+
+    /**
+     * IANA timezone
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun timezone(): Optional<String> = timezone.getOptional("timezone")
 
     /**
      * Returns the raw JSON value of [id].
@@ -259,6 +283,22 @@ private constructor(
      */
     @JsonProperty("metrics") @ExcludeMissing fun _metrics(): JsonField<Metrics> = metrics
 
+    /**
+     * Returns the raw JSON value of [targetOptions].
+     *
+     * Unlike [targetOptions], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("target_options")
+    @ExcludeMissing
+    fun _targetOptions(): JsonField<TargetOptions> = targetOptions
+
+    /**
+     * Returns the raw JSON value of [timezone].
+     *
+     * Unlike [timezone], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("timezone") @ExcludeMissing fun _timezone(): JsonField<String> = timezone
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -309,6 +349,8 @@ private constructor(
         private var targets: JsonField<Targets>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var metrics: JsonField<Metrics> = JsonMissing.of()
+        private var targetOptions: JsonField<TargetOptions> = JsonMissing.of()
+        private var timezone: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -325,6 +367,8 @@ private constructor(
             targets = postRetrieveResponse.targets
             updatedAt = postRetrieveResponse.updatedAt
             metrics = postRetrieveResponse.metrics
+            targetOptions = postRetrieveResponse.targetOptions
+            timezone = postRetrieveResponse.timezone
             additionalProperties = postRetrieveResponse.additionalProperties.toMutableMap()
         }
 
@@ -497,6 +541,39 @@ private constructor(
          */
         fun metrics(metrics: JsonField<Metrics>) = apply { this.metrics = metrics }
 
+        /** Per-target customizations */
+        fun targetOptions(targetOptions: TargetOptions?) =
+            targetOptions(JsonField.ofNullable(targetOptions))
+
+        /** Alias for calling [Builder.targetOptions] with `targetOptions.orElse(null)`. */
+        fun targetOptions(targetOptions: Optional<TargetOptions>) =
+            targetOptions(targetOptions.getOrNull())
+
+        /**
+         * Sets [Builder.targetOptions] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.targetOptions] with a well-typed [TargetOptions] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun targetOptions(targetOptions: JsonField<TargetOptions>) = apply {
+            this.targetOptions = targetOptions
+        }
+
+        /** IANA timezone */
+        fun timezone(timezone: String?) = timezone(JsonField.ofNullable(timezone))
+
+        /** Alias for calling [Builder.timezone] with `timezone.orElse(null)`. */
+        fun timezone(timezone: Optional<String>) = timezone(timezone.getOrNull())
+
+        /**
+         * Sets [Builder.timezone] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.timezone] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun timezone(timezone: JsonField<String>) = apply { this.timezone = timezone }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -552,6 +629,8 @@ private constructor(
                 checkRequired("targets", targets),
                 checkRequired("updatedAt", updatedAt),
                 metrics,
+                targetOptions,
+                timezone,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -575,6 +654,8 @@ private constructor(
         targets().validate()
         updatedAt()
         metrics().ifPresent { it.validate() }
+        targetOptions().ifPresent { it.validate() }
+        timezone()
         validated = true
     }
 
@@ -604,7 +685,9 @@ private constructor(
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (targets.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
-            (metrics.asKnown().getOrNull()?.validity() ?: 0)
+            (metrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (targetOptions.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (timezone.asKnown().isPresent) 1 else 0)
 
     class Media
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -2505,6 +2588,106 @@ private constructor(
             "Metrics{clicks=$clicks, comments=$comments, engagementRate=$engagementRate, impressions=$impressions, likes=$likes, reach=$reach, saves=$saves, shares=$shares, views=$views, additionalProperties=$additionalProperties}"
     }
 
+    /** Per-target customizations */
+    class TargetOptions
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [TargetOptions]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [TargetOptions]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(targetOptions: TargetOptions) = apply {
+                additionalProperties = targetOptions.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [TargetOptions].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): TargetOptions = TargetOptions(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): TargetOptions = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is TargetOptions && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "TargetOptions{additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -2523,6 +2706,8 @@ private constructor(
             targets == other.targets &&
             updatedAt == other.updatedAt &&
             metrics == other.metrics &&
+            targetOptions == other.targetOptions &&
+            timezone == other.timezone &&
             additionalProperties == other.additionalProperties
     }
 
@@ -2540,6 +2725,8 @@ private constructor(
             targets,
             updatedAt,
             metrics,
+            targetOptions,
+            timezone,
             additionalProperties,
         )
     }
@@ -2547,5 +2734,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PostRetrieveResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, metrics=$metrics, additionalProperties=$additionalProperties}"
+        "PostRetrieveResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, metrics=$metrics, targetOptions=$targetOptions, timezone=$timezone, additionalProperties=$additionalProperties}"
 }

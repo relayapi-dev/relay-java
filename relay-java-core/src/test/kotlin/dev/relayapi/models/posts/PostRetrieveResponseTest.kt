@@ -86,6 +86,12 @@ internal class PostRetrieveResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostRetrieveResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         assertThat(postRetrieveResponse.id()).isEqualTo("id")
@@ -164,6 +170,13 @@ internal class PostRetrieveResponseTest {
                     .views(0.0)
                     .build()
             )
+        assertThat(postRetrieveResponse.targetOptions())
+            .contains(
+                PostRetrieveResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postRetrieveResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -241,6 +254,12 @@ internal class PostRetrieveResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostRetrieveResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostRetrieveResponse =

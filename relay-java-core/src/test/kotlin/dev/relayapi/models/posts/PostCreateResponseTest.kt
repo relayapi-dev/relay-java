@@ -86,6 +86,12 @@ internal class PostCreateResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostCreateResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         assertThat(postCreateResponse.id()).isEqualTo("id")
@@ -164,6 +170,13 @@ internal class PostCreateResponseTest {
                     .views(0.0)
                     .build()
             )
+        assertThat(postCreateResponse.targetOptions())
+            .contains(
+                PostCreateResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postCreateResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -241,6 +254,12 @@ internal class PostCreateResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostCreateResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostCreateResponse =

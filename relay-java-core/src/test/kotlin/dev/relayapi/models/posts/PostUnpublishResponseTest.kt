@@ -86,6 +86,12 @@ internal class PostUnpublishResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostUnpublishResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         assertThat(postUnpublishResponse.id()).isEqualTo("id")
@@ -164,6 +170,13 @@ internal class PostUnpublishResponseTest {
                     .views(0.0)
                     .build()
             )
+        assertThat(postUnpublishResponse.targetOptions())
+            .contains(
+                PostUnpublishResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postUnpublishResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -241,6 +254,12 @@ internal class PostUnpublishResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostUnpublishResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostUnpublishResponse =

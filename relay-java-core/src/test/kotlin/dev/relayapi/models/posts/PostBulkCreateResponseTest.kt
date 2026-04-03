@@ -88,6 +88,12 @@ internal class PostBulkCreateResponseTest {
                                 .views(0.0)
                                 .build()
                         )
+                        .targetOptions(
+                            PostBulkCreateResponse.Data.TargetOptions.builder()
+                                .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                                .build()
+                        )
+                        .timezone("timezone")
                         .build()
                 )
                 .summary(
@@ -172,6 +178,12 @@ internal class PostBulkCreateResponseTest {
                             .views(0.0)
                             .build()
                     )
+                    .targetOptions(
+                        PostBulkCreateResponse.Data.TargetOptions.builder()
+                            .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                            .build()
+                    )
+                    .timezone("timezone")
                     .build()
             )
         assertThat(postBulkCreateResponse.summary())
@@ -262,6 +274,12 @@ internal class PostBulkCreateResponseTest {
                                 .views(0.0)
                                 .build()
                         )
+                        .targetOptions(
+                            PostBulkCreateResponse.Data.TargetOptions.builder()
+                                .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                                .build()
+                        )
+                        .timezone("timezone")
                         .build()
                 )
                 .summary(
