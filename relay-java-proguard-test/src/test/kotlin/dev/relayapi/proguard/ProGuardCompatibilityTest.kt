@@ -142,6 +142,12 @@ internal class ProGuardCompatibilityTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostCreateResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostCreateResponse =

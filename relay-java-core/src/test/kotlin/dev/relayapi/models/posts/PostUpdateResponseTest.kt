@@ -86,6 +86,12 @@ internal class PostUpdateResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostUpdateResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         assertThat(postUpdateResponse.id()).isEqualTo("id")
@@ -164,6 +170,13 @@ internal class PostUpdateResponseTest {
                     .views(0.0)
                     .build()
             )
+        assertThat(postUpdateResponse.targetOptions())
+            .contains(
+                PostUpdateResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postUpdateResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -241,6 +254,12 @@ internal class PostUpdateResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostUpdateResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostUpdateResponse =

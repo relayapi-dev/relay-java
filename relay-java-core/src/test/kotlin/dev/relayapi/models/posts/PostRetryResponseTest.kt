@@ -86,6 +86,12 @@ internal class PostRetryResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostRetryResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         assertThat(postRetryResponse.id()).isEqualTo("id")
@@ -164,6 +170,13 @@ internal class PostRetryResponseTest {
                     .views(0.0)
                     .build()
             )
+        assertThat(postRetryResponse.targetOptions())
+            .contains(
+                PostRetryResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postRetryResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -241,6 +254,12 @@ internal class PostRetryResponseTest {
                         .views(0.0)
                         .build()
                 )
+                .targetOptions(
+                    PostRetryResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostRetryResponse =
