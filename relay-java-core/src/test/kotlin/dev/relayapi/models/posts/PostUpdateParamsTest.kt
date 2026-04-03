@@ -21,6 +21,7 @@ internal class PostUpdateParamsTest {
                     .type(PostUpdateParams.Media.Type.IMAGE)
                     .build()
             )
+            .notes("notes")
             .recycling(
                 PostUpdateParams.Recycling.builder()
                     .gap(1L)
@@ -64,6 +65,7 @@ internal class PostUpdateParamsTest {
                         .type(PostUpdateParams.Media.Type.IMAGE)
                         .build()
                 )
+                .notes("notes")
                 .recycling(
                     PostUpdateParams.Recycling.builder()
                         .gap(1L)
@@ -95,6 +97,7 @@ internal class PostUpdateParamsTest {
                     .type(PostUpdateParams.Media.Type.IMAGE)
                     .build()
             )
+        assertThat(body.notes()).contains("notes")
         assertThat(body.recycling())
             .contains(
                 PostUpdateParams.Recycling.builder()

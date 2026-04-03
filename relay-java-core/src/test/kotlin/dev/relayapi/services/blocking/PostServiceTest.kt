@@ -85,6 +85,7 @@ internal class PostServiceTest {
                             .type(PostUpdateParams.Media.Type.IMAGE)
                             .build()
                     )
+                    .notes("notes")
                     .recycling(
                         PostUpdateParams.Recycling.builder()
                             .gap(1L)
