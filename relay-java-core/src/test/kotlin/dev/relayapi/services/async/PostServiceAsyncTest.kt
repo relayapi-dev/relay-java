@@ -126,6 +126,7 @@ internal class PostServiceAsyncTest {
                     .cursor("cursor")
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .include("include")
+                    .includeExternal(PostListParams.IncludeExternal.TRUE)
                     .limit(1L)
                     .status(PostListParams.Status.DRAFT)
                     .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))

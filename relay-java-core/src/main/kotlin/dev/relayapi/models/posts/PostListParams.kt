@@ -22,6 +22,7 @@ private constructor(
     private val cursor: String?,
     private val from: OffsetDateTime?,
     private val include: String?,
+    private val includeExternal: IncludeExternal?,
     private val limit: Long?,
     private val status: Status?,
     private val to: OffsetDateTime?,
@@ -41,6 +42,9 @@ private constructor(
 
     /** Comma-separated list of fields to include in the response (e.g. 'targets,media') */
     fun include(): Optional<String> = Optional.ofNullable(include)
+
+    /** When true and status=published, also return external posts merged by published_at */
+    fun includeExternal(): Optional<IncludeExternal> = Optional.ofNullable(includeExternal)
 
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
@@ -77,6 +81,7 @@ private constructor(
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
         private var include: String? = null
+        private var includeExternal: IncludeExternal? = null
         private var limit: Long? = null
         private var status: Status? = null
         private var to: OffsetDateTime? = null
@@ -90,6 +95,7 @@ private constructor(
             cursor = postListParams.cursor
             from = postListParams.from
             include = postListParams.include
+            includeExternal = postListParams.includeExternal
             limit = postListParams.limit
             status = postListParams.status
             to = postListParams.to
@@ -121,6 +127,15 @@ private constructor(
 
         /** Alias for calling [Builder.include] with `include.orElse(null)`. */
         fun include(include: Optional<String>) = include(include.getOrNull())
+
+        /** When true and status=published, also return external posts merged by published_at */
+        fun includeExternal(includeExternal: IncludeExternal?) = apply {
+            this.includeExternal = includeExternal
+        }
+
+        /** Alias for calling [Builder.includeExternal] with `includeExternal.orElse(null)`. */
+        fun includeExternal(includeExternal: Optional<IncludeExternal>) =
+            includeExternal(includeExternal.getOrNull())
 
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
@@ -262,6 +277,7 @@ private constructor(
                 cursor,
                 from,
                 include,
+                includeExternal,
                 limit,
                 status,
                 to,
@@ -280,6 +296,7 @@ private constructor(
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 include?.let { put("include", it) }
+                includeExternal?.let { put("include_external", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 status?.let { put("status", it.toString()) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
@@ -287,6 +304,135 @@ private constructor(
                 putAll(additionalQueryParams)
             }
             .build()
+
+    /** When true and status=published, also return external posts merged by published_at */
+    class IncludeExternal @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val TRUE = of("true")
+
+            @JvmField val FALSE = of("false")
+
+            @JvmStatic fun of(value: String) = IncludeExternal(JsonField.of(value))
+        }
+
+        /** An enum containing [IncludeExternal]'s known values. */
+        enum class Known {
+            TRUE,
+            FALSE,
+        }
+
+        /**
+         * An enum containing [IncludeExternal]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [IncludeExternal] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            TRUE,
+            FALSE,
+            /**
+             * An enum member indicating that [IncludeExternal] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                TRUE -> Value.TRUE
+                FALSE -> Value.FALSE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws RelayInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                TRUE -> Known.TRUE
+                FALSE -> Known.FALSE
+                else -> throw RelayInvalidDataException("Unknown IncludeExternal: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws RelayInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow { RelayInvalidDataException("Value is not a String") }
+
+        private var validated: Boolean = false
+
+        fun validate(): IncludeExternal = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is IncludeExternal && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     /** Filter by post status */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -441,6 +587,7 @@ private constructor(
             cursor == other.cursor &&
             from == other.from &&
             include == other.include &&
+            includeExternal == other.includeExternal &&
             limit == other.limit &&
             status == other.status &&
             to == other.to &&
@@ -455,6 +602,7 @@ private constructor(
             cursor,
             from,
             include,
+            includeExternal,
             limit,
             status,
             to,
@@ -464,5 +612,5 @@ private constructor(
         )
 
     override fun toString() =
-        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, include=$include, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, include=$include, includeExternal=$includeExternal, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

@@ -35,6 +35,7 @@ private constructor(
     private val status: JsonField<Status>,
     private val targets: JsonField<Targets>,
     private val updatedAt: JsonField<OffsetDateTime>,
+    private val metrics: JsonField<Metrics>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -63,6 +64,7 @@ private constructor(
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("metrics") @ExcludeMissing metrics: JsonField<Metrics> = JsonMissing.of(),
     ) : this(
         id,
         content,
@@ -75,6 +77,7 @@ private constructor(
         status,
         targets,
         updatedAt,
+        metrics,
         mutableMapOf(),
     )
 
@@ -153,6 +156,14 @@ private constructor(
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
+
+    /**
+     * Engagement metrics (reactions, comments, views, etc.)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun metrics(): Optional<Metrics> = metrics.getOptional("metrics")
 
     /**
      * Returns the raw JSON value of [id].
@@ -241,6 +252,13 @@ private constructor(
     @ExcludeMissing
     fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
 
+    /**
+     * Returns the raw JSON value of [metrics].
+     *
+     * Unlike [metrics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("metrics") @ExcludeMissing fun _metrics(): JsonField<Metrics> = metrics
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -290,6 +308,7 @@ private constructor(
         private var status: JsonField<Status>? = null
         private var targets: JsonField<Targets>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
+        private var metrics: JsonField<Metrics> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -305,6 +324,7 @@ private constructor(
             status = postCreateResponse.status
             targets = postCreateResponse.targets
             updatedAt = postCreateResponse.updatedAt
+            metrics = postCreateResponse.metrics
             additionalProperties = postCreateResponse.additionalProperties.toMutableMap()
         }
 
@@ -466,6 +486,17 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
+        /** Engagement metrics (reactions, comments, views, etc.) */
+        fun metrics(metrics: Metrics) = metrics(JsonField.of(metrics))
+
+        /**
+         * Sets [Builder.metrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.metrics] with a well-typed [Metrics] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun metrics(metrics: JsonField<Metrics>) = apply { this.metrics = metrics }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -520,6 +551,7 @@ private constructor(
                 checkRequired("status", status),
                 checkRequired("targets", targets),
                 checkRequired("updatedAt", updatedAt),
+                metrics,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -542,6 +574,7 @@ private constructor(
         status().validate()
         targets().validate()
         updatedAt()
+        metrics().ifPresent { it.validate() }
         validated = true
     }
 
@@ -570,7 +603,8 @@ private constructor(
             (if (scheduledAt.asKnown().isPresent) 1 else 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (targets.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+            (if (updatedAt.asKnown().isPresent) 1 else 0) +
+            (metrics.asKnown().getOrNull()?.validity() ?: 0)
 
     class Media
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -2030,6 +2064,447 @@ private constructor(
         override fun toString() = "Targets{additionalProperties=$additionalProperties}"
     }
 
+    /** Engagement metrics (reactions, comments, views, etc.) */
+    class Metrics
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val clicks: JsonField<Double>,
+        private val comments: JsonField<Double>,
+        private val engagementRate: JsonField<Double>,
+        private val impressions: JsonField<Double>,
+        private val likes: JsonField<Double>,
+        private val reach: JsonField<Double>,
+        private val saves: JsonField<Double>,
+        private val shares: JsonField<Double>,
+        private val views: JsonField<Double>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("clicks") @ExcludeMissing clicks: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("comments")
+            @ExcludeMissing
+            comments: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("engagement_rate")
+            @ExcludeMissing
+            engagementRate: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("impressions")
+            @ExcludeMissing
+            impressions: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("likes") @ExcludeMissing likes: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("reach") @ExcludeMissing reach: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("saves") @ExcludeMissing saves: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("shares") @ExcludeMissing shares: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("views") @ExcludeMissing views: JsonField<Double> = JsonMissing.of(),
+        ) : this(
+            clicks,
+            comments,
+            engagementRate,
+            impressions,
+            likes,
+            reach,
+            saves,
+            shares,
+            views,
+            mutableMapOf(),
+        )
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun clicks(): Optional<Double> = clicks.getOptional("clicks")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun comments(): Optional<Double> = comments.getOptional("comments")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun engagementRate(): Optional<Double> = engagementRate.getOptional("engagement_rate")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun impressions(): Optional<Double> = impressions.getOptional("impressions")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun likes(): Optional<Double> = likes.getOptional("likes")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun reach(): Optional<Double> = reach.getOptional("reach")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun saves(): Optional<Double> = saves.getOptional("saves")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun shares(): Optional<Double> = shares.getOptional("shares")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun views(): Optional<Double> = views.getOptional("views")
+
+        /**
+         * Returns the raw JSON value of [clicks].
+         *
+         * Unlike [clicks], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("clicks") @ExcludeMissing fun _clicks(): JsonField<Double> = clicks
+
+        /**
+         * Returns the raw JSON value of [comments].
+         *
+         * Unlike [comments], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("comments") @ExcludeMissing fun _comments(): JsonField<Double> = comments
+
+        /**
+         * Returns the raw JSON value of [engagementRate].
+         *
+         * Unlike [engagementRate], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("engagement_rate")
+        @ExcludeMissing
+        fun _engagementRate(): JsonField<Double> = engagementRate
+
+        /**
+         * Returns the raw JSON value of [impressions].
+         *
+         * Unlike [impressions], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("impressions")
+        @ExcludeMissing
+        fun _impressions(): JsonField<Double> = impressions
+
+        /**
+         * Returns the raw JSON value of [likes].
+         *
+         * Unlike [likes], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("likes") @ExcludeMissing fun _likes(): JsonField<Double> = likes
+
+        /**
+         * Returns the raw JSON value of [reach].
+         *
+         * Unlike [reach], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("reach") @ExcludeMissing fun _reach(): JsonField<Double> = reach
+
+        /**
+         * Returns the raw JSON value of [saves].
+         *
+         * Unlike [saves], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("saves") @ExcludeMissing fun _saves(): JsonField<Double> = saves
+
+        /**
+         * Returns the raw JSON value of [shares].
+         *
+         * Unlike [shares], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("shares") @ExcludeMissing fun _shares(): JsonField<Double> = shares
+
+        /**
+         * Returns the raw JSON value of [views].
+         *
+         * Unlike [views], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("views") @ExcludeMissing fun _views(): JsonField<Double> = views
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Metrics]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Metrics]. */
+        class Builder internal constructor() {
+
+            private var clicks: JsonField<Double> = JsonMissing.of()
+            private var comments: JsonField<Double> = JsonMissing.of()
+            private var engagementRate: JsonField<Double> = JsonMissing.of()
+            private var impressions: JsonField<Double> = JsonMissing.of()
+            private var likes: JsonField<Double> = JsonMissing.of()
+            private var reach: JsonField<Double> = JsonMissing.of()
+            private var saves: JsonField<Double> = JsonMissing.of()
+            private var shares: JsonField<Double> = JsonMissing.of()
+            private var views: JsonField<Double> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(metrics: Metrics) = apply {
+                clicks = metrics.clicks
+                comments = metrics.comments
+                engagementRate = metrics.engagementRate
+                impressions = metrics.impressions
+                likes = metrics.likes
+                reach = metrics.reach
+                saves = metrics.saves
+                shares = metrics.shares
+                views = metrics.views
+                additionalProperties = metrics.additionalProperties.toMutableMap()
+            }
+
+            fun clicks(clicks: Double) = clicks(JsonField.of(clicks))
+
+            /**
+             * Sets [Builder.clicks] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.clicks] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun clicks(clicks: JsonField<Double>) = apply { this.clicks = clicks }
+
+            fun comments(comments: Double) = comments(JsonField.of(comments))
+
+            /**
+             * Sets [Builder.comments] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.comments] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun comments(comments: JsonField<Double>) = apply { this.comments = comments }
+
+            fun engagementRate(engagementRate: Double) =
+                engagementRate(JsonField.of(engagementRate))
+
+            /**
+             * Sets [Builder.engagementRate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.engagementRate] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun engagementRate(engagementRate: JsonField<Double>) = apply {
+                this.engagementRate = engagementRate
+            }
+
+            fun impressions(impressions: Double) = impressions(JsonField.of(impressions))
+
+            /**
+             * Sets [Builder.impressions] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.impressions] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun impressions(impressions: JsonField<Double>) = apply {
+                this.impressions = impressions
+            }
+
+            fun likes(likes: Double) = likes(JsonField.of(likes))
+
+            /**
+             * Sets [Builder.likes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.likes] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun likes(likes: JsonField<Double>) = apply { this.likes = likes }
+
+            fun reach(reach: Double) = reach(JsonField.of(reach))
+
+            /**
+             * Sets [Builder.reach] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.reach] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun reach(reach: JsonField<Double>) = apply { this.reach = reach }
+
+            fun saves(saves: Double) = saves(JsonField.of(saves))
+
+            /**
+             * Sets [Builder.saves] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.saves] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun saves(saves: JsonField<Double>) = apply { this.saves = saves }
+
+            fun shares(shares: Double) = shares(JsonField.of(shares))
+
+            /**
+             * Sets [Builder.shares] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.shares] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun shares(shares: JsonField<Double>) = apply { this.shares = shares }
+
+            fun views(views: Double) = views(JsonField.of(views))
+
+            /**
+             * Sets [Builder.views] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.views] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun views(views: JsonField<Double>) = apply { this.views = views }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Metrics].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Metrics =
+                Metrics(
+                    clicks,
+                    comments,
+                    engagementRate,
+                    impressions,
+                    likes,
+                    reach,
+                    saves,
+                    shares,
+                    views,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Metrics = apply {
+            if (validated) {
+                return@apply
+            }
+
+            clicks()
+            comments()
+            engagementRate()
+            impressions()
+            likes()
+            reach()
+            saves()
+            shares()
+            views()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (clicks.asKnown().isPresent) 1 else 0) +
+                (if (comments.asKnown().isPresent) 1 else 0) +
+                (if (engagementRate.asKnown().isPresent) 1 else 0) +
+                (if (impressions.asKnown().isPresent) 1 else 0) +
+                (if (likes.asKnown().isPresent) 1 else 0) +
+                (if (reach.asKnown().isPresent) 1 else 0) +
+                (if (saves.asKnown().isPresent) 1 else 0) +
+                (if (shares.asKnown().isPresent) 1 else 0) +
+                (if (views.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Metrics &&
+                clicks == other.clicks &&
+                comments == other.comments &&
+                engagementRate == other.engagementRate &&
+                impressions == other.impressions &&
+                likes == other.likes &&
+                reach == other.reach &&
+                saves == other.saves &&
+                shares == other.shares &&
+                views == other.views &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                clicks,
+                comments,
+                engagementRate,
+                impressions,
+                likes,
+                reach,
+                saves,
+                shares,
+                views,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Metrics{clicks=$clicks, comments=$comments, engagementRate=$engagementRate, impressions=$impressions, likes=$likes, reach=$reach, saves=$saves, shares=$shares, views=$views, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -2047,6 +2522,7 @@ private constructor(
             status == other.status &&
             targets == other.targets &&
             updatedAt == other.updatedAt &&
+            metrics == other.metrics &&
             additionalProperties == other.additionalProperties
     }
 
@@ -2063,6 +2539,7 @@ private constructor(
             status,
             targets,
             updatedAt,
+            metrics,
             additionalProperties,
         )
     }
@@ -2070,5 +2547,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PostCreateResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "PostCreateResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, metrics=$metrics, additionalProperties=$additionalProperties}"
 }
