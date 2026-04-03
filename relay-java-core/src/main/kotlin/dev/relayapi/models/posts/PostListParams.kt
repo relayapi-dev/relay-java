@@ -43,7 +43,10 @@ private constructor(
     /** Comma-separated list of fields to include in the response (e.g. 'targets,media') */
     fun include(): Optional<String> = Optional.ofNullable(include)
 
-    /** When true and status=published, also return external posts merged by published_at */
+    /**
+     * When true, also return external posts merged by published_at (works with status=published or
+     * no status filter)
+     */
     fun includeExternal(): Optional<IncludeExternal> = Optional.ofNullable(includeExternal)
 
     /** Number of items per page */
@@ -128,7 +131,10 @@ private constructor(
         /** Alias for calling [Builder.include] with `include.orElse(null)`. */
         fun include(include: Optional<String>) = include(include.getOrNull())
 
-        /** When true and status=published, also return external posts merged by published_at */
+        /**
+         * When true, also return external posts merged by published_at (works with status=published
+         * or no status filter)
+         */
         fun includeExternal(includeExternal: IncludeExternal?) = apply {
             this.includeExternal = includeExternal
         }
@@ -305,7 +311,10 @@ private constructor(
             }
             .build()
 
-    /** When true and status=published, also return external posts merged by published_at */
+    /**
+     * When true, also return external posts merged by published_at (works with status=published or
+     * no status filter)
+     */
     class IncludeExternal @JsonCreator private constructor(private val value: JsonField<String>) :
         Enum {
 
