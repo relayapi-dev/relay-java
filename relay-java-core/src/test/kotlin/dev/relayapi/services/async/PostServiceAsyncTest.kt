@@ -27,6 +27,14 @@ internal class PostServiceAsyncTest {
                     .scheduledAt("now")
                     .addTarget("string")
                     .content("content")
+                    .addCrossPostAction(
+                        PostCreateParams.CrossPostAction.builder()
+                            .actionType(PostCreateParams.CrossPostAction.ActionType.REPOST)
+                            .targetAccountId("target_account_id")
+                            .content("content")
+                            .delayMinutes(0L)
+                            .build()
+                    )
                     .addMedia(
                         PostCreateParams.Media.builder()
                             .url("https://example.com")
@@ -44,9 +52,17 @@ internal class PostServiceAsyncTest {
                             .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
                     )
+                    .shortenUrls(true)
+                    .skipSignature(true)
                     .targetOptions(
                         PostCreateParams.TargetOptions.builder()
                             .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                            .build()
+                    )
+                    .templateId("template_id")
+                    .templateVariables(
+                        PostCreateParams.TemplateVariables.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
                     .timezone("timezone")
@@ -164,6 +180,16 @@ internal class PostServiceAsyncTest {
                             .scheduledAt("now")
                             .addTarget("string")
                             .content("content")
+                            .addCrossPostAction(
+                                PostBulkCreateParams.Post.CrossPostAction.builder()
+                                    .actionType(
+                                        PostBulkCreateParams.Post.CrossPostAction.ActionType.REPOST
+                                    )
+                                    .targetAccountId("target_account_id")
+                                    .content("content")
+                                    .delayMinutes(0L)
+                                    .build()
+                            )
                             .addMedia(
                                 PostBulkCreateParams.Post.Media.builder()
                                     .url("https://example.com")
@@ -181,12 +207,20 @@ internal class PostServiceAsyncTest {
                                     .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                                     .build()
                             )
+                            .shortenUrls(true)
+                            .skipSignature(true)
                             .targetOptions(
                                 PostBulkCreateParams.Post.TargetOptions.builder()
                                     .putAdditionalProperty(
                                         "foo",
                                         JsonValue.from(mapOf("foo" to "bar")),
                                     )
+                                    .build()
+                            )
+                            .templateId("template_id")
+                            .templateVariables(
+                                PostBulkCreateParams.Post.TemplateVariables.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("string"))
                                     .build()
                             )
                             .timezone("timezone")
