@@ -16,6 +16,7 @@ import dev.relayapi.errors.RelayInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class UsageRetrieveResponse
@@ -1358,12 +1359,13 @@ private constructor(
         )
 
         /**
-         * API calls remaining this cycle (Infinity for pro overage)
+         * API calls remaining this cycle. Null for pro plan (unlimited, overage billed).
          *
-         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
          */
-        fun apiCallsRemaining(): Double = apiCallsRemaining.getRequired("api_calls_remaining")
+        fun apiCallsRemaining(): Optional<Double> =
+            apiCallsRemaining.getOptional("api_calls_remaining")
 
         /**
          * API calls used this cycle
@@ -1515,9 +1517,23 @@ private constructor(
                 additionalProperties = usage.additionalProperties.toMutableMap()
             }
 
-            /** API calls remaining this cycle (Infinity for pro overage) */
+            /** API calls remaining this cycle. Null for pro plan (unlimited, overage billed). */
+            fun apiCallsRemaining(apiCallsRemaining: Double?) =
+                apiCallsRemaining(JsonField.ofNullable(apiCallsRemaining))
+
+            /**
+             * Alias for [Builder.apiCallsRemaining].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
             fun apiCallsRemaining(apiCallsRemaining: Double) =
-                apiCallsRemaining(JsonField.of(apiCallsRemaining))
+                apiCallsRemaining(apiCallsRemaining as Double?)
+
+            /**
+             * Alias for calling [Builder.apiCallsRemaining] with `apiCallsRemaining.orElse(null)`.
+             */
+            fun apiCallsRemaining(apiCallsRemaining: Optional<Double>) =
+                apiCallsRemaining(apiCallsRemaining.getOrNull())
 
             /**
              * Sets [Builder.apiCallsRemaining] to an arbitrary JSON value.
