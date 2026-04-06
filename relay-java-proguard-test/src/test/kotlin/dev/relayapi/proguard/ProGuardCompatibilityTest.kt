@@ -147,6 +147,8 @@ internal class ProGuardCompatibilityTest {
                         .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                         .build()
                 )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
                 .timezone("timezone")
                 .build()
 

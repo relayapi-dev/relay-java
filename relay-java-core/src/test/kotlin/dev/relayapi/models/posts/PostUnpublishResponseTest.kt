@@ -91,6 +91,8 @@ internal class PostUnpublishResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                         .build()
                 )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
                 .timezone("timezone")
                 .build()
 
@@ -176,6 +178,8 @@ internal class PostUnpublishResponseTest {
                     .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                     .build()
             )
+        assertThat(postUnpublishResponse.threadGroupId()).contains("thread_group_id")
+        assertThat(postUnpublishResponse.threadPosition()).contains(0.0)
         assertThat(postUnpublishResponse.timezone()).contains("timezone")
     }
 
@@ -259,6 +263,8 @@ internal class PostUnpublishResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                         .build()
                 )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
                 .timezone("timezone")
                 .build()
 

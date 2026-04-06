@@ -293,12 +293,16 @@ private constructor(
     class PlatformLimits
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val beehiiv: JsonField<Beehiiv>,
         private val bluesky: JsonField<Bluesky>,
+        private val convertkit: JsonField<Convertkit>,
         private val discord: JsonField<Discord>,
         private val facebook: JsonField<Facebook>,
         private val googlebusiness: JsonField<Googlebusiness>,
         private val instagram: JsonField<Instagram>,
         private val linkedin: JsonField<Linkedin>,
+        private val listmonk: JsonField<Listmonk>,
+        private val mailchimp: JsonField<Mailchimp>,
         private val mastodon: JsonField<Mastodon>,
         private val pinterest: JsonField<Pinterest>,
         private val reddit: JsonField<Reddit>,
@@ -315,7 +319,11 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("beehiiv") @ExcludeMissing beehiiv: JsonField<Beehiiv> = JsonMissing.of(),
             @JsonProperty("bluesky") @ExcludeMissing bluesky: JsonField<Bluesky> = JsonMissing.of(),
+            @JsonProperty("convertkit")
+            @ExcludeMissing
+            convertkit: JsonField<Convertkit> = JsonMissing.of(),
             @JsonProperty("discord") @ExcludeMissing discord: JsonField<Discord> = JsonMissing.of(),
             @JsonProperty("facebook")
             @ExcludeMissing
@@ -329,6 +337,12 @@ private constructor(
             @JsonProperty("linkedin")
             @ExcludeMissing
             linkedin: JsonField<Linkedin> = JsonMissing.of(),
+            @JsonProperty("listmonk")
+            @ExcludeMissing
+            listmonk: JsonField<Listmonk> = JsonMissing.of(),
+            @JsonProperty("mailchimp")
+            @ExcludeMissing
+            mailchimp: JsonField<Mailchimp> = JsonMissing.of(),
             @JsonProperty("mastodon")
             @ExcludeMissing
             mastodon: JsonField<Mastodon> = JsonMissing.of(),
@@ -351,12 +365,16 @@ private constructor(
             whatsapp: JsonField<Whatsapp> = JsonMissing.of(),
             @JsonProperty("youtube") @ExcludeMissing youtube: JsonField<Youtube> = JsonMissing.of(),
         ) : this(
+            beehiiv,
             bluesky,
+            convertkit,
             discord,
             facebook,
             googlebusiness,
             instagram,
             linkedin,
+            listmonk,
+            mailchimp,
             mastodon,
             pinterest,
             reddit,
@@ -375,7 +393,19 @@ private constructor(
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
          */
+        fun beehiiv(): Optional<Beehiiv> = beehiiv.getOptional("beehiiv")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
         fun bluesky(): Optional<Bluesky> = bluesky.getOptional("bluesky")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun convertkit(): Optional<Convertkit> = convertkit.getOptional("convertkit")
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -407,6 +437,18 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun linkedin(): Optional<Linkedin> = linkedin.getOptional("linkedin")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun listmonk(): Optional<Listmonk> = listmonk.getOptional("listmonk")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun mailchimp(): Optional<Mailchimp> = mailchimp.getOptional("mailchimp")
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -475,11 +517,27 @@ private constructor(
         fun youtube(): Optional<Youtube> = youtube.getOptional("youtube")
 
         /**
+         * Returns the raw JSON value of [beehiiv].
+         *
+         * Unlike [beehiiv], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("beehiiv") @ExcludeMissing fun _beehiiv(): JsonField<Beehiiv> = beehiiv
+
+        /**
          * Returns the raw JSON value of [bluesky].
          *
          * Unlike [bluesky], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("bluesky") @ExcludeMissing fun _bluesky(): JsonField<Bluesky> = bluesky
+
+        /**
+         * Returns the raw JSON value of [convertkit].
+         *
+         * Unlike [convertkit], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("convertkit")
+        @ExcludeMissing
+        fun _convertkit(): JsonField<Convertkit> = convertkit
 
         /**
          * Returns the raw JSON value of [discord].
@@ -520,6 +578,22 @@ private constructor(
          * Unlike [linkedin], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("linkedin") @ExcludeMissing fun _linkedin(): JsonField<Linkedin> = linkedin
+
+        /**
+         * Returns the raw JSON value of [listmonk].
+         *
+         * Unlike [listmonk], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("listmonk") @ExcludeMissing fun _listmonk(): JsonField<Listmonk> = listmonk
+
+        /**
+         * Returns the raw JSON value of [mailchimp].
+         *
+         * Unlike [mailchimp], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("mailchimp")
+        @ExcludeMissing
+        fun _mailchimp(): JsonField<Mailchimp> = mailchimp
 
         /**
          * Returns the raw JSON value of [mastodon].
@@ -621,12 +695,16 @@ private constructor(
         /** A builder for [PlatformLimits]. */
         class Builder internal constructor() {
 
+            private var beehiiv: JsonField<Beehiiv> = JsonMissing.of()
             private var bluesky: JsonField<Bluesky> = JsonMissing.of()
+            private var convertkit: JsonField<Convertkit> = JsonMissing.of()
             private var discord: JsonField<Discord> = JsonMissing.of()
             private var facebook: JsonField<Facebook> = JsonMissing.of()
             private var googlebusiness: JsonField<Googlebusiness> = JsonMissing.of()
             private var instagram: JsonField<Instagram> = JsonMissing.of()
             private var linkedin: JsonField<Linkedin> = JsonMissing.of()
+            private var listmonk: JsonField<Listmonk> = JsonMissing.of()
+            private var mailchimp: JsonField<Mailchimp> = JsonMissing.of()
             private var mastodon: JsonField<Mastodon> = JsonMissing.of()
             private var pinterest: JsonField<Pinterest> = JsonMissing.of()
             private var reddit: JsonField<Reddit> = JsonMissing.of()
@@ -642,12 +720,16 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(platformLimits: PlatformLimits) = apply {
+                beehiiv = platformLimits.beehiiv
                 bluesky = platformLimits.bluesky
+                convertkit = platformLimits.convertkit
                 discord = platformLimits.discord
                 facebook = platformLimits.facebook
                 googlebusiness = platformLimits.googlebusiness
                 instagram = platformLimits.instagram
                 linkedin = platformLimits.linkedin
+                listmonk = platformLimits.listmonk
+                mailchimp = platformLimits.mailchimp
                 mastodon = platformLimits.mastodon
                 pinterest = platformLimits.pinterest
                 reddit = platformLimits.reddit
@@ -662,6 +744,17 @@ private constructor(
                 additionalProperties = platformLimits.additionalProperties.toMutableMap()
             }
 
+            fun beehiiv(beehiiv: Beehiiv) = beehiiv(JsonField.of(beehiiv))
+
+            /**
+             * Sets [Builder.beehiiv] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.beehiiv] with a well-typed [Beehiiv] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun beehiiv(beehiiv: JsonField<Beehiiv>) = apply { this.beehiiv = beehiiv }
+
             fun bluesky(bluesky: Bluesky) = bluesky(JsonField.of(bluesky))
 
             /**
@@ -672,6 +765,19 @@ private constructor(
              * supported value.
              */
             fun bluesky(bluesky: JsonField<Bluesky>) = apply { this.bluesky = bluesky }
+
+            fun convertkit(convertkit: Convertkit) = convertkit(JsonField.of(convertkit))
+
+            /**
+             * Sets [Builder.convertkit] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.convertkit] with a well-typed [Convertkit] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun convertkit(convertkit: JsonField<Convertkit>) = apply {
+                this.convertkit = convertkit
+            }
 
             fun discord(discord: Discord) = discord(JsonField.of(discord))
 
@@ -730,6 +836,28 @@ private constructor(
              * supported value.
              */
             fun linkedin(linkedin: JsonField<Linkedin>) = apply { this.linkedin = linkedin }
+
+            fun listmonk(listmonk: Listmonk) = listmonk(JsonField.of(listmonk))
+
+            /**
+             * Sets [Builder.listmonk] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.listmonk] with a well-typed [Listmonk] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun listmonk(listmonk: JsonField<Listmonk>) = apply { this.listmonk = listmonk }
+
+            fun mailchimp(mailchimp: Mailchimp) = mailchimp(JsonField.of(mailchimp))
+
+            /**
+             * Sets [Builder.mailchimp] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.mailchimp] with a well-typed [Mailchimp] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun mailchimp(mailchimp: JsonField<Mailchimp>) = apply { this.mailchimp = mailchimp }
 
             fun mastodon(mastodon: Mastodon) = mastodon(JsonField.of(mastodon))
 
@@ -878,12 +1006,16 @@ private constructor(
              */
             fun build(): PlatformLimits =
                 PlatformLimits(
+                    beehiiv,
                     bluesky,
+                    convertkit,
                     discord,
                     facebook,
                     googlebusiness,
                     instagram,
                     linkedin,
+                    listmonk,
+                    mailchimp,
                     mastodon,
                     pinterest,
                     reddit,
@@ -906,12 +1038,16 @@ private constructor(
                 return@apply
             }
 
+            beehiiv().ifPresent { it.validate() }
             bluesky().ifPresent { it.validate() }
+            convertkit().ifPresent { it.validate() }
             discord().ifPresent { it.validate() }
             facebook().ifPresent { it.validate() }
             googlebusiness().ifPresent { it.validate() }
             instagram().ifPresent { it.validate() }
             linkedin().ifPresent { it.validate() }
+            listmonk().ifPresent { it.validate() }
+            mailchimp().ifPresent { it.validate() }
             mastodon().ifPresent { it.validate() }
             pinterest().ifPresent { it.validate() }
             reddit().ifPresent { it.validate() }
@@ -942,12 +1078,16 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (bluesky.asKnown().getOrNull()?.validity() ?: 0) +
+            (beehiiv.asKnown().getOrNull()?.validity() ?: 0) +
+                (bluesky.asKnown().getOrNull()?.validity() ?: 0) +
+                (convertkit.asKnown().getOrNull()?.validity() ?: 0) +
                 (discord.asKnown().getOrNull()?.validity() ?: 0) +
                 (facebook.asKnown().getOrNull()?.validity() ?: 0) +
                 (googlebusiness.asKnown().getOrNull()?.validity() ?: 0) +
                 (instagram.asKnown().getOrNull()?.validity() ?: 0) +
                 (linkedin.asKnown().getOrNull()?.validity() ?: 0) +
+                (listmonk.asKnown().getOrNull()?.validity() ?: 0) +
+                (mailchimp.asKnown().getOrNull()?.validity() ?: 0) +
                 (mastodon.asKnown().getOrNull()?.validity() ?: 0) +
                 (pinterest.asKnown().getOrNull()?.validity() ?: 0) +
                 (reddit.asKnown().getOrNull()?.validity() ?: 0) +
@@ -959,6 +1099,264 @@ private constructor(
                 (twitter.asKnown().getOrNull()?.validity() ?: 0) +
                 (whatsapp.asKnown().getOrNull()?.validity() ?: 0) +
                 (youtube.asKnown().getOrNull()?.validity() ?: 0)
+
+        class Beehiiv
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val maxSize: JsonField<Double>,
+            private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("max_size")
+                @ExcludeMissing
+                maxSize: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("within_limit")
+                @ExcludeMissing
+                withinLimit: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
+
+            /**
+             * Maximum file size in bytes
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun maxSize(): Double = maxSize.getRequired("max_size")
+
+            /**
+             * Whether file size is within limit
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
+
+            /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
+             * Returns the raw JSON value of [maxSize].
+             *
+             * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("max_size") @ExcludeMissing fun _maxSize(): JsonField<Double> = maxSize
+
+            /**
+             * Returns the raw JSON value of [withinLimit].
+             *
+             * Unlike [withinLimit], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("within_limit")
+            @ExcludeMissing
+            fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Beehiiv].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Beehiiv]. */
+            class Builder internal constructor() {
+
+                private var maxSize: JsonField<Double>? = null
+                private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(beehiiv: Beehiiv) = apply {
+                    maxSize = beehiiv.maxSize
+                    withinLimit = beehiiv.withinLimit
+                    mimeTypeSupported = beehiiv.mimeTypeSupported
+                    additionalProperties = beehiiv.additionalProperties.toMutableMap()
+                }
+
+                /** Maximum file size in bytes */
+                fun maxSize(maxSize: Double) = maxSize(JsonField.of(maxSize))
+
+                /**
+                 * Sets [Builder.maxSize] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.maxSize] with a well-typed [Double] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun maxSize(maxSize: JsonField<Double>) = apply { this.maxSize = maxSize }
+
+                /** Whether file size is within limit */
+                fun withinLimit(withinLimit: Boolean) = withinLimit(JsonField.of(withinLimit))
+
+                /**
+                 * Sets [Builder.withinLimit] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.withinLimit] with a well-typed [Boolean] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
+                    this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Beehiiv].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Beehiiv =
+                    Beehiiv(
+                        checkRequired("maxSize", maxSize),
+                        checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Beehiiv = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                maxSize()
+                withinLimit()
+                mimeTypeSupported()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (maxSize.asKnown().isPresent) 1 else 0) +
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Beehiiv &&
+                    maxSize == other.maxSize &&
+                    withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Beehiiv{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
+        }
 
         class Bluesky
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1216,6 +1614,264 @@ private constructor(
 
             override fun toString() =
                 "Bluesky{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
+        }
+
+        class Convertkit
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val maxSize: JsonField<Double>,
+            private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("max_size")
+                @ExcludeMissing
+                maxSize: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("within_limit")
+                @ExcludeMissing
+                withinLimit: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
+
+            /**
+             * Maximum file size in bytes
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun maxSize(): Double = maxSize.getRequired("max_size")
+
+            /**
+             * Whether file size is within limit
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
+
+            /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
+             * Returns the raw JSON value of [maxSize].
+             *
+             * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("max_size") @ExcludeMissing fun _maxSize(): JsonField<Double> = maxSize
+
+            /**
+             * Returns the raw JSON value of [withinLimit].
+             *
+             * Unlike [withinLimit], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("within_limit")
+            @ExcludeMissing
+            fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Convertkit].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Convertkit]. */
+            class Builder internal constructor() {
+
+                private var maxSize: JsonField<Double>? = null
+                private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(convertkit: Convertkit) = apply {
+                    maxSize = convertkit.maxSize
+                    withinLimit = convertkit.withinLimit
+                    mimeTypeSupported = convertkit.mimeTypeSupported
+                    additionalProperties = convertkit.additionalProperties.toMutableMap()
+                }
+
+                /** Maximum file size in bytes */
+                fun maxSize(maxSize: Double) = maxSize(JsonField.of(maxSize))
+
+                /**
+                 * Sets [Builder.maxSize] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.maxSize] with a well-typed [Double] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun maxSize(maxSize: JsonField<Double>) = apply { this.maxSize = maxSize }
+
+                /** Whether file size is within limit */
+                fun withinLimit(withinLimit: Boolean) = withinLimit(JsonField.of(withinLimit))
+
+                /**
+                 * Sets [Builder.withinLimit] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.withinLimit] with a well-typed [Boolean] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
+                    this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Convertkit].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Convertkit =
+                    Convertkit(
+                        checkRequired("maxSize", maxSize),
+                        checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Convertkit = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                maxSize()
+                withinLimit()
+                mimeTypeSupported()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (maxSize.asKnown().isPresent) 1 else 0) +
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Convertkit &&
+                    maxSize == other.maxSize &&
+                    withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Convertkit{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Discord
@@ -2506,6 +3162,522 @@ private constructor(
 
             override fun toString() =
                 "Linkedin{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
+        }
+
+        class Listmonk
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val maxSize: JsonField<Double>,
+            private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("max_size")
+                @ExcludeMissing
+                maxSize: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("within_limit")
+                @ExcludeMissing
+                withinLimit: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
+
+            /**
+             * Maximum file size in bytes
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun maxSize(): Double = maxSize.getRequired("max_size")
+
+            /**
+             * Whether file size is within limit
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
+
+            /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
+             * Returns the raw JSON value of [maxSize].
+             *
+             * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("max_size") @ExcludeMissing fun _maxSize(): JsonField<Double> = maxSize
+
+            /**
+             * Returns the raw JSON value of [withinLimit].
+             *
+             * Unlike [withinLimit], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("within_limit")
+            @ExcludeMissing
+            fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Listmonk].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Listmonk]. */
+            class Builder internal constructor() {
+
+                private var maxSize: JsonField<Double>? = null
+                private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(listmonk: Listmonk) = apply {
+                    maxSize = listmonk.maxSize
+                    withinLimit = listmonk.withinLimit
+                    mimeTypeSupported = listmonk.mimeTypeSupported
+                    additionalProperties = listmonk.additionalProperties.toMutableMap()
+                }
+
+                /** Maximum file size in bytes */
+                fun maxSize(maxSize: Double) = maxSize(JsonField.of(maxSize))
+
+                /**
+                 * Sets [Builder.maxSize] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.maxSize] with a well-typed [Double] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun maxSize(maxSize: JsonField<Double>) = apply { this.maxSize = maxSize }
+
+                /** Whether file size is within limit */
+                fun withinLimit(withinLimit: Boolean) = withinLimit(JsonField.of(withinLimit))
+
+                /**
+                 * Sets [Builder.withinLimit] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.withinLimit] with a well-typed [Boolean] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
+                    this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Listmonk].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Listmonk =
+                    Listmonk(
+                        checkRequired("maxSize", maxSize),
+                        checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Listmonk = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                maxSize()
+                withinLimit()
+                mimeTypeSupported()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (maxSize.asKnown().isPresent) 1 else 0) +
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Listmonk &&
+                    maxSize == other.maxSize &&
+                    withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Listmonk{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
+        }
+
+        class Mailchimp
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val maxSize: JsonField<Double>,
+            private val withinLimit: JsonField<Boolean>,
+            private val mimeTypeSupported: JsonField<Boolean>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("max_size")
+                @ExcludeMissing
+                maxSize: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("within_limit")
+                @ExcludeMissing
+                withinLimit: JsonField<Boolean> = JsonMissing.of(),
+                @JsonProperty("mime_type_supported")
+                @ExcludeMissing
+                mimeTypeSupported: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(maxSize, withinLimit, mimeTypeSupported, mutableMapOf())
+
+            /**
+             * Maximum file size in bytes
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun maxSize(): Double = maxSize.getRequired("max_size")
+
+            /**
+             * Whether file size is within limit
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun withinLimit(): Boolean = withinLimit.getRequired("within_limit")
+
+            /**
+             * Whether the MIME type is supported by this platform
+             *
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if
+             *   the server responded with an unexpected value).
+             */
+            fun mimeTypeSupported(): Optional<Boolean> =
+                mimeTypeSupported.getOptional("mime_type_supported")
+
+            /**
+             * Returns the raw JSON value of [maxSize].
+             *
+             * Unlike [maxSize], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("max_size") @ExcludeMissing fun _maxSize(): JsonField<Double> = maxSize
+
+            /**
+             * Returns the raw JSON value of [withinLimit].
+             *
+             * Unlike [withinLimit], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("within_limit")
+            @ExcludeMissing
+            fun _withinLimit(): JsonField<Boolean> = withinLimit
+
+            /**
+             * Returns the raw JSON value of [mimeTypeSupported].
+             *
+             * Unlike [mimeTypeSupported], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("mime_type_supported")
+            @ExcludeMissing
+            fun _mimeTypeSupported(): JsonField<Boolean> = mimeTypeSupported
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Mailchimp].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Mailchimp]. */
+            class Builder internal constructor() {
+
+                private var maxSize: JsonField<Double>? = null
+                private var withinLimit: JsonField<Boolean>? = null
+                private var mimeTypeSupported: JsonField<Boolean> = JsonMissing.of()
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(mailchimp: Mailchimp) = apply {
+                    maxSize = mailchimp.maxSize
+                    withinLimit = mailchimp.withinLimit
+                    mimeTypeSupported = mailchimp.mimeTypeSupported
+                    additionalProperties = mailchimp.additionalProperties.toMutableMap()
+                }
+
+                /** Maximum file size in bytes */
+                fun maxSize(maxSize: Double) = maxSize(JsonField.of(maxSize))
+
+                /**
+                 * Sets [Builder.maxSize] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.maxSize] with a well-typed [Double] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun maxSize(maxSize: JsonField<Double>) = apply { this.maxSize = maxSize }
+
+                /** Whether file size is within limit */
+                fun withinLimit(withinLimit: Boolean) = withinLimit(JsonField.of(withinLimit))
+
+                /**
+                 * Sets [Builder.withinLimit] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.withinLimit] with a well-typed [Boolean] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun withinLimit(withinLimit: JsonField<Boolean>) = apply {
+                    this.withinLimit = withinLimit
+                }
+
+                /** Whether the MIME type is supported by this platform */
+                fun mimeTypeSupported(mimeTypeSupported: Boolean) =
+                    mimeTypeSupported(JsonField.of(mimeTypeSupported))
+
+                /**
+                 * Sets [Builder.mimeTypeSupported] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.mimeTypeSupported] with a well-typed [Boolean]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun mimeTypeSupported(mimeTypeSupported: JsonField<Boolean>) = apply {
+                    this.mimeTypeSupported = mimeTypeSupported
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Mailchimp].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .maxSize()
+                 * .withinLimit()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Mailchimp =
+                    Mailchimp(
+                        checkRequired("maxSize", maxSize),
+                        checkRequired("withinLimit", withinLimit),
+                        mimeTypeSupported,
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Mailchimp = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                maxSize()
+                withinLimit()
+                mimeTypeSupported()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (maxSize.asKnown().isPresent) 1 else 0) +
+                    (if (withinLimit.asKnown().isPresent) 1 else 0) +
+                    (if (mimeTypeSupported.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Mailchimp &&
+                    maxSize == other.maxSize &&
+                    withinLimit == other.withinLimit &&
+                    mimeTypeSupported == other.mimeTypeSupported &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy {
+                Objects.hash(maxSize, withinLimit, mimeTypeSupported, additionalProperties)
+            }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Mailchimp{maxSize=$maxSize, withinLimit=$withinLimit, mimeTypeSupported=$mimeTypeSupported, additionalProperties=$additionalProperties}"
         }
 
         class Mastodon
@@ -5352,12 +6524,16 @@ private constructor(
             }
 
             return other is PlatformLimits &&
+                beehiiv == other.beehiiv &&
                 bluesky == other.bluesky &&
+                convertkit == other.convertkit &&
                 discord == other.discord &&
                 facebook == other.facebook &&
                 googlebusiness == other.googlebusiness &&
                 instagram == other.instagram &&
                 linkedin == other.linkedin &&
+                listmonk == other.listmonk &&
+                mailchimp == other.mailchimp &&
                 mastodon == other.mastodon &&
                 pinterest == other.pinterest &&
                 reddit == other.reddit &&
@@ -5374,12 +6550,16 @@ private constructor(
 
         private val hashCode: Int by lazy {
             Objects.hash(
+                beehiiv,
                 bluesky,
+                convertkit,
                 discord,
                 facebook,
                 googlebusiness,
                 instagram,
                 linkedin,
+                listmonk,
+                mailchimp,
                 mastodon,
                 pinterest,
                 reddit,
@@ -5398,7 +6578,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "PlatformLimits{bluesky=$bluesky, discord=$discord, facebook=$facebook, googlebusiness=$googlebusiness, instagram=$instagram, linkedin=$linkedin, mastodon=$mastodon, pinterest=$pinterest, reddit=$reddit, sms=$sms, snapchat=$snapchat, telegram=$telegram, threads=$threads, tiktok=$tiktok, twitter=$twitter, whatsapp=$whatsapp, youtube=$youtube, additionalProperties=$additionalProperties}"
+            "PlatformLimits{beehiiv=$beehiiv, bluesky=$bluesky, convertkit=$convertkit, discord=$discord, facebook=$facebook, googlebusiness=$googlebusiness, instagram=$instagram, linkedin=$linkedin, listmonk=$listmonk, mailchimp=$mailchimp, mastodon=$mastodon, pinterest=$pinterest, reddit=$reddit, sms=$sms, snapchat=$snapchat, telegram=$telegram, threads=$threads, tiktok=$tiktok, twitter=$twitter, whatsapp=$whatsapp, youtube=$youtube, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
