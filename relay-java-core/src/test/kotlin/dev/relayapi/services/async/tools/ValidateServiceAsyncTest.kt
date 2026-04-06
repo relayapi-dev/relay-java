@@ -71,6 +71,16 @@ internal class ValidateServiceAsyncTest {
                     .scheduledAt("now")
                     .addTarget("string")
                     .content("content")
+                    .addCrossPostAction(
+                        ValidateValidatePostParams.CrossPostAction.builder()
+                            .actionType(
+                                ValidateValidatePostParams.CrossPostAction.ActionType.REPOST
+                            )
+                            .targetAccountId("target_account_id")
+                            .content("content")
+                            .delayMinutes(0L)
+                            .build()
+                    )
                     .addMedia(
                         ValidateValidatePostParams.Media.builder()
                             .url("https://example.com")
@@ -88,9 +98,17 @@ internal class ValidateServiceAsyncTest {
                             .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
                     )
+                    .shortenUrls(true)
+                    .skipSignature(true)
                     .targetOptions(
                         ValidateValidatePostParams.TargetOptions.builder()
                             .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                            .build()
+                    )
+                    .templateId("template_id")
+                    .templateVariables(
+                        ValidateValidatePostParams.TemplateVariables.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("string"))
                             .build()
                     )
                     .timezone("timezone")
