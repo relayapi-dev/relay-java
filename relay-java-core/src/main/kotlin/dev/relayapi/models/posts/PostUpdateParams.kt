@@ -69,8 +69,8 @@ private constructor(
     fun recycling(): Optional<Recycling> = body.recycling()
 
     /**
-     * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO 8601
-     * timestamp to schedule.
+     * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+     * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -264,8 +264,8 @@ private constructor(
         fun recycling(recycling: JsonField<Recycling>) = apply { body.recycling(recycling) }
 
         /**
-         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-         * 8601 timestamp to schedule.
+         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+         * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
          */
         fun scheduledAt(scheduledAt: String) = apply { body.scheduledAt(scheduledAt) }
 
@@ -542,8 +542,8 @@ private constructor(
         fun recycling(): Optional<Recycling> = recycling.getOptional("recycling")
 
         /**
-         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-         * 8601 timestamp to schedule.
+         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+         * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -743,8 +743,8 @@ private constructor(
             fun recycling(recycling: JsonField<Recycling>) = apply { this.recycling = recycling }
 
             /**
-             * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-             * 8601 timestamp to schedule.
+             * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+             * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
              */
             fun scheduledAt(scheduledAt: String) = scheduledAt(JsonField.of(scheduledAt))
 

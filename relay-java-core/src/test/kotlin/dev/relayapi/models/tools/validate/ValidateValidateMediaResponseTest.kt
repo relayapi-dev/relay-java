@@ -16,8 +16,22 @@ internal class ValidateValidateMediaResponseTest {
                 .accessible(true)
                 .platformLimits(
                     ValidateValidateMediaResponse.PlatformLimits.builder()
+                        .beehiiv(
+                            ValidateValidateMediaResponse.PlatformLimits.Beehiiv.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
                         .bluesky(
                             ValidateValidateMediaResponse.PlatformLimits.Bluesky.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
+                        .convertkit(
+                            ValidateValidateMediaResponse.PlatformLimits.Convertkit.builder()
                                 .maxSize(0.0)
                                 .withinLimit(true)
                                 .mimeTypeSupported(true)
@@ -53,6 +67,20 @@ internal class ValidateValidateMediaResponseTest {
                         )
                         .linkedin(
                             ValidateValidateMediaResponse.PlatformLimits.Linkedin.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
+                        .listmonk(
+                            ValidateValidateMediaResponse.PlatformLimits.Listmonk.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
+                        .mailchimp(
+                            ValidateValidateMediaResponse.PlatformLimits.Mailchimp.builder()
                                 .maxSize(0.0)
                                 .withinLimit(true)
                                 .mimeTypeSupported(true)
@@ -145,8 +173,22 @@ internal class ValidateValidateMediaResponseTest {
         assertThat(validateValidateMediaResponse.platformLimits())
             .isEqualTo(
                 ValidateValidateMediaResponse.PlatformLimits.builder()
+                    .beehiiv(
+                        ValidateValidateMediaResponse.PlatformLimits.Beehiiv.builder()
+                            .maxSize(0.0)
+                            .withinLimit(true)
+                            .mimeTypeSupported(true)
+                            .build()
+                    )
                     .bluesky(
                         ValidateValidateMediaResponse.PlatformLimits.Bluesky.builder()
+                            .maxSize(0.0)
+                            .withinLimit(true)
+                            .mimeTypeSupported(true)
+                            .build()
+                    )
+                    .convertkit(
+                        ValidateValidateMediaResponse.PlatformLimits.Convertkit.builder()
                             .maxSize(0.0)
                             .withinLimit(true)
                             .mimeTypeSupported(true)
@@ -182,6 +224,20 @@ internal class ValidateValidateMediaResponseTest {
                     )
                     .linkedin(
                         ValidateValidateMediaResponse.PlatformLimits.Linkedin.builder()
+                            .maxSize(0.0)
+                            .withinLimit(true)
+                            .mimeTypeSupported(true)
+                            .build()
+                    )
+                    .listmonk(
+                        ValidateValidateMediaResponse.PlatformLimits.Listmonk.builder()
+                            .maxSize(0.0)
+                            .withinLimit(true)
+                            .mimeTypeSupported(true)
+                            .build()
+                    )
+                    .mailchimp(
+                        ValidateValidateMediaResponse.PlatformLimits.Mailchimp.builder()
                             .maxSize(0.0)
                             .withinLimit(true)
                             .mimeTypeSupported(true)
@@ -278,8 +334,22 @@ internal class ValidateValidateMediaResponseTest {
                 .accessible(true)
                 .platformLimits(
                     ValidateValidateMediaResponse.PlatformLimits.builder()
+                        .beehiiv(
+                            ValidateValidateMediaResponse.PlatformLimits.Beehiiv.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
                         .bluesky(
                             ValidateValidateMediaResponse.PlatformLimits.Bluesky.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
+                        .convertkit(
+                            ValidateValidateMediaResponse.PlatformLimits.Convertkit.builder()
                                 .maxSize(0.0)
                                 .withinLimit(true)
                                 .mimeTypeSupported(true)
@@ -315,6 +385,20 @@ internal class ValidateValidateMediaResponseTest {
                         )
                         .linkedin(
                             ValidateValidateMediaResponse.PlatformLimits.Linkedin.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
+                        .listmonk(
+                            ValidateValidateMediaResponse.PlatformLimits.Listmonk.builder()
+                                .maxSize(0.0)
+                                .withinLimit(true)
+                                .mimeTypeSupported(true)
+                                .build()
+                        )
+                        .mailchimp(
+                            ValidateValidateMediaResponse.PlatformLimits.Mailchimp.builder()
                                 .maxSize(0.0)
                                 .withinLimit(true)
                                 .mimeTypeSupported(true)

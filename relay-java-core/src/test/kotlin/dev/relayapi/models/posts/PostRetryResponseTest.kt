@@ -91,6 +91,8 @@ internal class PostRetryResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                         .build()
                 )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
                 .timezone("timezone")
                 .build()
 
@@ -176,6 +178,8 @@ internal class PostRetryResponseTest {
                     .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                     .build()
             )
+        assertThat(postRetryResponse.threadGroupId()).contains("thread_group_id")
+        assertThat(postRetryResponse.threadPosition()).contains(0.0)
         assertThat(postRetryResponse.timezone()).contains("timezone")
     }
 
@@ -259,6 +263,8 @@ internal class PostRetryResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                         .build()
                 )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
                 .timezone("timezone")
                 .build()
 

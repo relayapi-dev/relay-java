@@ -506,8 +506,8 @@ private constructor(
         )
 
         /**
-         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-         * 8601 timestamp to schedule.
+         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+         * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -794,8 +794,8 @@ private constructor(
             }
 
             /**
-             * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-             * 8601 timestamp to schedule.
+             * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+             * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
              */
             fun scheduledAt(scheduledAt: String) = scheduledAt(JsonField.of(scheduledAt))
 

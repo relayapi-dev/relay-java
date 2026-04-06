@@ -15,8 +15,22 @@ internal class ValidateCheckPostLengthResponseTest {
             ValidateCheckPostLengthResponse.builder()
                 .platforms(
                     ValidateCheckPostLengthResponse.Platforms.builder()
+                        .beehiiv(
+                            ValidateCheckPostLengthResponse.Platforms.Beehiiv.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
                         .bluesky(
                             ValidateCheckPostLengthResponse.Platforms.Bluesky.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
+                        .convertkit(
+                            ValidateCheckPostLengthResponse.Platforms.Convertkit.builder()
                                 .count(0.0)
                                 .limit(0.0)
                                 .withinLimit(true)
@@ -52,6 +66,20 @@ internal class ValidateCheckPostLengthResponseTest {
                         )
                         .linkedin(
                             ValidateCheckPostLengthResponse.Platforms.Linkedin.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
+                        .listmonk(
+                            ValidateCheckPostLengthResponse.Platforms.Listmonk.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
+                        .mailchimp(
+                            ValidateCheckPostLengthResponse.Platforms.Mailchimp.builder()
                                 .count(0.0)
                                 .limit(0.0)
                                 .withinLimit(true)
@@ -141,8 +169,22 @@ internal class ValidateCheckPostLengthResponseTest {
         assertThat(validateCheckPostLengthResponse.platforms())
             .isEqualTo(
                 ValidateCheckPostLengthResponse.Platforms.builder()
+                    .beehiiv(
+                        ValidateCheckPostLengthResponse.Platforms.Beehiiv.builder()
+                            .count(0.0)
+                            .limit(0.0)
+                            .withinLimit(true)
+                            .build()
+                    )
                     .bluesky(
                         ValidateCheckPostLengthResponse.Platforms.Bluesky.builder()
+                            .count(0.0)
+                            .limit(0.0)
+                            .withinLimit(true)
+                            .build()
+                    )
+                    .convertkit(
+                        ValidateCheckPostLengthResponse.Platforms.Convertkit.builder()
                             .count(0.0)
                             .limit(0.0)
                             .withinLimit(true)
@@ -178,6 +220,20 @@ internal class ValidateCheckPostLengthResponseTest {
                     )
                     .linkedin(
                         ValidateCheckPostLengthResponse.Platforms.Linkedin.builder()
+                            .count(0.0)
+                            .limit(0.0)
+                            .withinLimit(true)
+                            .build()
+                    )
+                    .listmonk(
+                        ValidateCheckPostLengthResponse.Platforms.Listmonk.builder()
+                            .count(0.0)
+                            .limit(0.0)
+                            .withinLimit(true)
+                            .build()
+                    )
+                    .mailchimp(
+                        ValidateCheckPostLengthResponse.Platforms.Mailchimp.builder()
                             .count(0.0)
                             .limit(0.0)
                             .withinLimit(true)
@@ -271,8 +327,22 @@ internal class ValidateCheckPostLengthResponseTest {
             ValidateCheckPostLengthResponse.builder()
                 .platforms(
                     ValidateCheckPostLengthResponse.Platforms.builder()
+                        .beehiiv(
+                            ValidateCheckPostLengthResponse.Platforms.Beehiiv.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
                         .bluesky(
                             ValidateCheckPostLengthResponse.Platforms.Bluesky.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
+                        .convertkit(
+                            ValidateCheckPostLengthResponse.Platforms.Convertkit.builder()
                                 .count(0.0)
                                 .limit(0.0)
                                 .withinLimit(true)
@@ -308,6 +378,20 @@ internal class ValidateCheckPostLengthResponseTest {
                         )
                         .linkedin(
                             ValidateCheckPostLengthResponse.Platforms.Linkedin.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
+                        .listmonk(
+                            ValidateCheckPostLengthResponse.Platforms.Listmonk.builder()
+                                .count(0.0)
+                                .limit(0.0)
+                                .withinLimit(true)
+                                .build()
+                        )
+                        .mailchimp(
+                            ValidateCheckPostLengthResponse.Platforms.Mailchimp.builder()
                                 .count(0.0)
                                 .limit(0.0)
                                 .withinLimit(true)

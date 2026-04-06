@@ -37,6 +37,8 @@ private constructor(
     private val updatedAt: JsonField<OffsetDateTime>,
     private val metrics: JsonField<Metrics>,
     private val targetOptions: JsonField<TargetOptions>,
+    private val threadGroupId: JsonField<String>,
+    private val threadPosition: JsonField<Double>,
     private val timezone: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -70,6 +72,12 @@ private constructor(
         @JsonProperty("target_options")
         @ExcludeMissing
         targetOptions: JsonField<TargetOptions> = JsonMissing.of(),
+        @JsonProperty("thread_group_id")
+        @ExcludeMissing
+        threadGroupId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("thread_position")
+        @ExcludeMissing
+        threadPosition: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("timezone") @ExcludeMissing timezone: JsonField<String> = JsonMissing.of(),
     ) : this(
         id,
@@ -85,6 +93,8 @@ private constructor(
         updatedAt,
         metrics,
         targetOptions,
+        threadGroupId,
+        threadPosition,
         timezone,
         mutableMapOf(),
     )
@@ -180,6 +190,22 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun targetOptions(): Optional<TargetOptions> = targetOptions.getOptional("target_options")
+
+    /**
+     * Thread group ID (non-null if part of a thread)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun threadGroupId(): Optional<String> = threadGroupId.getOptional("thread_group_id")
+
+    /**
+     * Position within thread (0 = root)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun threadPosition(): Optional<Double> = threadPosition.getOptional("thread_position")
 
     /**
      * IANA timezone
@@ -293,6 +319,24 @@ private constructor(
     fun _targetOptions(): JsonField<TargetOptions> = targetOptions
 
     /**
+     * Returns the raw JSON value of [threadGroupId].
+     *
+     * Unlike [threadGroupId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("thread_group_id")
+    @ExcludeMissing
+    fun _threadGroupId(): JsonField<String> = threadGroupId
+
+    /**
+     * Returns the raw JSON value of [threadPosition].
+     *
+     * Unlike [threadPosition], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("thread_position")
+    @ExcludeMissing
+    fun _threadPosition(): JsonField<Double> = threadPosition
+
+    /**
      * Returns the raw JSON value of [timezone].
      *
      * Unlike [timezone], this method doesn't throw if the JSON field has an unexpected type.
@@ -350,6 +394,8 @@ private constructor(
         private var updatedAt: JsonField<OffsetDateTime>? = null
         private var metrics: JsonField<Metrics> = JsonMissing.of()
         private var targetOptions: JsonField<TargetOptions> = JsonMissing.of()
+        private var threadGroupId: JsonField<String> = JsonMissing.of()
+        private var threadPosition: JsonField<Double> = JsonMissing.of()
         private var timezone: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -368,6 +414,8 @@ private constructor(
             updatedAt = postUpdateResponse.updatedAt
             metrics = postUpdateResponse.metrics
             targetOptions = postUpdateResponse.targetOptions
+            threadGroupId = postUpdateResponse.threadGroupId
+            threadPosition = postUpdateResponse.threadPosition
             timezone = postUpdateResponse.timezone
             additionalProperties = postUpdateResponse.additionalProperties.toMutableMap()
         }
@@ -560,6 +608,51 @@ private constructor(
             this.targetOptions = targetOptions
         }
 
+        /** Thread group ID (non-null if part of a thread) */
+        fun threadGroupId(threadGroupId: String?) =
+            threadGroupId(JsonField.ofNullable(threadGroupId))
+
+        /** Alias for calling [Builder.threadGroupId] with `threadGroupId.orElse(null)`. */
+        fun threadGroupId(threadGroupId: Optional<String>) =
+            threadGroupId(threadGroupId.getOrNull())
+
+        /**
+         * Sets [Builder.threadGroupId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.threadGroupId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun threadGroupId(threadGroupId: JsonField<String>) = apply {
+            this.threadGroupId = threadGroupId
+        }
+
+        /** Position within thread (0 = root) */
+        fun threadPosition(threadPosition: Double?) =
+            threadPosition(JsonField.ofNullable(threadPosition))
+
+        /**
+         * Alias for [Builder.threadPosition].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun threadPosition(threadPosition: Double) = threadPosition(threadPosition as Double?)
+
+        /** Alias for calling [Builder.threadPosition] with `threadPosition.orElse(null)`. */
+        fun threadPosition(threadPosition: Optional<Double>) =
+            threadPosition(threadPosition.getOrNull())
+
+        /**
+         * Sets [Builder.threadPosition] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.threadPosition] with a well-typed [Double] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun threadPosition(threadPosition: JsonField<Double>) = apply {
+            this.threadPosition = threadPosition
+        }
+
         /** IANA timezone */
         fun timezone(timezone: String?) = timezone(JsonField.ofNullable(timezone))
 
@@ -630,6 +723,8 @@ private constructor(
                 checkRequired("updatedAt", updatedAt),
                 metrics,
                 targetOptions,
+                threadGroupId,
+                threadPosition,
                 timezone,
                 additionalProperties.toMutableMap(),
             )
@@ -655,6 +750,8 @@ private constructor(
         updatedAt()
         metrics().ifPresent { it.validate() }
         targetOptions().ifPresent { it.validate() }
+        threadGroupId()
+        threadPosition()
         timezone()
         validated = true
     }
@@ -687,6 +784,8 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (metrics.asKnown().getOrNull()?.validity() ?: 0) +
             (targetOptions.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (threadGroupId.asKnown().isPresent) 1 else 0) +
+            (if (threadPosition.asKnown().isPresent) 1 else 0) +
             (if (timezone.asKnown().isPresent) 1 else 0)
 
     class Media
@@ -2707,6 +2806,8 @@ private constructor(
             updatedAt == other.updatedAt &&
             metrics == other.metrics &&
             targetOptions == other.targetOptions &&
+            threadGroupId == other.threadGroupId &&
+            threadPosition == other.threadPosition &&
             timezone == other.timezone &&
             additionalProperties == other.additionalProperties
     }
@@ -2726,6 +2827,8 @@ private constructor(
             updatedAt,
             metrics,
             targetOptions,
+            threadGroupId,
+            threadPosition,
             timezone,
             additionalProperties,
         )
@@ -2734,5 +2837,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PostUpdateResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, metrics=$metrics, targetOptions=$targetOptions, timezone=$timezone, additionalProperties=$additionalProperties}"
+        "PostUpdateResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, metrics=$metrics, targetOptions=$targetOptions, threadGroupId=$threadGroupId, threadPosition=$threadPosition, timezone=$timezone, additionalProperties=$additionalProperties}"
 }
