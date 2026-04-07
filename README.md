@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/dev.relayapi/relay-java)](https://central.sonatype.com/artifact/dev.relayapi/relay-java/0.0.1)
-[![javadoc](https://javadoc.io/badge2/dev.relayapi/relay-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/dev.relayapi/relay-java/0.0.1)
+[![Maven Central](https://img.shields.io/maven-central/v/dev.relayapi/relay-java)](https://central.sonatype.com/artifact/dev.relayapi/relay-java/0.1.0)
+[![javadoc](https://javadoc.io/badge2/dev.relayapi/relay-java/0.1.0/javadoc.svg)](https://javadoc.io/doc/dev.relayapi/relay-java/0.1.0)
 
 <!-- x-release-please-end -->
 
@@ -22,7 +22,7 @@ Use the Relay MCP Server to enable AI assistants to interact with this API, allo
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [docs.relayapi.dev](https://docs.relayapi.dev). Javadocs are available on [javadoc.io](https://javadoc.io/doc/dev.relayapi/relay-java/0.0.1).
+The REST API documentation can be found on [docs.relayapi.dev](https://docs.relayapi.dev). Javadocs are available on [javadoc.io](https://javadoc.io/doc/dev.relayapi/relay-java/0.1.0).
 
 <!-- x-release-please-end -->
 
@@ -33,7 +33,7 @@ The REST API documentation can be found on [docs.relayapi.dev](https://docs.rela
 ### Gradle
 
 ```kotlin
-implementation("dev.relayapi:relay-java:0.0.1")
+implementation("dev.relayapi:relay-java:0.1.0")
 ```
 
 ### Maven
@@ -42,7 +42,7 @@ implementation("dev.relayapi:relay-java:0.0.1")
 <dependency>
   <groupId>dev.relayapi</groupId>
   <artifactId>relay-java</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
 </dependency>
 ```
 
