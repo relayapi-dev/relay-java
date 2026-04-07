@@ -13,6 +13,7 @@ internal class ConnectCompleteOAuthCallbackParamsTest {
             .platform(ConnectCompleteOAuthCallbackParams.Platform.TWITTER)
             .code("code")
             .redirectUrl("https://example.com")
+            .state("state")
             .build()
     }
 
@@ -36,12 +37,14 @@ internal class ConnectCompleteOAuthCallbackParamsTest {
                 .platform(ConnectCompleteOAuthCallbackParams.Platform.TWITTER)
                 .code("code")
                 .redirectUrl("https://example.com")
+                .state("state")
                 .build()
 
         val body = params._body()
 
         assertThat(body.code()).isEqualTo("code")
         assertThat(body.redirectUrl()).contains("https://example.com")
+        assertThat(body.state()).contains("state")
     }
 
     @Test

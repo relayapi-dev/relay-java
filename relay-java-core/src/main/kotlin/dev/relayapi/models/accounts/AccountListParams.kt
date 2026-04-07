@@ -47,7 +47,7 @@ private constructor(
     /** Only show ungrouped accounts */
     fun ungrouped(): Optional<Boolean> = Optional.ofNullable(ungrouped)
 
-    /** Filter by group ID */
+    /** Filter by workspace ID */
     fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
@@ -150,7 +150,7 @@ private constructor(
         /** Alias for calling [Builder.ungrouped] with `ungrouped.orElse(null)`. */
         fun ungrouped(ungrouped: Optional<Boolean>) = ungrouped(ungrouped.getOrNull())
 
-        /** Filter by group ID */
+        /** Filter by workspace ID */
         fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
 
         /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
