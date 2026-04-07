@@ -24,6 +24,19 @@ internal class HealthRetrieveResponseTest {
                 .error(
                     HealthRetrieveResponse.Error.builder().code("code").message("message").build()
                 )
+                .sync(
+                    HealthRetrieveResponse.Sync.builder()
+                        .consecutiveErrors(0.0)
+                        .enabled(true)
+                        .lastError("last_error")
+                        .lastErrorAt("last_error_at")
+                        .lastSyncAt("last_sync_at")
+                        .nextSyncAt("next_sync_at")
+                        .rateLimitResetAt("rate_limit_reset_at")
+                        .totalPostsSynced(0.0)
+                        .totalSyncRuns(0.0)
+                        .build()
+                )
                 .build()
 
         assertThat(healthRetrieveResponse.id()).isEqualTo("id")
@@ -37,6 +50,20 @@ internal class HealthRetrieveResponseTest {
         assertThat(healthRetrieveResponse.error())
             .contains(
                 HealthRetrieveResponse.Error.builder().code("code").message("message").build()
+            )
+        assertThat(healthRetrieveResponse.sync())
+            .contains(
+                HealthRetrieveResponse.Sync.builder()
+                    .consecutiveErrors(0.0)
+                    .enabled(true)
+                    .lastError("last_error")
+                    .lastErrorAt("last_error_at")
+                    .lastSyncAt("last_sync_at")
+                    .nextSyncAt("next_sync_at")
+                    .rateLimitResetAt("rate_limit_reset_at")
+                    .totalPostsSynced(0.0)
+                    .totalSyncRuns(0.0)
+                    .build()
             )
     }
 
@@ -55,6 +82,19 @@ internal class HealthRetrieveResponseTest {
                 .username("username")
                 .error(
                     HealthRetrieveResponse.Error.builder().code("code").message("message").build()
+                )
+                .sync(
+                    HealthRetrieveResponse.Sync.builder()
+                        .consecutiveErrors(0.0)
+                        .enabled(true)
+                        .lastError("last_error")
+                        .lastErrorAt("last_error_at")
+                        .lastSyncAt("last_sync_at")
+                        .nextSyncAt("next_sync_at")
+                        .rateLimitResetAt("rate_limit_reset_at")
+                        .totalPostsSynced(0.0)
+                        .totalSyncRuns(0.0)
+                        .build()
                 )
                 .build()
 
