@@ -34,21 +34,25 @@ interface BroadcastServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): BroadcastServiceAsync
 
-    /** Create a broadcast */
+    /** Deprecated. Use POST /v1/broadcasts instead. */
+    @Deprecated("deprecated")
     fun create(params: BroadcastCreateParams): CompletableFuture<BroadcastCreateResponse> =
         create(params, RequestOptions.none())
 
     /** @see create */
+    @Deprecated("deprecated")
     fun create(
         params: BroadcastCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BroadcastCreateResponse>
 
-    /** Get broadcast details */
+    /** Deprecated. Use GET /v1/broadcasts/{id} instead. */
+    @Deprecated("deprecated")
     fun retrieve(broadcastId: String): CompletableFuture<BroadcastRetrieveResponse> =
         retrieve(broadcastId, BroadcastRetrieveParams.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         broadcastId: String,
         params: BroadcastRetrieveParams = BroadcastRetrieveParams.none(),
@@ -57,6 +61,7 @@ interface BroadcastServiceAsync {
         retrieve(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         broadcastId: String,
         params: BroadcastRetrieveParams = BroadcastRetrieveParams.none(),
@@ -64,37 +69,44 @@ interface BroadcastServiceAsync {
         retrieve(broadcastId, params, RequestOptions.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         params: BroadcastRetrieveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BroadcastRetrieveResponse>
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(params: BroadcastRetrieveParams): CompletableFuture<BroadcastRetrieveResponse> =
         retrieve(params, RequestOptions.none())
 
     /** @see retrieve */
+    @Deprecated("deprecated")
     fun retrieve(
         broadcastId: String,
         requestOptions: RequestOptions,
     ): CompletableFuture<BroadcastRetrieveResponse> =
         retrieve(broadcastId, BroadcastRetrieveParams.none(), requestOptions)
 
-    /** List broadcasts */
+    /** Deprecated. Use GET /v1/broadcasts instead. */
+    @Deprecated("deprecated")
     fun list(params: BroadcastListParams): CompletableFuture<BroadcastListResponse> =
         list(params, RequestOptions.none())
 
     /** @see list */
+    @Deprecated("deprecated")
     fun list(
         params: BroadcastListParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BroadcastListResponse>
 
-    /** Delete a broadcast */
+    /** Deprecated. Use DELETE /v1/broadcasts/{id} instead. */
+    @Deprecated("deprecated")
     fun delete(broadcastId: String): CompletableFuture<Void?> =
         delete(broadcastId, BroadcastDeleteParams.none())
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(
         broadcastId: String,
         params: BroadcastDeleteParams = BroadcastDeleteParams.none(),
@@ -103,30 +115,36 @@ interface BroadcastServiceAsync {
         delete(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(
         broadcastId: String,
         params: BroadcastDeleteParams = BroadcastDeleteParams.none(),
     ): CompletableFuture<Void?> = delete(broadcastId, params, RequestOptions.none())
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(
         params: BroadcastDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<Void?>
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(params: BroadcastDeleteParams): CompletableFuture<Void?> =
         delete(params, RequestOptions.none())
 
     /** @see delete */
+    @Deprecated("deprecated")
     fun delete(broadcastId: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
         delete(broadcastId, BroadcastDeleteParams.none(), requestOptions)
 
-    /** Schedule a broadcast */
+    /** Deprecated. Use POST /v1/broadcasts/{id}/schedule instead. */
+    @Deprecated("deprecated")
     fun schedule(broadcastId: String): CompletableFuture<BroadcastScheduleResponse> =
         schedule(broadcastId, BroadcastScheduleParams.none())
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(
         broadcastId: String,
         params: BroadcastScheduleParams = BroadcastScheduleParams.none(),
@@ -135,6 +153,7 @@ interface BroadcastServiceAsync {
         schedule(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(
         broadcastId: String,
         params: BroadcastScheduleParams = BroadcastScheduleParams.none(),
@@ -142,27 +161,32 @@ interface BroadcastServiceAsync {
         schedule(broadcastId, params, RequestOptions.none())
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(
         params: BroadcastScheduleParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BroadcastScheduleResponse>
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(params: BroadcastScheduleParams): CompletableFuture<BroadcastScheduleResponse> =
         schedule(params, RequestOptions.none())
 
     /** @see schedule */
+    @Deprecated("deprecated")
     fun schedule(
         broadcastId: String,
         requestOptions: RequestOptions,
     ): CompletableFuture<BroadcastScheduleResponse> =
         schedule(broadcastId, BroadcastScheduleParams.none(), requestOptions)
 
-    /** Send a broadcast immediately */
+    /** Deprecated. Use POST /v1/broadcasts/{id}/send instead. */
+    @Deprecated("deprecated")
     fun send(broadcastId: String): CompletableFuture<BroadcastSendResponse> =
         send(broadcastId, BroadcastSendParams.none())
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(
         broadcastId: String,
         params: BroadcastSendParams = BroadcastSendParams.none(),
@@ -171,22 +195,26 @@ interface BroadcastServiceAsync {
         send(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(
         broadcastId: String,
         params: BroadcastSendParams = BroadcastSendParams.none(),
     ): CompletableFuture<BroadcastSendResponse> = send(broadcastId, params, RequestOptions.none())
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(
         params: BroadcastSendParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<BroadcastSendResponse>
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(params: BroadcastSendParams): CompletableFuture<BroadcastSendResponse> =
         send(params, RequestOptions.none())
 
     /** @see send */
+    @Deprecated("deprecated")
     fun send(
         broadcastId: String,
         requestOptions: RequestOptions,
@@ -211,12 +239,14 @@ interface BroadcastServiceAsync {
          * Returns a raw HTTP response for `post /v1/whatsapp/broadcasts`, but is otherwise the same
          * as [BroadcastServiceAsync.create].
          */
+        @Deprecated("deprecated")
         fun create(
             params: BroadcastCreateParams
         ): CompletableFuture<HttpResponseFor<BroadcastCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see create */
+        @Deprecated("deprecated")
         fun create(
             params: BroadcastCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -226,12 +256,14 @@ interface BroadcastServiceAsync {
          * Returns a raw HTTP response for `get /v1/whatsapp/broadcasts/{broadcast_id}`, but is
          * otherwise the same as [BroadcastServiceAsync.retrieve].
          */
+        @Deprecated("deprecated")
         fun retrieve(
             broadcastId: String
         ): CompletableFuture<HttpResponseFor<BroadcastRetrieveResponse>> =
             retrieve(broadcastId, BroadcastRetrieveParams.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         fun retrieve(
             broadcastId: String,
             params: BroadcastRetrieveParams = BroadcastRetrieveParams.none(),
@@ -240,6 +272,7 @@ interface BroadcastServiceAsync {
             retrieve(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         fun retrieve(
             broadcastId: String,
             params: BroadcastRetrieveParams = BroadcastRetrieveParams.none(),
@@ -247,18 +280,21 @@ interface BroadcastServiceAsync {
             retrieve(broadcastId, params, RequestOptions.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         fun retrieve(
             params: BroadcastRetrieveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BroadcastRetrieveResponse>>
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         fun retrieve(
             params: BroadcastRetrieveParams
         ): CompletableFuture<HttpResponseFor<BroadcastRetrieveResponse>> =
             retrieve(params, RequestOptions.none())
 
         /** @see retrieve */
+        @Deprecated("deprecated")
         fun retrieve(
             broadcastId: String,
             requestOptions: RequestOptions,
@@ -269,12 +305,14 @@ interface BroadcastServiceAsync {
          * Returns a raw HTTP response for `get /v1/whatsapp/broadcasts`, but is otherwise the same
          * as [BroadcastServiceAsync.list].
          */
+        @Deprecated("deprecated")
         fun list(
             params: BroadcastListParams
         ): CompletableFuture<HttpResponseFor<BroadcastListResponse>> =
             list(params, RequestOptions.none())
 
         /** @see list */
+        @Deprecated("deprecated")
         fun list(
             params: BroadcastListParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -284,10 +322,12 @@ interface BroadcastServiceAsync {
          * Returns a raw HTTP response for `delete /v1/whatsapp/broadcasts/{broadcast_id}`, but is
          * otherwise the same as [BroadcastServiceAsync.delete].
          */
+        @Deprecated("deprecated")
         fun delete(broadcastId: String): CompletableFuture<HttpResponse> =
             delete(broadcastId, BroadcastDeleteParams.none())
 
         /** @see delete */
+        @Deprecated("deprecated")
         fun delete(
             broadcastId: String,
             params: BroadcastDeleteParams = BroadcastDeleteParams.none(),
@@ -296,22 +336,26 @@ interface BroadcastServiceAsync {
             delete(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see delete */
+        @Deprecated("deprecated")
         fun delete(
             broadcastId: String,
             params: BroadcastDeleteParams = BroadcastDeleteParams.none(),
         ): CompletableFuture<HttpResponse> = delete(broadcastId, params, RequestOptions.none())
 
         /** @see delete */
+        @Deprecated("deprecated")
         fun delete(
             params: BroadcastDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponse>
 
         /** @see delete */
+        @Deprecated("deprecated")
         fun delete(params: BroadcastDeleteParams): CompletableFuture<HttpResponse> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
+        @Deprecated("deprecated")
         fun delete(
             broadcastId: String,
             requestOptions: RequestOptions,
@@ -322,12 +366,14 @@ interface BroadcastServiceAsync {
          * Returns a raw HTTP response for `post /v1/whatsapp/broadcasts/{broadcast_id}/schedule`,
          * but is otherwise the same as [BroadcastServiceAsync.schedule].
          */
+        @Deprecated("deprecated")
         fun schedule(
             broadcastId: String
         ): CompletableFuture<HttpResponseFor<BroadcastScheduleResponse>> =
             schedule(broadcastId, BroadcastScheduleParams.none())
 
         /** @see schedule */
+        @Deprecated("deprecated")
         fun schedule(
             broadcastId: String,
             params: BroadcastScheduleParams = BroadcastScheduleParams.none(),
@@ -336,6 +382,7 @@ interface BroadcastServiceAsync {
             schedule(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see schedule */
+        @Deprecated("deprecated")
         fun schedule(
             broadcastId: String,
             params: BroadcastScheduleParams = BroadcastScheduleParams.none(),
@@ -343,18 +390,21 @@ interface BroadcastServiceAsync {
             schedule(broadcastId, params, RequestOptions.none())
 
         /** @see schedule */
+        @Deprecated("deprecated")
         fun schedule(
             params: BroadcastScheduleParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BroadcastScheduleResponse>>
 
         /** @see schedule */
+        @Deprecated("deprecated")
         fun schedule(
             params: BroadcastScheduleParams
         ): CompletableFuture<HttpResponseFor<BroadcastScheduleResponse>> =
             schedule(params, RequestOptions.none())
 
         /** @see schedule */
+        @Deprecated("deprecated")
         fun schedule(
             broadcastId: String,
             requestOptions: RequestOptions,
@@ -365,10 +415,12 @@ interface BroadcastServiceAsync {
          * Returns a raw HTTP response for `post /v1/whatsapp/broadcasts/{broadcast_id}/send`, but
          * is otherwise the same as [BroadcastServiceAsync.send].
          */
+        @Deprecated("deprecated")
         fun send(broadcastId: String): CompletableFuture<HttpResponseFor<BroadcastSendResponse>> =
             send(broadcastId, BroadcastSendParams.none())
 
         /** @see send */
+        @Deprecated("deprecated")
         fun send(
             broadcastId: String,
             params: BroadcastSendParams = BroadcastSendParams.none(),
@@ -377,6 +429,7 @@ interface BroadcastServiceAsync {
             send(params.toBuilder().broadcastId(broadcastId).build(), requestOptions)
 
         /** @see send */
+        @Deprecated("deprecated")
         fun send(
             broadcastId: String,
             params: BroadcastSendParams = BroadcastSendParams.none(),
@@ -384,18 +437,21 @@ interface BroadcastServiceAsync {
             send(broadcastId, params, RequestOptions.none())
 
         /** @see send */
+        @Deprecated("deprecated")
         fun send(
             params: BroadcastSendParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<BroadcastSendResponse>>
 
         /** @see send */
+        @Deprecated("deprecated")
         fun send(
             params: BroadcastSendParams
         ): CompletableFuture<HttpResponseFor<BroadcastSendResponse>> =
             send(params, RequestOptions.none())
 
         /** @see send */
+        @Deprecated("deprecated")
         fun send(
             broadcastId: String,
             requestOptions: RequestOptions,

@@ -19,7 +19,9 @@ internal class ApiKeyCreateResponseTest {
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .key("key")
                 .name("name")
+                .permission(ApiKeyCreateResponse.Permission.READ_WRITE)
                 .prefix("prefix")
+                .workspaceScope(ApiKeyCreateResponse.WorkspaceScope.UnionMember0.ALL)
                 .build()
 
         assertThat(apiKeyCreateResponse.id()).isEqualTo("id")
@@ -29,7 +31,15 @@ internal class ApiKeyCreateResponseTest {
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(apiKeyCreateResponse.key()).isEqualTo("key")
         assertThat(apiKeyCreateResponse.name()).contains("name")
+        assertThat(apiKeyCreateResponse.permission())
+            .isEqualTo(ApiKeyCreateResponse.Permission.READ_WRITE)
         assertThat(apiKeyCreateResponse.prefix()).isEqualTo("prefix")
+        assertThat(apiKeyCreateResponse.workspaceScope())
+            .isEqualTo(
+                ApiKeyCreateResponse.WorkspaceScope.ofUnionMember0(
+                    ApiKeyCreateResponse.WorkspaceScope.UnionMember0.ALL
+                )
+            )
     }
 
     @Test
@@ -42,7 +52,9 @@ internal class ApiKeyCreateResponseTest {
                 .expiresAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .key("key")
                 .name("name")
+                .permission(ApiKeyCreateResponse.Permission.READ_WRITE)
                 .prefix("prefix")
+                .workspaceScope(ApiKeyCreateResponse.WorkspaceScope.UnionMember0.ALL)
                 .build()
 
         val roundtrippedApiKeyCreateResponse =

@@ -8,7 +8,8 @@ import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
 import java.util.Objects
 
-/** List broadcasts */
+/** Deprecated. Use GET /v1/broadcasts instead. */
+@Deprecated("deprecated")
 class BroadcastListParams
 private constructor(
     private val accountId: String,

@@ -26,6 +26,7 @@ internal class ContactServiceAsyncTest {
                     .email("email")
                     .name("name")
                     .addTag("string")
+                    .workspaceId("workspace_id")
                     .build()
             )
 
@@ -59,6 +60,7 @@ internal class ContactServiceAsyncTest {
                     .limit(1L)
                     .search("search")
                     .tag("tag")
+                    .workspaceId("workspace_id")
                     .build()
             )
 

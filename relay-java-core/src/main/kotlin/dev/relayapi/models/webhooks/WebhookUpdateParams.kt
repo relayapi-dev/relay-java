@@ -571,6 +571,8 @@ private constructor(
 
             @JvmField val POST_SCHEDULED = of("post.scheduled")
 
+            @JvmField val POST_RECYCLED = of("post.recycled")
+
             @JvmField val ACCOUNT_CONNECTED = of("account.connected")
 
             @JvmField val ACCOUNT_DISCONNECTED = of("account.disconnected")
@@ -578,6 +580,16 @@ private constructor(
             @JvmField val COMMENT_RECEIVED = of("comment.received")
 
             @JvmField val MESSAGE_RECEIVED = of("message.received")
+
+            @JvmField val AUTO_POST_CREATED = of("auto_post.created")
+
+            @JvmField val AUTO_POST_ERROR = of("auto_post.error")
+
+            @JvmField val ENGAGEMENT_RULE_TRIGGERED = of("engagement_rule.triggered")
+
+            @JvmField val CROSS_POST_ACTION_EXECUTED = of("cross_post_action.executed")
+
+            @JvmField val CROSS_POST_ACTION_FAILED = of("cross_post_action.failed")
 
             @JvmStatic fun of(value: String) = Event(JsonField.of(value))
         }
@@ -588,10 +600,16 @@ private constructor(
             POST_PARTIAL,
             POST_FAILED,
             POST_SCHEDULED,
+            POST_RECYCLED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
             MESSAGE_RECEIVED,
+            AUTO_POST_CREATED,
+            AUTO_POST_ERROR,
+            ENGAGEMENT_RULE_TRIGGERED,
+            CROSS_POST_ACTION_EXECUTED,
+            CROSS_POST_ACTION_FAILED,
         }
 
         /**
@@ -608,10 +626,16 @@ private constructor(
             POST_PARTIAL,
             POST_FAILED,
             POST_SCHEDULED,
+            POST_RECYCLED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
             MESSAGE_RECEIVED,
+            AUTO_POST_CREATED,
+            AUTO_POST_ERROR,
+            ENGAGEMENT_RULE_TRIGGERED,
+            CROSS_POST_ACTION_EXECUTED,
+            CROSS_POST_ACTION_FAILED,
             /** An enum member indicating that [Event] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -629,10 +653,16 @@ private constructor(
                 POST_PARTIAL -> Value.POST_PARTIAL
                 POST_FAILED -> Value.POST_FAILED
                 POST_SCHEDULED -> Value.POST_SCHEDULED
+                POST_RECYCLED -> Value.POST_RECYCLED
                 ACCOUNT_CONNECTED -> Value.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Value.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Value.COMMENT_RECEIVED
                 MESSAGE_RECEIVED -> Value.MESSAGE_RECEIVED
+                AUTO_POST_CREATED -> Value.AUTO_POST_CREATED
+                AUTO_POST_ERROR -> Value.AUTO_POST_ERROR
+                ENGAGEMENT_RULE_TRIGGERED -> Value.ENGAGEMENT_RULE_TRIGGERED
+                CROSS_POST_ACTION_EXECUTED -> Value.CROSS_POST_ACTION_EXECUTED
+                CROSS_POST_ACTION_FAILED -> Value.CROSS_POST_ACTION_FAILED
                 else -> Value._UNKNOWN
             }
 
@@ -650,10 +680,16 @@ private constructor(
                 POST_PARTIAL -> Known.POST_PARTIAL
                 POST_FAILED -> Known.POST_FAILED
                 POST_SCHEDULED -> Known.POST_SCHEDULED
+                POST_RECYCLED -> Known.POST_RECYCLED
                 ACCOUNT_CONNECTED -> Known.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Known.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Known.COMMENT_RECEIVED
                 MESSAGE_RECEIVED -> Known.MESSAGE_RECEIVED
+                AUTO_POST_CREATED -> Known.AUTO_POST_CREATED
+                AUTO_POST_ERROR -> Known.AUTO_POST_ERROR
+                ENGAGEMENT_RULE_TRIGGERED -> Known.ENGAGEMENT_RULE_TRIGGERED
+                CROSS_POST_ACTION_EXECUTED -> Known.CROSS_POST_ACTION_EXECUTED
+                CROSS_POST_ACTION_FAILED -> Known.CROSS_POST_ACTION_FAILED
                 else -> throw RelayInvalidDataException("Unknown Event: $value")
             }
 

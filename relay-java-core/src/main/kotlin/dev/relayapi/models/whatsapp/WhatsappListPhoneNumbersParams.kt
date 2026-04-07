@@ -2,22 +2,27 @@
 
 package dev.relayapi.models.whatsapp
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import dev.relayapi.core.Enum
+import dev.relayapi.core.JsonField
 import dev.relayapi.core.Params
-import dev.relayapi.core.checkRequired
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
+import dev.relayapi.errors.RelayInvalidDataException
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
-/** List registered phone numbers */
+/** List purchased phone numbers */
 class WhatsappListPhoneNumbersParams
 private constructor(
-    private val accountId: String,
+    private val status: Status?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** WhatsApp account ID */
-    fun accountId(): String = accountId
+    /** Filter by provisioning status */
+    fun status(): Optional<Status> = Optional.ofNullable(status)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -29,14 +34,11 @@ private constructor(
 
     companion object {
 
+        @JvmStatic fun none(): WhatsappListPhoneNumbersParams = builder().build()
+
         /**
          * Returns a mutable builder for constructing an instance of
          * [WhatsappListPhoneNumbersParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .accountId()
-         * ```
          */
         @JvmStatic fun builder() = Builder()
     }
@@ -44,19 +46,22 @@ private constructor(
     /** A builder for [WhatsappListPhoneNumbersParams]. */
     class Builder internal constructor() {
 
-        private var accountId: String? = null
+        private var status: Status? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(whatsappListPhoneNumbersParams: WhatsappListPhoneNumbersParams) = apply {
-            accountId = whatsappListPhoneNumbersParams.accountId
+            status = whatsappListPhoneNumbersParams.status
             additionalHeaders = whatsappListPhoneNumbersParams.additionalHeaders.toBuilder()
             additionalQueryParams = whatsappListPhoneNumbersParams.additionalQueryParams.toBuilder()
         }
 
-        /** WhatsApp account ID */
-        fun accountId(accountId: String) = apply { this.accountId = accountId }
+        /** Filter by provisioning status */
+        fun status(status: Status?) = apply { this.status = status }
+
+        /** Alias for calling [Builder.status] with `status.orElse(null)`. */
+        fun status(status: Optional<Status>) = status(status.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -160,17 +165,10 @@ private constructor(
          * Returns an immutable instance of [WhatsappListPhoneNumbersParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .accountId()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): WhatsappListPhoneNumbersParams =
             WhatsappListPhoneNumbersParams(
-                checkRequired("accountId", accountId),
+                status,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -181,10 +179,159 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
-                put("account_id", accountId)
+                status?.let { put("status", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
+
+    /** Filter by provisioning status */
+    class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val PURCHASING = of("purchasing")
+
+            @JvmField val PENDING_VERIFICATION = of("pending_verification")
+
+            @JvmField val VERIFIED = of("verified")
+
+            @JvmField val ACTIVE = of("active")
+
+            @JvmField val RELEASING = of("releasing")
+
+            @JvmField val RELEASED = of("released")
+
+            @JvmStatic fun of(value: String) = Status(JsonField.of(value))
+        }
+
+        /** An enum containing [Status]'s known values. */
+        enum class Known {
+            PURCHASING,
+            PENDING_VERIFICATION,
+            VERIFIED,
+            ACTIVE,
+            RELEASING,
+            RELEASED,
+        }
+
+        /**
+         * An enum containing [Status]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [Status] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            PURCHASING,
+            PENDING_VERIFICATION,
+            VERIFIED,
+            ACTIVE,
+            RELEASING,
+            RELEASED,
+            /** An enum member indicating that [Status] was instantiated with an unknown value. */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                PURCHASING -> Value.PURCHASING
+                PENDING_VERIFICATION -> Value.PENDING_VERIFICATION
+                VERIFIED -> Value.VERIFIED
+                ACTIVE -> Value.ACTIVE
+                RELEASING -> Value.RELEASING
+                RELEASED -> Value.RELEASED
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws RelayInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                PURCHASING -> Known.PURCHASING
+                PENDING_VERIFICATION -> Known.PENDING_VERIFICATION
+                VERIFIED -> Known.VERIFIED
+                ACTIVE -> Known.ACTIVE
+                RELEASING -> Known.RELEASING
+                RELEASED -> Known.RELEASED
+                else -> throw RelayInvalidDataException("Unknown Status: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws RelayInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow { RelayInvalidDataException("Value is not a String") }
+
+        private var validated: Boolean = false
+
+        fun validate(): Status = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Status && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -192,13 +339,13 @@ private constructor(
         }
 
         return other is WhatsappListPhoneNumbersParams &&
-            accountId == other.accountId &&
+            status == other.status &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(accountId, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int = Objects.hash(status, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "WhatsappListPhoneNumbersParams{accountId=$accountId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "WhatsappListPhoneNumbersParams{status=$status, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

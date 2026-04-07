@@ -16,6 +16,7 @@ internal class WebhookListParamsTest {
             .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .limit(1L)
             .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+            .workspaceId("workspace_id")
             .build()
     }
 
@@ -27,6 +28,7 @@ internal class WebhookListParamsTest {
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .limit(1L)
                 .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .workspaceId("workspace_id")
                 .build()
 
         val queryParams = params._queryParams()
@@ -38,6 +40,7 @@ internal class WebhookListParamsTest {
                     .put("from", "2019-12-27T18:11:19.117Z")
                     .put("limit", "1")
                     .put("to", "2019-12-27T18:11:19.117Z")
+                    .put("workspace_id", "workspace_id")
                     .build()
             )
     }

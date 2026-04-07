@@ -16,11 +16,12 @@ class AccountListParams
 private constructor(
     private val cursor: String?,
     private val from: OffsetDateTime?,
-    private val groupId: String?,
     private val limit: Long?,
+    private val platforms: String?,
     private val search: String?,
     private val to: OffsetDateTime?,
     private val ungrouped: Boolean?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -31,11 +32,11 @@ private constructor(
     /** Filter: start date (ISO 8601) */
     fun from(): Optional<OffsetDateTime> = Optional.ofNullable(from)
 
-    /** Filter by group ID */
-    fun groupId(): Optional<String> = Optional.ofNullable(groupId)
-
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    /** Comma-separated platform filter (e.g. instagram,facebook) */
+    fun platforms(): Optional<String> = Optional.ofNullable(platforms)
 
     /** Search by name or username */
     fun search(): Optional<String> = Optional.ofNullable(search)
@@ -45,6 +46,9 @@ private constructor(
 
     /** Only show ungrouped accounts */
     fun ungrouped(): Optional<Boolean> = Optional.ofNullable(ungrouped)
+
+    /** Filter by workspace ID */
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -67,11 +71,12 @@ private constructor(
 
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
-        private var groupId: String? = null
         private var limit: Long? = null
+        private var platforms: String? = null
         private var search: String? = null
         private var to: OffsetDateTime? = null
         private var ungrouped: Boolean? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -79,11 +84,12 @@ private constructor(
         internal fun from(accountListParams: AccountListParams) = apply {
             cursor = accountListParams.cursor
             from = accountListParams.from
-            groupId = accountListParams.groupId
             limit = accountListParams.limit
+            platforms = accountListParams.platforms
             search = accountListParams.search
             to = accountListParams.to
             ungrouped = accountListParams.ungrouped
+            workspaceId = accountListParams.workspaceId
             additionalHeaders = accountListParams.additionalHeaders.toBuilder()
             additionalQueryParams = accountListParams.additionalQueryParams.toBuilder()
         }
@@ -100,12 +106,6 @@ private constructor(
         /** Alias for calling [Builder.from] with `from.orElse(null)`. */
         fun from(from: Optional<OffsetDateTime>) = from(from.getOrNull())
 
-        /** Filter by group ID */
-        fun groupId(groupId: String?) = apply { this.groupId = groupId }
-
-        /** Alias for calling [Builder.groupId] with `groupId.orElse(null)`. */
-        fun groupId(groupId: Optional<String>) = groupId(groupId.getOrNull())
-
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
 
@@ -118,6 +118,12 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /** Comma-separated platform filter (e.g. instagram,facebook) */
+        fun platforms(platforms: String?) = apply { this.platforms = platforms }
+
+        /** Alias for calling [Builder.platforms] with `platforms.orElse(null)`. */
+        fun platforms(platforms: Optional<String>) = platforms(platforms.getOrNull())
 
         /** Search by name or username */
         fun search(search: String?) = apply { this.search = search }
@@ -143,6 +149,12 @@ private constructor(
 
         /** Alias for calling [Builder.ungrouped] with `ungrouped.orElse(null)`. */
         fun ungrouped(ungrouped: Optional<Boolean>) = ungrouped(ungrouped.getOrNull())
+
+        /** Filter by workspace ID */
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -251,11 +263,12 @@ private constructor(
             AccountListParams(
                 cursor,
                 from,
-                groupId,
                 limit,
+                platforms,
                 search,
                 to,
                 ungrouped,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -268,11 +281,12 @@ private constructor(
             .apply {
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
-                groupId?.let { put("group_id", it) }
                 limit?.let { put("limit", it.toString()) }
+                platforms?.let { put("platforms", it) }
                 search?.let { put("search", it) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 ungrouped?.let { put("ungrouped", it.toString()) }
+                workspaceId?.let { put("workspace_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -285,11 +299,12 @@ private constructor(
         return other is AccountListParams &&
             cursor == other.cursor &&
             from == other.from &&
-            groupId == other.groupId &&
             limit == other.limit &&
+            platforms == other.platforms &&
             search == other.search &&
             to == other.to &&
             ungrouped == other.ungrouped &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -298,15 +313,16 @@ private constructor(
         Objects.hash(
             cursor,
             from,
-            groupId,
             limit,
+            platforms,
             search,
             to,
             ungrouped,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "AccountListParams{cursor=$cursor, from=$from, groupId=$groupId, limit=$limit, search=$search, to=$to, ungrouped=$ungrouped, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "AccountListParams{cursor=$cursor, from=$from, limit=$limit, platforms=$platforms, search=$search, to=$to, ungrouped=$ungrouped, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

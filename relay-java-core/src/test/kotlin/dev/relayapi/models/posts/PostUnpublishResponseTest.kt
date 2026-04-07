@@ -25,6 +25,26 @@ internal class PostUnpublishResponseTest {
                         .type(PostUnpublishResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
+                .recycledFromId("recycled_from_id")
+                .recycling(
+                    PostUnpublishResponse.Recycling.builder()
+                        .id("id")
+                        .contentVariationIndex(0.0)
+                        .addContentVariation("string")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .enabled(true)
+                        .expireCount(0.0)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .gap(0.0)
+                        .gapFreq(PostUnpublishResponse.Recycling.GapFreq.DAY)
+                        .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recycleCount(0.0)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .scheduledAt("scheduled_at")
                 .status(PostUnpublishResponse.Status.DRAFT)
                 .targets(
@@ -39,6 +59,9 @@ internal class PostUnpublishResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -50,6 +73,27 @@ internal class PostUnpublishResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostUnpublishResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
+                .targetOptions(
+                    PostUnpublishResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
+                .timezone("timezone")
                 .build()
 
         assertThat(postUnpublishResponse.id()).isEqualTo("id")
@@ -61,6 +105,27 @@ internal class PostUnpublishResponseTest {
                 PostUnpublishResponse.Media.builder()
                     .url("https://example.com")
                     .type(PostUnpublishResponse.Media.Type.IMAGE)
+                    .build()
+            )
+        assertThat(postUnpublishResponse.publishedAt()).contains("published_at")
+        assertThat(postUnpublishResponse.recycledFromId()).contains("recycled_from_id")
+        assertThat(postUnpublishResponse.recycling())
+            .contains(
+                PostUnpublishResponse.Recycling.builder()
+                    .id("id")
+                    .contentVariationIndex(0.0)
+                    .addContentVariation("string")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .enabled(true)
+                    .expireCount(0.0)
+                    .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .gap(0.0)
+                    .gapFreq(PostUnpublishResponse.Recycling.GapFreq.DAY)
+                    .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .recycleCount(0.0)
+                    .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
         assertThat(postUnpublishResponse.scheduledAt()).contains("scheduled_at")
@@ -78,6 +143,9 @@ internal class PostUnpublishResponseTest {
                                     listOf(
                                         mapOf(
                                             "id" to "id",
+                                            "avatar_url" to "avatar_url",
+                                            "display_name" to "display_name",
+                                            "platform_post_id" to "platform_post_id",
                                             "url" to "url",
                                             "username" to "username",
                                         )
@@ -90,6 +158,29 @@ internal class PostUnpublishResponseTest {
             )
         assertThat(postUnpublishResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(postUnpublishResponse.metrics())
+            .contains(
+                PostUnpublishResponse.Metrics.builder()
+                    .clicks(0.0)
+                    .comments(0.0)
+                    .engagementRate(0.0)
+                    .impressions(0.0)
+                    .likes(0.0)
+                    .reach(0.0)
+                    .saves(0.0)
+                    .shares(0.0)
+                    .views(0.0)
+                    .build()
+            )
+        assertThat(postUnpublishResponse.targetOptions())
+            .contains(
+                PostUnpublishResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postUnpublishResponse.threadGroupId()).contains("thread_group_id")
+        assertThat(postUnpublishResponse.threadPosition()).contains(0.0)
+        assertThat(postUnpublishResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -106,6 +197,26 @@ internal class PostUnpublishResponseTest {
                         .type(PostUnpublishResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
+                .recycledFromId("recycled_from_id")
+                .recycling(
+                    PostUnpublishResponse.Recycling.builder()
+                        .id("id")
+                        .contentVariationIndex(0.0)
+                        .addContentVariation("string")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .enabled(true)
+                        .expireCount(0.0)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .gap(0.0)
+                        .gapFreq(PostUnpublishResponse.Recycling.GapFreq.DAY)
+                        .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recycleCount(0.0)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .scheduledAt("scheduled_at")
                 .status(PostUnpublishResponse.Status.DRAFT)
                 .targets(
@@ -120,6 +231,9 @@ internal class PostUnpublishResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -131,6 +245,27 @@ internal class PostUnpublishResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostUnpublishResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
+                .targetOptions(
+                    PostUnpublishResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostUnpublishResponse =

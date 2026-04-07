@@ -851,6 +851,14 @@ private constructor(
 
             @JvmField val SMS = of("sms")
 
+            @JvmField val BEEHIIV = of("beehiiv")
+
+            @JvmField val CONVERTKIT = of("convertkit")
+
+            @JvmField val MAILCHIMP = of("mailchimp")
+
+            @JvmField val LISTMONK = of("listmonk")
+
             @JvmStatic fun of(value: String) = Platform(JsonField.of(value))
         }
 
@@ -873,6 +881,10 @@ private constructor(
             MASTODON,
             DISCORD,
             SMS,
+            BEEHIIV,
+            CONVERTKIT,
+            MAILCHIMP,
+            LISTMONK,
         }
 
         /**
@@ -902,6 +914,10 @@ private constructor(
             MASTODON,
             DISCORD,
             SMS,
+            BEEHIIV,
+            CONVERTKIT,
+            MAILCHIMP,
+            LISTMONK,
             /** An enum member indicating that [Platform] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -932,6 +948,10 @@ private constructor(
                 MASTODON -> Value.MASTODON
                 DISCORD -> Value.DISCORD
                 SMS -> Value.SMS
+                BEEHIIV -> Value.BEEHIIV
+                CONVERTKIT -> Value.CONVERTKIT
+                MAILCHIMP -> Value.MAILCHIMP
+                LISTMONK -> Value.LISTMONK
                 else -> Value._UNKNOWN
             }
 
@@ -962,6 +982,10 @@ private constructor(
                 MASTODON -> Known.MASTODON
                 DISCORD -> Known.DISCORD
                 SMS -> Known.SMS
+                BEEHIIV -> Known.BEEHIIV
+                CONVERTKIT -> Known.CONVERTKIT
+                MAILCHIMP -> Known.MAILCHIMP
+                LISTMONK -> Known.LISTMONK
                 else -> throw RelayInvalidDataException("Unknown Platform: $value")
             }
 

@@ -19,7 +19,12 @@ internal class ApiKeyServiceAsyncTest {
 
         val apiKeyFuture =
             apiKeyServiceAsync.create(
-                ApiKeyCreateParams.builder().name("x").expiresInDays(1L).build()
+                ApiKeyCreateParams.builder()
+                    .name("x")
+                    .expiresInDays(1L)
+                    .permission(ApiKeyCreateParams.Permission.READ_WRITE)
+                    .workspaceScope(ApiKeyCreateParams.WorkspaceScope.UnionMember0.ALL)
+                    .build()
             )
 
         val apiKey = apiKeyFuture.get()

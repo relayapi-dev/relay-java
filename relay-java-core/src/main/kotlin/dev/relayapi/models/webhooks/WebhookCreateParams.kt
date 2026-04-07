@@ -20,6 +20,7 @@ import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Create a new webhook endpoint. The signing secret is returned only once in the response. */
@@ -47,6 +48,14 @@ private constructor(
     fun url(): String = body.url()
 
     /**
+     * Workspace ID to scope this webhook to
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun workspaceId(): Optional<String> = body.workspaceId()
+
+    /**
      * Returns the raw JSON value of [events].
      *
      * Unlike [events], this method doesn't throw if the JSON field has an unexpected type.
@@ -59,6 +68,13 @@ private constructor(
      * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _url(): JsonField<String> = body._url()
+
+    /**
+     * Returns the raw JSON value of [workspaceId].
+     *
+     * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _workspaceId(): JsonField<String> = body._workspaceId()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -105,6 +121,7 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [events]
          * - [url]
+         * - [workspaceId]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -137,6 +154,18 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun url(url: JsonField<String>) = apply { body.url(url) }
+
+        /** Workspace ID to scope this webhook to */
+        fun workspaceId(workspaceId: String) = apply { body.workspaceId(workspaceId) }
+
+        /**
+         * Sets [Builder.workspaceId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.workspaceId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun workspaceId(workspaceId: JsonField<String>) = apply { body.workspaceId(workspaceId) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -287,6 +316,7 @@ private constructor(
     private constructor(
         private val events: JsonField<List<Event>>,
         private val url: JsonField<String>,
+        private val workspaceId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -296,7 +326,10 @@ private constructor(
             @ExcludeMissing
             events: JsonField<List<Event>> = JsonMissing.of(),
             @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
-        ) : this(events, url, mutableMapOf())
+            @JsonProperty("workspace_id")
+            @ExcludeMissing
+            workspaceId: JsonField<String> = JsonMissing.of(),
+        ) : this(events, url, workspaceId, mutableMapOf())
 
         /**
          * Events to subscribe to
@@ -315,6 +348,14 @@ private constructor(
         fun url(): String = url.getRequired("url")
 
         /**
+         * Workspace ID to scope this webhook to
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun workspaceId(): Optional<String> = workspaceId.getOptional("workspace_id")
+
+        /**
          * Returns the raw JSON value of [events].
          *
          * Unlike [events], this method doesn't throw if the JSON field has an unexpected type.
@@ -327,6 +368,15 @@ private constructor(
          * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+        /**
+         * Returns the raw JSON value of [workspaceId].
+         *
+         * Unlike [workspaceId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("workspace_id")
+        @ExcludeMissing
+        fun _workspaceId(): JsonField<String> = workspaceId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -359,12 +409,14 @@ private constructor(
 
             private var events: JsonField<MutableList<Event>>? = null
             private var url: JsonField<String>? = null
+            private var workspaceId: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 events = body.events.map { it.toMutableList() }
                 url = body.url
+                workspaceId = body.workspaceId
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -406,6 +458,20 @@ private constructor(
              */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
+            /** Workspace ID to scope this webhook to */
+            fun workspaceId(workspaceId: String) = workspaceId(JsonField.of(workspaceId))
+
+            /**
+             * Sets [Builder.workspaceId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.workspaceId] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun workspaceId(workspaceId: JsonField<String>) = apply {
+                this.workspaceId = workspaceId
+            }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -442,6 +508,7 @@ private constructor(
                 Body(
                     checkRequired("events", events).map { it.toImmutable() },
                     checkRequired("url", url),
+                    workspaceId,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -455,6 +522,7 @@ private constructor(
 
             events().forEach { it.validate() }
             url()
+            workspaceId()
             validated = true
         }
 
@@ -475,7 +543,8 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (events.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-                (if (url.asKnown().isPresent) 1 else 0)
+                (if (url.asKnown().isPresent) 1 else 0) +
+                (if (workspaceId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -485,15 +554,18 @@ private constructor(
             return other is Body &&
                 events == other.events &&
                 url == other.url &&
+                workspaceId == other.workspaceId &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(events, url, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(events, url, workspaceId, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{events=$events, url=$url, additionalProperties=$additionalProperties}"
+            "Body{events=$events, url=$url, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
     }
 
     class Event @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -518,6 +590,8 @@ private constructor(
 
             @JvmField val POST_SCHEDULED = of("post.scheduled")
 
+            @JvmField val POST_RECYCLED = of("post.recycled")
+
             @JvmField val ACCOUNT_CONNECTED = of("account.connected")
 
             @JvmField val ACCOUNT_DISCONNECTED = of("account.disconnected")
@@ -525,6 +599,16 @@ private constructor(
             @JvmField val COMMENT_RECEIVED = of("comment.received")
 
             @JvmField val MESSAGE_RECEIVED = of("message.received")
+
+            @JvmField val AUTO_POST_CREATED = of("auto_post.created")
+
+            @JvmField val AUTO_POST_ERROR = of("auto_post.error")
+
+            @JvmField val ENGAGEMENT_RULE_TRIGGERED = of("engagement_rule.triggered")
+
+            @JvmField val CROSS_POST_ACTION_EXECUTED = of("cross_post_action.executed")
+
+            @JvmField val CROSS_POST_ACTION_FAILED = of("cross_post_action.failed")
 
             @JvmStatic fun of(value: String) = Event(JsonField.of(value))
         }
@@ -535,10 +619,16 @@ private constructor(
             POST_PARTIAL,
             POST_FAILED,
             POST_SCHEDULED,
+            POST_RECYCLED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
             MESSAGE_RECEIVED,
+            AUTO_POST_CREATED,
+            AUTO_POST_ERROR,
+            ENGAGEMENT_RULE_TRIGGERED,
+            CROSS_POST_ACTION_EXECUTED,
+            CROSS_POST_ACTION_FAILED,
         }
 
         /**
@@ -555,10 +645,16 @@ private constructor(
             POST_PARTIAL,
             POST_FAILED,
             POST_SCHEDULED,
+            POST_RECYCLED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
             MESSAGE_RECEIVED,
+            AUTO_POST_CREATED,
+            AUTO_POST_ERROR,
+            ENGAGEMENT_RULE_TRIGGERED,
+            CROSS_POST_ACTION_EXECUTED,
+            CROSS_POST_ACTION_FAILED,
             /** An enum member indicating that [Event] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -576,10 +672,16 @@ private constructor(
                 POST_PARTIAL -> Value.POST_PARTIAL
                 POST_FAILED -> Value.POST_FAILED
                 POST_SCHEDULED -> Value.POST_SCHEDULED
+                POST_RECYCLED -> Value.POST_RECYCLED
                 ACCOUNT_CONNECTED -> Value.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Value.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Value.COMMENT_RECEIVED
                 MESSAGE_RECEIVED -> Value.MESSAGE_RECEIVED
+                AUTO_POST_CREATED -> Value.AUTO_POST_CREATED
+                AUTO_POST_ERROR -> Value.AUTO_POST_ERROR
+                ENGAGEMENT_RULE_TRIGGERED -> Value.ENGAGEMENT_RULE_TRIGGERED
+                CROSS_POST_ACTION_EXECUTED -> Value.CROSS_POST_ACTION_EXECUTED
+                CROSS_POST_ACTION_FAILED -> Value.CROSS_POST_ACTION_FAILED
                 else -> Value._UNKNOWN
             }
 
@@ -597,10 +699,16 @@ private constructor(
                 POST_PARTIAL -> Known.POST_PARTIAL
                 POST_FAILED -> Known.POST_FAILED
                 POST_SCHEDULED -> Known.POST_SCHEDULED
+                POST_RECYCLED -> Known.POST_RECYCLED
                 ACCOUNT_CONNECTED -> Known.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Known.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Known.COMMENT_RECEIVED
                 MESSAGE_RECEIVED -> Known.MESSAGE_RECEIVED
+                AUTO_POST_CREATED -> Known.AUTO_POST_CREATED
+                AUTO_POST_ERROR -> Known.AUTO_POST_ERROR
+                ENGAGEMENT_RULE_TRIGGERED -> Known.ENGAGEMENT_RULE_TRIGGERED
+                CROSS_POST_ACTION_EXECUTED -> Known.CROSS_POST_ACTION_EXECUTED
+                CROSS_POST_ACTION_FAILED -> Known.CROSS_POST_ACTION_FAILED
                 else -> throw RelayInvalidDataException("Unknown Event: $value")
             }
 

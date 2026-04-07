@@ -18,6 +18,7 @@ import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
 import dev.relayapi.core.toImmutable
 import dev.relayapi.errors.RelayInvalidDataException
+import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -52,8 +53,24 @@ private constructor(
     fun media(): Optional<List<Media>> = body.media()
 
     /**
-     * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO 8601
-     * timestamp to schedule.
+     * Internal notes for this post
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun notes(): Optional<String> = body.notes()
+
+    /**
+     * Recycling configuration (Pro plan only)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun recycling(): Optional<Recycling> = body.recycling()
+
+    /**
+     * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+     * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -93,6 +110,20 @@ private constructor(
      * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _media(): JsonField<List<Media>> = body._media()
+
+    /**
+     * Returns the raw JSON value of [notes].
+     *
+     * Unlike [notes], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _notes(): JsonField<String> = body._notes()
+
+    /**
+     * Returns the raw JSON value of [recycling].
+     *
+     * Unlike [recycling], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _recycling(): JsonField<Recycling> = body._recycling()
 
     /**
      * Returns the raw JSON value of [scheduledAt].
@@ -169,9 +200,9 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [content]
          * - [media]
+         * - [notes]
+         * - [recycling]
          * - [scheduledAt]
-         * - [targetOptions]
-         * - [targets]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -206,9 +237,35 @@ private constructor(
          */
         fun addMedia(media: Media) = apply { body.addMedia(media) }
 
+        /** Internal notes for this post */
+        fun notes(notes: String?) = apply { body.notes(notes) }
+
+        /** Alias for calling [Builder.notes] with `notes.orElse(null)`. */
+        fun notes(notes: Optional<String>) = notes(notes.getOrNull())
+
         /**
-         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-         * 8601 timestamp to schedule.
+         * Sets [Builder.notes] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.notes] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun notes(notes: JsonField<String>) = apply { body.notes(notes) }
+
+        /** Recycling configuration (Pro plan only) */
+        fun recycling(recycling: Recycling) = apply { body.recycling(recycling) }
+
+        /**
+         * Sets [Builder.recycling] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.recycling] with a well-typed [Recycling] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun recycling(recycling: JsonField<Recycling>) = apply { body.recycling(recycling) }
+
+        /**
+         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+         * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
          */
         fun scheduledAt(scheduledAt: String) = apply { body.scheduledAt(scheduledAt) }
 
@@ -413,6 +470,8 @@ private constructor(
     private constructor(
         private val content: JsonField<String>,
         private val media: JsonField<List<Media>>,
+        private val notes: JsonField<String>,
+        private val recycling: JsonField<Recycling>,
         private val scheduledAt: JsonField<String>,
         private val targetOptions: JsonField<TargetOptions>,
         private val targets: JsonField<List<String>>,
@@ -424,6 +483,10 @@ private constructor(
         private constructor(
             @JsonProperty("content") @ExcludeMissing content: JsonField<String> = JsonMissing.of(),
             @JsonProperty("media") @ExcludeMissing media: JsonField<List<Media>> = JsonMissing.of(),
+            @JsonProperty("notes") @ExcludeMissing notes: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("recycling")
+            @ExcludeMissing
+            recycling: JsonField<Recycling> = JsonMissing.of(),
             @JsonProperty("scheduled_at")
             @ExcludeMissing
             scheduledAt: JsonField<String> = JsonMissing.of(),
@@ -434,7 +497,17 @@ private constructor(
             @ExcludeMissing
             targets: JsonField<List<String>> = JsonMissing.of(),
             @JsonProperty("timezone") @ExcludeMissing timezone: JsonField<String> = JsonMissing.of(),
-        ) : this(content, media, scheduledAt, targetOptions, targets, timezone, mutableMapOf())
+        ) : this(
+            content,
+            media,
+            notes,
+            recycling,
+            scheduledAt,
+            targetOptions,
+            targets,
+            timezone,
+            mutableMapOf(),
+        )
 
         /**
          * Post text
@@ -453,8 +526,24 @@ private constructor(
         fun media(): Optional<List<Media>> = media.getOptional("media")
 
         /**
-         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-         * 8601 timestamp to schedule.
+         * Internal notes for this post
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun notes(): Optional<String> = notes.getOptional("notes")
+
+        /**
+         * Recycling configuration (Pro plan only)
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun recycling(): Optional<Recycling> = recycling.getOptional("recycling")
+
+        /**
+         * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+         * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
          *   server responded with an unexpected value).
@@ -494,6 +583,22 @@ private constructor(
          * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<Media>> = media
+
+        /**
+         * Returns the raw JSON value of [notes].
+         *
+         * Unlike [notes], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("notes") @ExcludeMissing fun _notes(): JsonField<String> = notes
+
+        /**
+         * Returns the raw JSON value of [recycling].
+         *
+         * Unlike [recycling], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("recycling")
+        @ExcludeMissing
+        fun _recycling(): JsonField<Recycling> = recycling
 
         /**
          * Returns the raw JSON value of [scheduledAt].
@@ -551,6 +656,8 @@ private constructor(
 
             private var content: JsonField<String> = JsonMissing.of()
             private var media: JsonField<MutableList<Media>>? = null
+            private var notes: JsonField<String> = JsonMissing.of()
+            private var recycling: JsonField<Recycling> = JsonMissing.of()
             private var scheduledAt: JsonField<String> = JsonMissing.of()
             private var targetOptions: JsonField<TargetOptions> = JsonMissing.of()
             private var targets: JsonField<MutableList<String>>? = null
@@ -561,6 +668,8 @@ private constructor(
             internal fun from(body: Body) = apply {
                 content = body.content
                 media = body.media.map { it.toMutableList() }
+                notes = body.notes
+                recycling = body.recycling
                 scheduledAt = body.scheduledAt
                 targetOptions = body.targetOptions
                 targets = body.targets.map { it.toMutableList() }
@@ -606,9 +715,36 @@ private constructor(
                     }
             }
 
+            /** Internal notes for this post */
+            fun notes(notes: String?) = notes(JsonField.ofNullable(notes))
+
+            /** Alias for calling [Builder.notes] with `notes.orElse(null)`. */
+            fun notes(notes: Optional<String>) = notes(notes.getOrNull())
+
             /**
-             * Publish intent. Use "now" to publish immediately, "draft" to save as draft, or an ISO
-             * 8601 timestamp to schedule.
+             * Sets [Builder.notes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.notes] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun notes(notes: JsonField<String>) = apply { this.notes = notes }
+
+            /** Recycling configuration (Pro plan only) */
+            fun recycling(recycling: Recycling) = recycling(JsonField.of(recycling))
+
+            /**
+             * Sets [Builder.recycling] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.recycling] with a well-typed [Recycling] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun recycling(recycling: JsonField<Recycling>) = apply { this.recycling = recycling }
+
+            /**
+             * Publish intent. Use "now" to publish immediately, "draft" to save as draft, "auto" to
+             * auto-schedule to the best available slot, or an ISO 8601 timestamp to schedule.
              */
             fun scheduledAt(scheduledAt: String) = scheduledAt(JsonField.of(scheduledAt))
 
@@ -702,6 +838,8 @@ private constructor(
                 Body(
                     content,
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
+                    notes,
+                    recycling,
                     scheduledAt,
                     targetOptions,
                     (targets ?: JsonMissing.of()).map { it.toImmutable() },
@@ -719,6 +857,8 @@ private constructor(
 
             content()
             media().ifPresent { it.forEach { it.validate() } }
+            notes()
+            recycling().ifPresent { it.validate() }
             scheduledAt()
             targetOptions().ifPresent { it.validate() }
             targets()
@@ -744,6 +884,8 @@ private constructor(
         internal fun validity(): Int =
             (if (content.asKnown().isPresent) 1 else 0) +
                 (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (notes.asKnown().isPresent) 1 else 0) +
+                (recycling.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (scheduledAt.asKnown().isPresent) 1 else 0) +
                 (targetOptions.asKnown().getOrNull()?.validity() ?: 0) +
                 (targets.asKnown().getOrNull()?.size ?: 0) +
@@ -757,6 +899,8 @@ private constructor(
             return other is Body &&
                 content == other.content &&
                 media == other.media &&
+                notes == other.notes &&
+                recycling == other.recycling &&
                 scheduledAt == other.scheduledAt &&
                 targetOptions == other.targetOptions &&
                 targets == other.targets &&
@@ -768,6 +912,8 @@ private constructor(
             Objects.hash(
                 content,
                 media,
+                notes,
+                recycling,
                 scheduledAt,
                 targetOptions,
                 targets,
@@ -779,7 +925,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{content=$content, media=$media, scheduledAt=$scheduledAt, targetOptions=$targetOptions, targets=$targets, timezone=$timezone, additionalProperties=$additionalProperties}"
+            "Body{content=$content, media=$media, notes=$notes, recycling=$recycling, scheduledAt=$scheduledAt, targetOptions=$targetOptions, targets=$targets, timezone=$timezone, additionalProperties=$additionalProperties}"
     }
 
     class Media
@@ -1111,6 +1257,578 @@ private constructor(
 
         override fun toString() =
             "Media{url=$url, type=$type, additionalProperties=$additionalProperties}"
+    }
+
+    /** Recycling configuration (Pro plan only) */
+    class Recycling
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val gap: JsonField<Long>,
+        private val gapFreq: JsonField<GapFreq>,
+        private val startDate: JsonField<OffsetDateTime>,
+        private val contentVariations: JsonField<List<String>>,
+        private val enabled: JsonField<Boolean>,
+        private val expireCount: JsonField<Long>,
+        private val expireDate: JsonField<OffsetDateTime>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("gap") @ExcludeMissing gap: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("gap_freq")
+            @ExcludeMissing
+            gapFreq: JsonField<GapFreq> = JsonMissing.of(),
+            @JsonProperty("start_date")
+            @ExcludeMissing
+            startDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("content_variations")
+            @ExcludeMissing
+            contentVariations: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("enabled") @ExcludeMissing enabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("expire_count")
+            @ExcludeMissing
+            expireCount: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("expire_date")
+            @ExcludeMissing
+            expireDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+        ) : this(
+            gap,
+            gapFreq,
+            startDate,
+            contentVariations,
+            enabled,
+            expireCount,
+            expireDate,
+            mutableMapOf(),
+        )
+
+        /**
+         * Interval value
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun gap(): Long = gap.getRequired("gap")
+
+        /**
+         * Interval unit
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun gapFreq(): GapFreq = gapFreq.getRequired("gap_freq")
+
+        /**
+         * When to start recycling
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun startDate(): OffsetDateTime = startDate.getRequired("start_date")
+
+        /**
+         * Alternate content texts (round-robin)
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun contentVariations(): Optional<List<String>> =
+            contentVariations.getOptional("content_variations")
+
+        /**
+         * Whether recycling is active
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
+
+        /**
+         * Stop after this many recycles
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun expireCount(): Optional<Long> = expireCount.getOptional("expire_count")
+
+        /**
+         * Stop after this date
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun expireDate(): Optional<OffsetDateTime> = expireDate.getOptional("expire_date")
+
+        /**
+         * Returns the raw JSON value of [gap].
+         *
+         * Unlike [gap], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("gap") @ExcludeMissing fun _gap(): JsonField<Long> = gap
+
+        /**
+         * Returns the raw JSON value of [gapFreq].
+         *
+         * Unlike [gapFreq], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("gap_freq") @ExcludeMissing fun _gapFreq(): JsonField<GapFreq> = gapFreq
+
+        /**
+         * Returns the raw JSON value of [startDate].
+         *
+         * Unlike [startDate], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("start_date")
+        @ExcludeMissing
+        fun _startDate(): JsonField<OffsetDateTime> = startDate
+
+        /**
+         * Returns the raw JSON value of [contentVariations].
+         *
+         * Unlike [contentVariations], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("content_variations")
+        @ExcludeMissing
+        fun _contentVariations(): JsonField<List<String>> = contentVariations
+
+        /**
+         * Returns the raw JSON value of [enabled].
+         *
+         * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("enabled") @ExcludeMissing fun _enabled(): JsonField<Boolean> = enabled
+
+        /**
+         * Returns the raw JSON value of [expireCount].
+         *
+         * Unlike [expireCount], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("expire_count")
+        @ExcludeMissing
+        fun _expireCount(): JsonField<Long> = expireCount
+
+        /**
+         * Returns the raw JSON value of [expireDate].
+         *
+         * Unlike [expireDate], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("expire_date")
+        @ExcludeMissing
+        fun _expireDate(): JsonField<OffsetDateTime> = expireDate
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Recycling].
+             *
+             * The following fields are required:
+             * ```java
+             * .gap()
+             * .gapFreq()
+             * .startDate()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Recycling]. */
+        class Builder internal constructor() {
+
+            private var gap: JsonField<Long>? = null
+            private var gapFreq: JsonField<GapFreq>? = null
+            private var startDate: JsonField<OffsetDateTime>? = null
+            private var contentVariations: JsonField<MutableList<String>>? = null
+            private var enabled: JsonField<Boolean> = JsonMissing.of()
+            private var expireCount: JsonField<Long> = JsonMissing.of()
+            private var expireDate: JsonField<OffsetDateTime> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(recycling: Recycling) = apply {
+                gap = recycling.gap
+                gapFreq = recycling.gapFreq
+                startDate = recycling.startDate
+                contentVariations = recycling.contentVariations.map { it.toMutableList() }
+                enabled = recycling.enabled
+                expireCount = recycling.expireCount
+                expireDate = recycling.expireDate
+                additionalProperties = recycling.additionalProperties.toMutableMap()
+            }
+
+            /** Interval value */
+            fun gap(gap: Long) = gap(JsonField.of(gap))
+
+            /**
+             * Sets [Builder.gap] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.gap] with a well-typed [Long] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun gap(gap: JsonField<Long>) = apply { this.gap = gap }
+
+            /** Interval unit */
+            fun gapFreq(gapFreq: GapFreq) = gapFreq(JsonField.of(gapFreq))
+
+            /**
+             * Sets [Builder.gapFreq] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.gapFreq] with a well-typed [GapFreq] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun gapFreq(gapFreq: JsonField<GapFreq>) = apply { this.gapFreq = gapFreq }
+
+            /** When to start recycling */
+            fun startDate(startDate: OffsetDateTime) = startDate(JsonField.of(startDate))
+
+            /**
+             * Sets [Builder.startDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.startDate] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun startDate(startDate: JsonField<OffsetDateTime>) = apply {
+                this.startDate = startDate
+            }
+
+            /** Alternate content texts (round-robin) */
+            fun contentVariations(contentVariations: List<String>) =
+                contentVariations(JsonField.of(contentVariations))
+
+            /**
+             * Sets [Builder.contentVariations] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.contentVariations] with a well-typed `List<String>`
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun contentVariations(contentVariations: JsonField<List<String>>) = apply {
+                this.contentVariations = contentVariations.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [contentVariations].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addContentVariation(contentVariation: String) = apply {
+                contentVariations =
+                    (contentVariations ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("contentVariations", it).add(contentVariation)
+                    }
+            }
+
+            /** Whether recycling is active */
+            fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
+
+            /**
+             * Sets [Builder.enabled] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
+
+            /** Stop after this many recycles */
+            fun expireCount(expireCount: Long) = expireCount(JsonField.of(expireCount))
+
+            /**
+             * Sets [Builder.expireCount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.expireCount] with a well-typed [Long] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun expireCount(expireCount: JsonField<Long>) = apply { this.expireCount = expireCount }
+
+            /** Stop after this date */
+            fun expireDate(expireDate: OffsetDateTime) = expireDate(JsonField.of(expireDate))
+
+            /**
+             * Sets [Builder.expireDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.expireDate] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun expireDate(expireDate: JsonField<OffsetDateTime>) = apply {
+                this.expireDate = expireDate
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Recycling].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .gap()
+             * .gapFreq()
+             * .startDate()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Recycling =
+                Recycling(
+                    checkRequired("gap", gap),
+                    checkRequired("gapFreq", gapFreq),
+                    checkRequired("startDate", startDate),
+                    (contentVariations ?: JsonMissing.of()).map { it.toImmutable() },
+                    enabled,
+                    expireCount,
+                    expireDate,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Recycling = apply {
+            if (validated) {
+                return@apply
+            }
+
+            gap()
+            gapFreq().validate()
+            startDate()
+            contentVariations()
+            enabled()
+            expireCount()
+            expireDate()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (gap.asKnown().isPresent) 1 else 0) +
+                (gapFreq.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (startDate.asKnown().isPresent) 1 else 0) +
+                (contentVariations.asKnown().getOrNull()?.size ?: 0) +
+                (if (enabled.asKnown().isPresent) 1 else 0) +
+                (if (expireCount.asKnown().isPresent) 1 else 0) +
+                (if (expireDate.asKnown().isPresent) 1 else 0)
+
+        /** Interval unit */
+        class GapFreq @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val DAY = of("day")
+
+                @JvmField val WEEK = of("week")
+
+                @JvmField val MONTH = of("month")
+
+                @JvmStatic fun of(value: String) = GapFreq(JsonField.of(value))
+            }
+
+            /** An enum containing [GapFreq]'s known values. */
+            enum class Known {
+                DAY,
+                WEEK,
+                MONTH,
+            }
+
+            /**
+             * An enum containing [GapFreq]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [GapFreq] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                DAY,
+                WEEK,
+                MONTH,
+                /**
+                 * An enum member indicating that [GapFreq] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    DAY -> Value.DAY
+                    WEEK -> Value.WEEK
+                    MONTH -> Value.MONTH
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws RelayInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    DAY -> Known.DAY
+                    WEEK -> Known.WEEK
+                    MONTH -> Known.MONTH
+                    else -> throw RelayInvalidDataException("Unknown GapFreq: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws RelayInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    RelayInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            fun validate(): GapFreq = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is GapFreq && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Recycling &&
+                gap == other.gap &&
+                gapFreq == other.gapFreq &&
+                startDate == other.startDate &&
+                contentVariations == other.contentVariations &&
+                enabled == other.enabled &&
+                expireCount == other.expireCount &&
+                expireDate == other.expireDate &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                gap,
+                gapFreq,
+                startDate,
+                contentVariations,
+                enabled,
+                expireCount,
+                expireDate,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Recycling{gap=$gap, gapFreq=$gapFreq, startDate=$startDate, contentVariations=$contentVariations, enabled=$enabled, expireCount=$expireCount, expireDate=$expireDate, additionalProperties=$additionalProperties}"
     }
 
     class TargetOptions

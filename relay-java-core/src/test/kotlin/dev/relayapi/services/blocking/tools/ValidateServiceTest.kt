@@ -8,6 +8,7 @@ import dev.relayapi.models.tools.validate.ValidateCheckPostLengthParams
 import dev.relayapi.models.tools.validate.ValidateRetrieveSubredditParams
 import dev.relayapi.models.tools.validate.ValidateValidateMediaParams
 import dev.relayapi.models.tools.validate.ValidateValidatePostParams
+import java.time.OffsetDateTime
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -67,18 +68,48 @@ internal class ValidateServiceTest {
                     .scheduledAt("now")
                     .addTarget("string")
                     .content("content")
+                    .addCrossPostAction(
+                        ValidateValidatePostParams.CrossPostAction.builder()
+                            .actionType(
+                                ValidateValidatePostParams.CrossPostAction.ActionType.REPOST
+                            )
+                            .targetAccountId("target_account_id")
+                            .content("content")
+                            .delayMinutes(0L)
+                            .build()
+                    )
                     .addMedia(
                         ValidateValidatePostParams.Media.builder()
                             .url("https://example.com")
                             .type(ValidateValidatePostParams.Media.Type.IMAGE)
                             .build()
                     )
+                    .recycling(
+                        ValidateValidatePostParams.Recycling.builder()
+                            .gap(1L)
+                            .gapFreq(ValidateValidatePostParams.Recycling.GapFreq.DAY)
+                            .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .addContentVariation("string")
+                            .enabled(true)
+                            .expireCount(1L)
+                            .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .shortenUrls(true)
+                    .skipSignature(true)
                     .targetOptions(
                         ValidateValidatePostParams.TargetOptions.builder()
                             .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
                             .build()
                     )
+                    .templateId("template_id")
+                    .templateVariables(
+                        ValidateValidatePostParams.TemplateVariables.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("string"))
+                            .build()
+                    )
                     .timezone("timezone")
+                    .workspaceId("workspace_id")
                     .build()
             )
 

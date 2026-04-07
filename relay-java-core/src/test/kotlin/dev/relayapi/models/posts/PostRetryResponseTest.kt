@@ -25,6 +25,26 @@ internal class PostRetryResponseTest {
                         .type(PostRetryResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
+                .recycledFromId("recycled_from_id")
+                .recycling(
+                    PostRetryResponse.Recycling.builder()
+                        .id("id")
+                        .contentVariationIndex(0.0)
+                        .addContentVariation("string")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .enabled(true)
+                        .expireCount(0.0)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .gap(0.0)
+                        .gapFreq(PostRetryResponse.Recycling.GapFreq.DAY)
+                        .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recycleCount(0.0)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .scheduledAt("scheduled_at")
                 .status(PostRetryResponse.Status.DRAFT)
                 .targets(
@@ -39,6 +59,9 @@ internal class PostRetryResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -50,6 +73,27 @@ internal class PostRetryResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostRetryResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
+                .targetOptions(
+                    PostRetryResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
+                .timezone("timezone")
                 .build()
 
         assertThat(postRetryResponse.id()).isEqualTo("id")
@@ -61,6 +105,27 @@ internal class PostRetryResponseTest {
                 PostRetryResponse.Media.builder()
                     .url("https://example.com")
                     .type(PostRetryResponse.Media.Type.IMAGE)
+                    .build()
+            )
+        assertThat(postRetryResponse.publishedAt()).contains("published_at")
+        assertThat(postRetryResponse.recycledFromId()).contains("recycled_from_id")
+        assertThat(postRetryResponse.recycling())
+            .contains(
+                PostRetryResponse.Recycling.builder()
+                    .id("id")
+                    .contentVariationIndex(0.0)
+                    .addContentVariation("string")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .enabled(true)
+                    .expireCount(0.0)
+                    .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .gap(0.0)
+                    .gapFreq(PostRetryResponse.Recycling.GapFreq.DAY)
+                    .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .recycleCount(0.0)
+                    .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
         assertThat(postRetryResponse.scheduledAt()).contains("scheduled_at")
@@ -78,6 +143,9 @@ internal class PostRetryResponseTest {
                                     listOf(
                                         mapOf(
                                             "id" to "id",
+                                            "avatar_url" to "avatar_url",
+                                            "display_name" to "display_name",
+                                            "platform_post_id" to "platform_post_id",
                                             "url" to "url",
                                             "username" to "username",
                                         )
@@ -90,6 +158,29 @@ internal class PostRetryResponseTest {
             )
         assertThat(postRetryResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(postRetryResponse.metrics())
+            .contains(
+                PostRetryResponse.Metrics.builder()
+                    .clicks(0.0)
+                    .comments(0.0)
+                    .engagementRate(0.0)
+                    .impressions(0.0)
+                    .likes(0.0)
+                    .reach(0.0)
+                    .saves(0.0)
+                    .shares(0.0)
+                    .views(0.0)
+                    .build()
+            )
+        assertThat(postRetryResponse.targetOptions())
+            .contains(
+                PostRetryResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postRetryResponse.threadGroupId()).contains("thread_group_id")
+        assertThat(postRetryResponse.threadPosition()).contains(0.0)
+        assertThat(postRetryResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -106,6 +197,26 @@ internal class PostRetryResponseTest {
                         .type(PostRetryResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
+                .recycledFromId("recycled_from_id")
+                .recycling(
+                    PostRetryResponse.Recycling.builder()
+                        .id("id")
+                        .contentVariationIndex(0.0)
+                        .addContentVariation("string")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .enabled(true)
+                        .expireCount(0.0)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .gap(0.0)
+                        .gapFreq(PostRetryResponse.Recycling.GapFreq.DAY)
+                        .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recycleCount(0.0)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .scheduledAt("scheduled_at")
                 .status(PostRetryResponse.Status.DRAFT)
                 .targets(
@@ -120,6 +231,9 @@ internal class PostRetryResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -131,6 +245,27 @@ internal class PostRetryResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostRetryResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
+                .targetOptions(
+                    PostRetryResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostRetryResponse =

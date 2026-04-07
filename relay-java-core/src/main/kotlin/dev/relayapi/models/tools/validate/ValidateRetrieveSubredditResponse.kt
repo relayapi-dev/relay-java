@@ -365,6 +365,7 @@ private constructor(
         private val image: JsonField<Boolean>,
         private val link: JsonField<Boolean>,
         private val self: JsonField<Boolean>,
+        private val video: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -373,7 +374,8 @@ private constructor(
             @JsonProperty("image") @ExcludeMissing image: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("link") @ExcludeMissing link: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("self") @ExcludeMissing self: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(image, link, self, mutableMapOf())
+            @JsonProperty("video") @ExcludeMissing video: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(image, link, self, video, mutableMapOf())
 
         /**
          * Allows image posts
@@ -400,6 +402,14 @@ private constructor(
         fun self(): Boolean = self.getRequired("self")
 
         /**
+         * Allows video posts
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun video(): Optional<Boolean> = video.getOptional("video")
+
+        /**
          * Returns the raw JSON value of [image].
          *
          * Unlike [image], this method doesn't throw if the JSON field has an unexpected type.
@@ -419,6 +429,13 @@ private constructor(
          * Unlike [self], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("self") @ExcludeMissing fun _self(): JsonField<Boolean> = self
+
+        /**
+         * Returns the raw JSON value of [video].
+         *
+         * Unlike [video], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("video") @ExcludeMissing fun _video(): JsonField<Boolean> = video
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -453,6 +470,7 @@ private constructor(
             private var image: JsonField<Boolean>? = null
             private var link: JsonField<Boolean>? = null
             private var self: JsonField<Boolean>? = null
+            private var video: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -460,6 +478,7 @@ private constructor(
                 image = postTypes.image
                 link = postTypes.link
                 self = postTypes.self
+                video = postTypes.video
                 additionalProperties = postTypes.additionalProperties.toMutableMap()
             }
 
@@ -499,6 +518,18 @@ private constructor(
              */
             fun self(self: JsonField<Boolean>) = apply { this.self = self }
 
+            /** Allows video posts */
+            fun video(video: Boolean) = video(JsonField.of(video))
+
+            /**
+             * Sets [Builder.video] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.video] with a well-typed [Boolean] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun video(video: JsonField<Boolean>) = apply { this.video = video }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -537,6 +568,7 @@ private constructor(
                     checkRequired("image", image),
                     checkRequired("link", link),
                     checkRequired("self", self),
+                    video,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -551,6 +583,7 @@ private constructor(
             image()
             link()
             self()
+            video()
             validated = true
         }
 
@@ -572,7 +605,8 @@ private constructor(
         internal fun validity(): Int =
             (if (image.asKnown().isPresent) 1 else 0) +
                 (if (link.asKnown().isPresent) 1 else 0) +
-                (if (self.asKnown().isPresent) 1 else 0)
+                (if (self.asKnown().isPresent) 1 else 0) +
+                (if (video.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -583,15 +617,18 @@ private constructor(
                 image == other.image &&
                 link == other.link &&
                 self == other.self &&
+                video == other.video &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(image, link, self, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(image, link, self, video, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "PostTypes{image=$image, link=$link, self=$self, additionalProperties=$additionalProperties}"
+            "PostTypes{image=$image, link=$link, self=$self, video=$video, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

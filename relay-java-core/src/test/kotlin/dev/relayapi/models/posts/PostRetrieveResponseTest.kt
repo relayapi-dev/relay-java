@@ -25,6 +25,26 @@ internal class PostRetrieveResponseTest {
                         .type(PostRetrieveResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
+                .recycledFromId("recycled_from_id")
+                .recycling(
+                    PostRetrieveResponse.Recycling.builder()
+                        .id("id")
+                        .contentVariationIndex(0.0)
+                        .addContentVariation("string")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .enabled(true)
+                        .expireCount(0.0)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .gap(0.0)
+                        .gapFreq(PostRetrieveResponse.Recycling.GapFreq.DAY)
+                        .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recycleCount(0.0)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .scheduledAt("scheduled_at")
                 .status(PostRetrieveResponse.Status.DRAFT)
                 .targets(
@@ -39,6 +59,9 @@ internal class PostRetrieveResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -50,6 +73,27 @@ internal class PostRetrieveResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostRetrieveResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
+                .targetOptions(
+                    PostRetrieveResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
+                .timezone("timezone")
                 .build()
 
         assertThat(postRetrieveResponse.id()).isEqualTo("id")
@@ -61,6 +105,27 @@ internal class PostRetrieveResponseTest {
                 PostRetrieveResponse.Media.builder()
                     .url("https://example.com")
                     .type(PostRetrieveResponse.Media.Type.IMAGE)
+                    .build()
+            )
+        assertThat(postRetrieveResponse.publishedAt()).contains("published_at")
+        assertThat(postRetrieveResponse.recycledFromId()).contains("recycled_from_id")
+        assertThat(postRetrieveResponse.recycling())
+            .contains(
+                PostRetrieveResponse.Recycling.builder()
+                    .id("id")
+                    .contentVariationIndex(0.0)
+                    .addContentVariation("string")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .enabled(true)
+                    .expireCount(0.0)
+                    .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .gap(0.0)
+                    .gapFreq(PostRetrieveResponse.Recycling.GapFreq.DAY)
+                    .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .recycleCount(0.0)
+                    .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
         assertThat(postRetrieveResponse.scheduledAt()).contains("scheduled_at")
@@ -78,6 +143,9 @@ internal class PostRetrieveResponseTest {
                                     listOf(
                                         mapOf(
                                             "id" to "id",
+                                            "avatar_url" to "avatar_url",
+                                            "display_name" to "display_name",
+                                            "platform_post_id" to "platform_post_id",
                                             "url" to "url",
                                             "username" to "username",
                                         )
@@ -90,6 +158,29 @@ internal class PostRetrieveResponseTest {
             )
         assertThat(postRetrieveResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(postRetrieveResponse.metrics())
+            .contains(
+                PostRetrieveResponse.Metrics.builder()
+                    .clicks(0.0)
+                    .comments(0.0)
+                    .engagementRate(0.0)
+                    .impressions(0.0)
+                    .likes(0.0)
+                    .reach(0.0)
+                    .saves(0.0)
+                    .shares(0.0)
+                    .views(0.0)
+                    .build()
+            )
+        assertThat(postRetrieveResponse.targetOptions())
+            .contains(
+                PostRetrieveResponse.TargetOptions.builder()
+                    .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                    .build()
+            )
+        assertThat(postRetrieveResponse.threadGroupId()).contains("thread_group_id")
+        assertThat(postRetrieveResponse.threadPosition()).contains(0.0)
+        assertThat(postRetrieveResponse.timezone()).contains("timezone")
     }
 
     @Test
@@ -106,6 +197,26 @@ internal class PostRetrieveResponseTest {
                         .type(PostRetrieveResponse.Media.Type.IMAGE)
                         .build()
                 )
+                .publishedAt("published_at")
+                .recycledFromId("recycled_from_id")
+                .recycling(
+                    PostRetrieveResponse.Recycling.builder()
+                        .id("id")
+                        .contentVariationIndex(0.0)
+                        .addContentVariation("string")
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .enabled(true)
+                        .expireCount(0.0)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .gap(0.0)
+                        .gapFreq(PostRetrieveResponse.Recycling.GapFreq.DAY)
+                        .lastRecycledAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .nextRecycleAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .recycleCount(0.0)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .scheduledAt("scheduled_at")
                 .status(PostRetrieveResponse.Status.DRAFT)
                 .targets(
@@ -120,6 +231,9 @@ internal class PostRetrieveResponseTest {
                                         listOf(
                                             mapOf(
                                                 "id" to "id",
+                                                "avatar_url" to "avatar_url",
+                                                "display_name" to "display_name",
+                                                "platform_post_id" to "platform_post_id",
                                                 "url" to "url",
                                                 "username" to "username",
                                             )
@@ -131,6 +245,27 @@ internal class PostRetrieveResponseTest {
                         .build()
                 )
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .metrics(
+                    PostRetrieveResponse.Metrics.builder()
+                        .clicks(0.0)
+                        .comments(0.0)
+                        .engagementRate(0.0)
+                        .impressions(0.0)
+                        .likes(0.0)
+                        .reach(0.0)
+                        .saves(0.0)
+                        .shares(0.0)
+                        .views(0.0)
+                        .build()
+                )
+                .targetOptions(
+                    PostRetrieveResponse.TargetOptions.builder()
+                        .putAdditionalProperty("foo", JsonValue.from(mapOf("foo" to "bar")))
+                        .build()
+                )
+                .threadGroupId("thread_group_id")
+                .threadPosition(0.0)
+                .timezone("timezone")
                 .build()
 
         val roundtrippedPostRetrieveResponse =

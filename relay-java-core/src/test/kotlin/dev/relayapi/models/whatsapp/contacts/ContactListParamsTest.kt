@@ -16,6 +16,7 @@ internal class ContactListParamsTest {
             .limit(1L)
             .search("search")
             .tag("tag")
+            .workspaceId("workspace_id")
             .build()
     }
 
@@ -28,6 +29,7 @@ internal class ContactListParamsTest {
                 .limit(1L)
                 .search("search")
                 .tag("tag")
+                .workspaceId("workspace_id")
                 .build()
 
         val queryParams = params._queryParams()
@@ -40,6 +42,7 @@ internal class ContactListParamsTest {
                     .put("limit", "1")
                     .put("search", "search")
                     .put("tag", "tag")
+                    .put("workspace_id", "workspace_id")
                     .build()
             )
     }

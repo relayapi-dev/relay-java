@@ -21,10 +21,12 @@ private constructor(
     private val accountId: String?,
     private val cursor: String?,
     private val from: OffsetDateTime?,
-    private val groupId: String?,
+    private val include: String?,
+    private val includeExternal: IncludeExternal?,
     private val limit: Long?,
     private val status: Status?,
     private val to: OffsetDateTime?,
+    private val workspaceId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -38,8 +40,14 @@ private constructor(
     /** Filter: start date (ISO 8601) */
     fun from(): Optional<OffsetDateTime> = Optional.ofNullable(from)
 
-    /** Filter by account group ID */
-    fun groupId(): Optional<String> = Optional.ofNullable(groupId)
+    /** Comma-separated list of fields to include in the response (e.g. 'targets,media') */
+    fun include(): Optional<String> = Optional.ofNullable(include)
+
+    /**
+     * When true, also return external posts merged by published_at (works with status=published or
+     * no status filter)
+     */
+    fun includeExternal(): Optional<IncludeExternal> = Optional.ofNullable(includeExternal)
 
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
@@ -49,6 +57,9 @@ private constructor(
 
     /** Filter: end date (ISO 8601) */
     fun to(): Optional<OffsetDateTime> = Optional.ofNullable(to)
+
+    /** Filter by workspace ID */
+    fun workspaceId(): Optional<String> = Optional.ofNullable(workspaceId)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -72,10 +83,12 @@ private constructor(
         private var accountId: String? = null
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
-        private var groupId: String? = null
+        private var include: String? = null
+        private var includeExternal: IncludeExternal? = null
         private var limit: Long? = null
         private var status: Status? = null
         private var to: OffsetDateTime? = null
+        private var workspaceId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
@@ -84,10 +97,12 @@ private constructor(
             accountId = postListParams.accountId
             cursor = postListParams.cursor
             from = postListParams.from
-            groupId = postListParams.groupId
+            include = postListParams.include
+            includeExternal = postListParams.includeExternal
             limit = postListParams.limit
             status = postListParams.status
             to = postListParams.to
+            workspaceId = postListParams.workspaceId
             additionalHeaders = postListParams.additionalHeaders.toBuilder()
             additionalQueryParams = postListParams.additionalQueryParams.toBuilder()
         }
@@ -110,11 +125,23 @@ private constructor(
         /** Alias for calling [Builder.from] with `from.orElse(null)`. */
         fun from(from: Optional<OffsetDateTime>) = from(from.getOrNull())
 
-        /** Filter by account group ID */
-        fun groupId(groupId: String?) = apply { this.groupId = groupId }
+        /** Comma-separated list of fields to include in the response (e.g. 'targets,media') */
+        fun include(include: String?) = apply { this.include = include }
 
-        /** Alias for calling [Builder.groupId] with `groupId.orElse(null)`. */
-        fun groupId(groupId: Optional<String>) = groupId(groupId.getOrNull())
+        /** Alias for calling [Builder.include] with `include.orElse(null)`. */
+        fun include(include: Optional<String>) = include(include.getOrNull())
+
+        /**
+         * When true, also return external posts merged by published_at (works with status=published
+         * or no status filter)
+         */
+        fun includeExternal(includeExternal: IncludeExternal?) = apply {
+            this.includeExternal = includeExternal
+        }
+
+        /** Alias for calling [Builder.includeExternal] with `includeExternal.orElse(null)`. */
+        fun includeExternal(includeExternal: Optional<IncludeExternal>) =
+            includeExternal(includeExternal.getOrNull())
 
         /** Number of items per page */
         fun limit(limit: Long?) = apply { this.limit = limit }
@@ -140,6 +167,12 @@ private constructor(
 
         /** Alias for calling [Builder.to] with `to.orElse(null)`. */
         fun to(to: Optional<OffsetDateTime>) = to(to.getOrNull())
+
+        /** Filter by workspace ID */
+        fun workspaceId(workspaceId: String?) = apply { this.workspaceId = workspaceId }
+
+        /** Alias for calling [Builder.workspaceId] with `workspaceId.orElse(null)`. */
+        fun workspaceId(workspaceId: Optional<String>) = workspaceId(workspaceId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -249,10 +282,12 @@ private constructor(
                 accountId,
                 cursor,
                 from,
-                groupId,
+                include,
+                includeExternal,
                 limit,
                 status,
                 to,
+                workspaceId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -266,13 +301,147 @@ private constructor(
                 accountId?.let { put("account_id", it) }
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
-                groupId?.let { put("group_id", it) }
+                include?.let { put("include", it) }
+                includeExternal?.let { put("include_external", it.toString()) }
                 limit?.let { put("limit", it.toString()) }
                 status?.let { put("status", it.toString()) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
+                workspaceId?.let { put("workspace_id", it) }
                 putAll(additionalQueryParams)
             }
             .build()
+
+    /**
+     * When true, also return external posts merged by published_at (works with status=published or
+     * no status filter)
+     */
+    class IncludeExternal @JsonCreator private constructor(private val value: JsonField<String>) :
+        Enum {
+
+        /**
+         * Returns this class instance's raw value.
+         *
+         * This is usually only useful if this instance was deserialized from data that doesn't
+         * match any known member, and you want to know that value. For example, if the SDK is on an
+         * older version than the API, then the API may respond with new members that the SDK is
+         * unaware of.
+         */
+        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+        companion object {
+
+            @JvmField val TRUE = of("true")
+
+            @JvmField val FALSE = of("false")
+
+            @JvmStatic fun of(value: String) = IncludeExternal(JsonField.of(value))
+        }
+
+        /** An enum containing [IncludeExternal]'s known values. */
+        enum class Known {
+            TRUE,
+            FALSE,
+        }
+
+        /**
+         * An enum containing [IncludeExternal]'s known values, as well as an [_UNKNOWN] member.
+         *
+         * An instance of [IncludeExternal] can contain an unknown value in a couple of cases:
+         * - It was deserialized from data that doesn't match any known member. For example, if the
+         *   SDK is on an older version than the API, then the API may respond with new members that
+         *   the SDK is unaware of.
+         * - It was constructed with an arbitrary value using the [of] method.
+         */
+        enum class Value {
+            TRUE,
+            FALSE,
+            /**
+             * An enum member indicating that [IncludeExternal] was instantiated with an unknown
+             * value.
+             */
+            _UNKNOWN,
+        }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
+         * if the class was instantiated with an unknown value.
+         *
+         * Use the [known] method instead if you're certain the value is always known or if you want
+         * to throw for the unknown case.
+         */
+        fun value(): Value =
+            when (this) {
+                TRUE -> Value.TRUE
+                FALSE -> Value.FALSE
+                else -> Value._UNKNOWN
+            }
+
+        /**
+         * Returns an enum member corresponding to this class instance's value.
+         *
+         * Use the [value] method instead if you're uncertain the value is always known and don't
+         * want to throw for the unknown case.
+         *
+         * @throws RelayInvalidDataException if this class instance's value is a not a known member.
+         */
+        fun known(): Known =
+            when (this) {
+                TRUE -> Known.TRUE
+                FALSE -> Known.FALSE
+                else -> throw RelayInvalidDataException("Unknown IncludeExternal: $value")
+            }
+
+        /**
+         * Returns this class instance's primitive wire representation.
+         *
+         * This differs from the [toString] method because that method is primarily for debugging
+         * and generally doesn't throw.
+         *
+         * @throws RelayInvalidDataException if this class instance's value does not have the
+         *   expected primitive type.
+         */
+        fun asString(): String =
+            _value().asString().orElseThrow { RelayInvalidDataException("Value is not a String") }
+
+        private var validated: Boolean = false
+
+        fun validate(): IncludeExternal = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is IncludeExternal && value == other.value
+        }
+
+        override fun hashCode() = value.hashCode()
+
+        override fun toString() = value.toString()
+    }
 
     /** Filter by post status */
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -426,10 +595,12 @@ private constructor(
             accountId == other.accountId &&
             cursor == other.cursor &&
             from == other.from &&
-            groupId == other.groupId &&
+            include == other.include &&
+            includeExternal == other.includeExternal &&
             limit == other.limit &&
             status == other.status &&
             to == other.to &&
+            workspaceId == other.workspaceId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
@@ -439,14 +610,16 @@ private constructor(
             accountId,
             cursor,
             from,
-            groupId,
+            include,
+            includeExternal,
             limit,
             status,
             to,
+            workspaceId,
             additionalHeaders,
             additionalQueryParams,
         )
 
     override fun toString() =
-        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, groupId=$groupId, limit=$limit, status=$status, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, include=$include, includeExternal=$includeExternal, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

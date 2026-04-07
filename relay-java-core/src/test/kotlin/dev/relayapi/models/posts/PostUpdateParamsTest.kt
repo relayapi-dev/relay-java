@@ -3,6 +3,7 @@
 package dev.relayapi.models.posts
 
 import dev.relayapi.core.JsonValue
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,6 +19,18 @@ internal class PostUpdateParamsTest {
                 PostUpdateParams.Media.builder()
                     .url("https://example.com")
                     .type(PostUpdateParams.Media.Type.IMAGE)
+                    .build()
+            )
+            .notes("notes")
+            .recycling(
+                PostUpdateParams.Recycling.builder()
+                    .gap(1L)
+                    .gapFreq(PostUpdateParams.Recycling.GapFreq.DAY)
+                    .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .addContentVariation("string")
+                    .enabled(true)
+                    .expireCount(1L)
+                    .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
             .scheduledAt("now")
@@ -52,6 +65,18 @@ internal class PostUpdateParamsTest {
                         .type(PostUpdateParams.Media.Type.IMAGE)
                         .build()
                 )
+                .notes("notes")
+                .recycling(
+                    PostUpdateParams.Recycling.builder()
+                        .gap(1L)
+                        .gapFreq(PostUpdateParams.Recycling.GapFreq.DAY)
+                        .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .addContentVariation("string")
+                        .enabled(true)
+                        .expireCount(1L)
+                        .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
                 .scheduledAt("now")
                 .targetOptions(
                     PostUpdateParams.TargetOptions.builder()
@@ -70,6 +95,19 @@ internal class PostUpdateParamsTest {
                 PostUpdateParams.Media.builder()
                     .url("https://example.com")
                     .type(PostUpdateParams.Media.Type.IMAGE)
+                    .build()
+            )
+        assertThat(body.notes()).contains("notes")
+        assertThat(body.recycling())
+            .contains(
+                PostUpdateParams.Recycling.builder()
+                    .gap(1L)
+                    .gapFreq(PostUpdateParams.Recycling.GapFreq.DAY)
+                    .startDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .addContentVariation("string")
+                    .enabled(true)
+                    .expireCount(1L)
+                    .expireDate(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
         assertThat(body.scheduledAt()).contains("now")

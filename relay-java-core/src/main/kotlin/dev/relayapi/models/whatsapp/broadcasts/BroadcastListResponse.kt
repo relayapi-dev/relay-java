@@ -659,6 +659,8 @@ private constructor(
 
                 @JvmField val SENT = of("sent")
 
+                @JvmField val PARTIALLY_FAILED = of("partially_failed")
+
                 @JvmField val FAILED = of("failed")
 
                 @JvmStatic fun of(value: String) = Status(JsonField.of(value))
@@ -670,6 +672,7 @@ private constructor(
                 SCHEDULED,
                 SENDING,
                 SENT,
+                PARTIALLY_FAILED,
                 FAILED,
             }
 
@@ -687,6 +690,7 @@ private constructor(
                 SCHEDULED,
                 SENDING,
                 SENT,
+                PARTIALLY_FAILED,
                 FAILED,
                 /**
                  * An enum member indicating that [Status] was instantiated with an unknown value.
@@ -707,6 +711,7 @@ private constructor(
                     SCHEDULED -> Value.SCHEDULED
                     SENDING -> Value.SENDING
                     SENT -> Value.SENT
+                    PARTIALLY_FAILED -> Value.PARTIALLY_FAILED
                     FAILED -> Value.FAILED
                     else -> Value._UNKNOWN
                 }
@@ -726,6 +731,7 @@ private constructor(
                     SCHEDULED -> Known.SCHEDULED
                     SENDING -> Known.SENDING
                     SENT -> Known.SENT
+                    PARTIALLY_FAILED -> Known.PARTIALLY_FAILED
                     FAILED -> Known.FAILED
                     else -> throw RelayInvalidDataException("Unknown Status: $value")
                 }

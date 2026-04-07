@@ -28,10 +28,18 @@ private constructor(
     private val content: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val media: JsonField<List<Media>>,
+    private val publishedAt: JsonField<String>,
+    private val recycledFromId: JsonField<String>,
+    private val recycling: JsonField<Recycling>,
     private val scheduledAt: JsonField<String>,
     private val status: JsonField<Status>,
     private val targets: JsonField<Targets>,
     private val updatedAt: JsonField<OffsetDateTime>,
+    private val metrics: JsonField<Metrics>,
+    private val targetOptions: JsonField<TargetOptions>,
+    private val threadGroupId: JsonField<String>,
+    private val threadPosition: JsonField<Double>,
+    private val timezone: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -43,6 +51,15 @@ private constructor(
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("media") @ExcludeMissing media: JsonField<List<Media>> = JsonMissing.of(),
+        @JsonProperty("published_at")
+        @ExcludeMissing
+        publishedAt: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("recycled_from_id")
+        @ExcludeMissing
+        recycledFromId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("recycling")
+        @ExcludeMissing
+        recycling: JsonField<Recycling> = JsonMissing.of(),
         @JsonProperty("scheduled_at")
         @ExcludeMissing
         scheduledAt: JsonField<String> = JsonMissing.of(),
@@ -51,7 +68,36 @@ private constructor(
         @JsonProperty("updated_at")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(id, content, createdAt, media, scheduledAt, status, targets, updatedAt, mutableMapOf())
+        @JsonProperty("metrics") @ExcludeMissing metrics: JsonField<Metrics> = JsonMissing.of(),
+        @JsonProperty("target_options")
+        @ExcludeMissing
+        targetOptions: JsonField<TargetOptions> = JsonMissing.of(),
+        @JsonProperty("thread_group_id")
+        @ExcludeMissing
+        threadGroupId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("thread_position")
+        @ExcludeMissing
+        threadPosition: JsonField<Double> = JsonMissing.of(),
+        @JsonProperty("timezone") @ExcludeMissing timezone: JsonField<String> = JsonMissing.of(),
+    ) : this(
+        id,
+        content,
+        createdAt,
+        media,
+        publishedAt,
+        recycledFromId,
+        recycling,
+        scheduledAt,
+        status,
+        targets,
+        updatedAt,
+        metrics,
+        targetOptions,
+        threadGroupId,
+        threadPosition,
+        timezone,
+        mutableMapOf(),
+    )
 
     /**
      * Post ID
@@ -80,6 +126,30 @@ private constructor(
     fun media(): Optional<List<Media>> = media.getOptional("media")
 
     /**
+     * When the post was published
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun publishedAt(): Optional<String> = publishedAt.getOptional("published_at")
+
+    /**
+     * Source post ID if this is a recycled copy
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun recycledFromId(): Optional<String> = recycledFromId.getOptional("recycled_from_id")
+
+    /**
+     * Recycling configuration, if any
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun recycling(): Optional<Recycling> = recycling.getOptional("recycling")
+
+    /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -104,6 +174,46 @@ private constructor(
      *   missing or null (e.g. if the server responded with an unexpected value).
      */
     fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
+
+    /**
+     * Engagement metrics (reactions, comments, views, etc.)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun metrics(): Optional<Metrics> = metrics.getOptional("metrics")
+
+    /**
+     * Per-target customizations
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun targetOptions(): Optional<TargetOptions> = targetOptions.getOptional("target_options")
+
+    /**
+     * Thread group ID (non-null if part of a thread)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun threadGroupId(): Optional<String> = threadGroupId.getOptional("thread_group_id")
+
+    /**
+     * Position within thread (0 = root)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun threadPosition(): Optional<Double> = threadPosition.getOptional("thread_position")
+
+    /**
+     * IANA timezone
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun timezone(): Optional<String> = timezone.getOptional("timezone")
 
     /**
      * Returns the raw JSON value of [id].
@@ -134,6 +244,31 @@ private constructor(
      * Unlike [media], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("media") @ExcludeMissing fun _media(): JsonField<List<Media>> = media
+
+    /**
+     * Returns the raw JSON value of [publishedAt].
+     *
+     * Unlike [publishedAt], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("published_at")
+    @ExcludeMissing
+    fun _publishedAt(): JsonField<String> = publishedAt
+
+    /**
+     * Returns the raw JSON value of [recycledFromId].
+     *
+     * Unlike [recycledFromId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("recycled_from_id")
+    @ExcludeMissing
+    fun _recycledFromId(): JsonField<String> = recycledFromId
+
+    /**
+     * Returns the raw JSON value of [recycling].
+     *
+     * Unlike [recycling], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("recycling") @ExcludeMissing fun _recycling(): JsonField<Recycling> = recycling
 
     /**
      * Returns the raw JSON value of [scheduledAt].
@@ -167,6 +302,47 @@ private constructor(
     @ExcludeMissing
     fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
 
+    /**
+     * Returns the raw JSON value of [metrics].
+     *
+     * Unlike [metrics], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("metrics") @ExcludeMissing fun _metrics(): JsonField<Metrics> = metrics
+
+    /**
+     * Returns the raw JSON value of [targetOptions].
+     *
+     * Unlike [targetOptions], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("target_options")
+    @ExcludeMissing
+    fun _targetOptions(): JsonField<TargetOptions> = targetOptions
+
+    /**
+     * Returns the raw JSON value of [threadGroupId].
+     *
+     * Unlike [threadGroupId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("thread_group_id")
+    @ExcludeMissing
+    fun _threadGroupId(): JsonField<String> = threadGroupId
+
+    /**
+     * Returns the raw JSON value of [threadPosition].
+     *
+     * Unlike [threadPosition], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("thread_position")
+    @ExcludeMissing
+    fun _threadPosition(): JsonField<Double> = threadPosition
+
+    /**
+     * Returns the raw JSON value of [timezone].
+     *
+     * Unlike [timezone], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("timezone") @ExcludeMissing fun _timezone(): JsonField<String> = timezone
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -190,6 +366,9 @@ private constructor(
          * .content()
          * .createdAt()
          * .media()
+         * .publishedAt()
+         * .recycledFromId()
+         * .recycling()
          * .scheduledAt()
          * .status()
          * .targets()
@@ -206,10 +385,18 @@ private constructor(
         private var content: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var media: JsonField<MutableList<Media>>? = null
+        private var publishedAt: JsonField<String>? = null
+        private var recycledFromId: JsonField<String>? = null
+        private var recycling: JsonField<Recycling>? = null
         private var scheduledAt: JsonField<String>? = null
         private var status: JsonField<Status>? = null
         private var targets: JsonField<Targets>? = null
         private var updatedAt: JsonField<OffsetDateTime>? = null
+        private var metrics: JsonField<Metrics> = JsonMissing.of()
+        private var targetOptions: JsonField<TargetOptions> = JsonMissing.of()
+        private var threadGroupId: JsonField<String> = JsonMissing.of()
+        private var threadPosition: JsonField<Double> = JsonMissing.of()
+        private var timezone: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -218,10 +405,18 @@ private constructor(
             content = postRetrieveResponse.content
             createdAt = postRetrieveResponse.createdAt
             media = postRetrieveResponse.media.map { it.toMutableList() }
+            publishedAt = postRetrieveResponse.publishedAt
+            recycledFromId = postRetrieveResponse.recycledFromId
+            recycling = postRetrieveResponse.recycling
             scheduledAt = postRetrieveResponse.scheduledAt
             status = postRetrieveResponse.status
             targets = postRetrieveResponse.targets
             updatedAt = postRetrieveResponse.updatedAt
+            metrics = postRetrieveResponse.metrics
+            targetOptions = postRetrieveResponse.targetOptions
+            threadGroupId = postRetrieveResponse.threadGroupId
+            threadPosition = postRetrieveResponse.threadPosition
+            timezone = postRetrieveResponse.timezone
             additionalProperties = postRetrieveResponse.additionalProperties.toMutableMap()
         }
 
@@ -288,6 +483,55 @@ private constructor(
                 }
         }
 
+        /** When the post was published */
+        fun publishedAt(publishedAt: String?) = publishedAt(JsonField.ofNullable(publishedAt))
+
+        /** Alias for calling [Builder.publishedAt] with `publishedAt.orElse(null)`. */
+        fun publishedAt(publishedAt: Optional<String>) = publishedAt(publishedAt.getOrNull())
+
+        /**
+         * Sets [Builder.publishedAt] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.publishedAt] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun publishedAt(publishedAt: JsonField<String>) = apply { this.publishedAt = publishedAt }
+
+        /** Source post ID if this is a recycled copy */
+        fun recycledFromId(recycledFromId: String?) =
+            recycledFromId(JsonField.ofNullable(recycledFromId))
+
+        /** Alias for calling [Builder.recycledFromId] with `recycledFromId.orElse(null)`. */
+        fun recycledFromId(recycledFromId: Optional<String>) =
+            recycledFromId(recycledFromId.getOrNull())
+
+        /**
+         * Sets [Builder.recycledFromId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.recycledFromId] with a well-typed [String] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun recycledFromId(recycledFromId: JsonField<String>) = apply {
+            this.recycledFromId = recycledFromId
+        }
+
+        /** Recycling configuration, if any */
+        fun recycling(recycling: Recycling?) = recycling(JsonField.ofNullable(recycling))
+
+        /** Alias for calling [Builder.recycling] with `recycling.orElse(null)`. */
+        fun recycling(recycling: Optional<Recycling>) = recycling(recycling.getOrNull())
+
+        /**
+         * Sets [Builder.recycling] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.recycling] with a well-typed [Recycling] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun recycling(recycling: JsonField<Recycling>) = apply { this.recycling = recycling }
+
         fun scheduledAt(scheduledAt: String?) = scheduledAt(JsonField.ofNullable(scheduledAt))
 
         /** Alias for calling [Builder.scheduledAt] with `scheduledAt.orElse(null)`. */
@@ -334,6 +578,95 @@ private constructor(
          */
         fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply { this.updatedAt = updatedAt }
 
+        /** Engagement metrics (reactions, comments, views, etc.) */
+        fun metrics(metrics: Metrics) = metrics(JsonField.of(metrics))
+
+        /**
+         * Sets [Builder.metrics] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.metrics] with a well-typed [Metrics] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun metrics(metrics: JsonField<Metrics>) = apply { this.metrics = metrics }
+
+        /** Per-target customizations */
+        fun targetOptions(targetOptions: TargetOptions?) =
+            targetOptions(JsonField.ofNullable(targetOptions))
+
+        /** Alias for calling [Builder.targetOptions] with `targetOptions.orElse(null)`. */
+        fun targetOptions(targetOptions: Optional<TargetOptions>) =
+            targetOptions(targetOptions.getOrNull())
+
+        /**
+         * Sets [Builder.targetOptions] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.targetOptions] with a well-typed [TargetOptions] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun targetOptions(targetOptions: JsonField<TargetOptions>) = apply {
+            this.targetOptions = targetOptions
+        }
+
+        /** Thread group ID (non-null if part of a thread) */
+        fun threadGroupId(threadGroupId: String?) =
+            threadGroupId(JsonField.ofNullable(threadGroupId))
+
+        /** Alias for calling [Builder.threadGroupId] with `threadGroupId.orElse(null)`. */
+        fun threadGroupId(threadGroupId: Optional<String>) =
+            threadGroupId(threadGroupId.getOrNull())
+
+        /**
+         * Sets [Builder.threadGroupId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.threadGroupId] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun threadGroupId(threadGroupId: JsonField<String>) = apply {
+            this.threadGroupId = threadGroupId
+        }
+
+        /** Position within thread (0 = root) */
+        fun threadPosition(threadPosition: Double?) =
+            threadPosition(JsonField.ofNullable(threadPosition))
+
+        /**
+         * Alias for [Builder.threadPosition].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun threadPosition(threadPosition: Double) = threadPosition(threadPosition as Double?)
+
+        /** Alias for calling [Builder.threadPosition] with `threadPosition.orElse(null)`. */
+        fun threadPosition(threadPosition: Optional<Double>) =
+            threadPosition(threadPosition.getOrNull())
+
+        /**
+         * Sets [Builder.threadPosition] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.threadPosition] with a well-typed [Double] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun threadPosition(threadPosition: JsonField<Double>) = apply {
+            this.threadPosition = threadPosition
+        }
+
+        /** IANA timezone */
+        fun timezone(timezone: String?) = timezone(JsonField.ofNullable(timezone))
+
+        /** Alias for calling [Builder.timezone] with `timezone.orElse(null)`. */
+        fun timezone(timezone: Optional<String>) = timezone(timezone.getOrNull())
+
+        /**
+         * Sets [Builder.timezone] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.timezone] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun timezone(timezone: JsonField<String>) = apply { this.timezone = timezone }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -364,6 +697,9 @@ private constructor(
          * .content()
          * .createdAt()
          * .media()
+         * .publishedAt()
+         * .recycledFromId()
+         * .recycling()
          * .scheduledAt()
          * .status()
          * .targets()
@@ -378,10 +714,18 @@ private constructor(
                 checkRequired("content", content),
                 checkRequired("createdAt", createdAt),
                 checkRequired("media", media).map { it.toImmutable() },
+                checkRequired("publishedAt", publishedAt),
+                checkRequired("recycledFromId", recycledFromId),
+                checkRequired("recycling", recycling),
                 checkRequired("scheduledAt", scheduledAt),
                 checkRequired("status", status),
                 checkRequired("targets", targets),
                 checkRequired("updatedAt", updatedAt),
+                metrics,
+                targetOptions,
+                threadGroupId,
+                threadPosition,
+                timezone,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -397,10 +741,18 @@ private constructor(
         content()
         createdAt()
         media().ifPresent { it.forEach { it.validate() } }
+        publishedAt()
+        recycledFromId()
+        recycling().ifPresent { it.validate() }
         scheduledAt()
         status().validate()
         targets().validate()
         updatedAt()
+        metrics().ifPresent { it.validate() }
+        targetOptions().ifPresent { it.validate() }
+        threadGroupId()
+        threadPosition()
+        timezone()
         validated = true
     }
 
@@ -423,10 +775,18 @@ private constructor(
             (if (content.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (publishedAt.asKnown().isPresent) 1 else 0) +
+            (if (recycledFromId.asKnown().isPresent) 1 else 0) +
+            (recycling.asKnown().getOrNull()?.validity() ?: 0) +
             (if (scheduledAt.asKnown().isPresent) 1 else 0) +
             (status.asKnown().getOrNull()?.validity() ?: 0) +
             (targets.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (updatedAt.asKnown().isPresent) 1 else 0)
+            (if (updatedAt.asKnown().isPresent) 1 else 0) +
+            (metrics.asKnown().getOrNull()?.validity() ?: 0) +
+            (targetOptions.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (threadGroupId.asKnown().isPresent) 1 else 0) +
+            (if (threadPosition.asKnown().isPresent) 1 else 0) +
+            (if (timezone.asKnown().isPresent) 1 else 0)
 
     class Media
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -759,6 +1119,885 @@ private constructor(
             "Media{url=$url, type=$type, additionalProperties=$additionalProperties}"
     }
 
+    /** Recycling configuration, if any */
+    class Recycling
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val id: JsonField<String>,
+        private val contentVariationIndex: JsonField<Double>,
+        private val contentVariations: JsonField<List<String>>,
+        private val createdAt: JsonField<OffsetDateTime>,
+        private val enabled: JsonField<Boolean>,
+        private val expireCount: JsonField<Double>,
+        private val expireDate: JsonField<OffsetDateTime>,
+        private val gap: JsonField<Double>,
+        private val gapFreq: JsonField<GapFreq>,
+        private val lastRecycledAt: JsonField<OffsetDateTime>,
+        private val nextRecycleAt: JsonField<OffsetDateTime>,
+        private val recycleCount: JsonField<Double>,
+        private val startDate: JsonField<OffsetDateTime>,
+        private val updatedAt: JsonField<OffsetDateTime>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("content_variation_index")
+            @ExcludeMissing
+            contentVariationIndex: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("content_variations")
+            @ExcludeMissing
+            contentVariations: JsonField<List<String>> = JsonMissing.of(),
+            @JsonProperty("created_at")
+            @ExcludeMissing
+            createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("enabled") @ExcludeMissing enabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("expire_count")
+            @ExcludeMissing
+            expireCount: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("expire_date")
+            @ExcludeMissing
+            expireDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("gap") @ExcludeMissing gap: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("gap_freq")
+            @ExcludeMissing
+            gapFreq: JsonField<GapFreq> = JsonMissing.of(),
+            @JsonProperty("last_recycled_at")
+            @ExcludeMissing
+            lastRecycledAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("next_recycle_at")
+            @ExcludeMissing
+            nextRecycleAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("recycle_count")
+            @ExcludeMissing
+            recycleCount: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("start_date")
+            @ExcludeMissing
+            startDate: JsonField<OffsetDateTime> = JsonMissing.of(),
+            @JsonProperty("updated_at")
+            @ExcludeMissing
+            updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        ) : this(
+            id,
+            contentVariationIndex,
+            contentVariations,
+            createdAt,
+            enabled,
+            expireCount,
+            expireDate,
+            gap,
+            gapFreq,
+            lastRecycledAt,
+            nextRecycleAt,
+            recycleCount,
+            startDate,
+            updatedAt,
+            mutableMapOf(),
+        )
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun id(): String = id.getRequired("id")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun contentVariationIndex(): Double =
+            contentVariationIndex.getRequired("content_variation_index")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun contentVariations(): List<String> = contentVariations.getRequired("content_variations")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun enabled(): Boolean = enabled.getRequired("enabled")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun expireCount(): Optional<Double> = expireCount.getOptional("expire_count")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun expireDate(): Optional<OffsetDateTime> = expireDate.getOptional("expire_date")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun gap(): Double = gap.getRequired("gap")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun gapFreq(): GapFreq = gapFreq.getRequired("gap_freq")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun lastRecycledAt(): Optional<OffsetDateTime> =
+            lastRecycledAt.getOptional("last_recycled_at")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun nextRecycleAt(): Optional<OffsetDateTime> = nextRecycleAt.getOptional("next_recycle_at")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun recycleCount(): Double = recycleCount.getRequired("recycle_count")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun startDate(): OffsetDateTime = startDate.getRequired("start_date")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun updatedAt(): OffsetDateTime = updatedAt.getRequired("updated_at")
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [contentVariationIndex].
+         *
+         * Unlike [contentVariationIndex], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("content_variation_index")
+        @ExcludeMissing
+        fun _contentVariationIndex(): JsonField<Double> = contentVariationIndex
+
+        /**
+         * Returns the raw JSON value of [contentVariations].
+         *
+         * Unlike [contentVariations], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("content_variations")
+        @ExcludeMissing
+        fun _contentVariations(): JsonField<List<String>> = contentVariations
+
+        /**
+         * Returns the raw JSON value of [createdAt].
+         *
+         * Unlike [createdAt], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("created_at")
+        @ExcludeMissing
+        fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+        /**
+         * Returns the raw JSON value of [enabled].
+         *
+         * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("enabled") @ExcludeMissing fun _enabled(): JsonField<Boolean> = enabled
+
+        /**
+         * Returns the raw JSON value of [expireCount].
+         *
+         * Unlike [expireCount], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("expire_count")
+        @ExcludeMissing
+        fun _expireCount(): JsonField<Double> = expireCount
+
+        /**
+         * Returns the raw JSON value of [expireDate].
+         *
+         * Unlike [expireDate], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("expire_date")
+        @ExcludeMissing
+        fun _expireDate(): JsonField<OffsetDateTime> = expireDate
+
+        /**
+         * Returns the raw JSON value of [gap].
+         *
+         * Unlike [gap], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("gap") @ExcludeMissing fun _gap(): JsonField<Double> = gap
+
+        /**
+         * Returns the raw JSON value of [gapFreq].
+         *
+         * Unlike [gapFreq], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("gap_freq") @ExcludeMissing fun _gapFreq(): JsonField<GapFreq> = gapFreq
+
+        /**
+         * Returns the raw JSON value of [lastRecycledAt].
+         *
+         * Unlike [lastRecycledAt], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("last_recycled_at")
+        @ExcludeMissing
+        fun _lastRecycledAt(): JsonField<OffsetDateTime> = lastRecycledAt
+
+        /**
+         * Returns the raw JSON value of [nextRecycleAt].
+         *
+         * Unlike [nextRecycleAt], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("next_recycle_at")
+        @ExcludeMissing
+        fun _nextRecycleAt(): JsonField<OffsetDateTime> = nextRecycleAt
+
+        /**
+         * Returns the raw JSON value of [recycleCount].
+         *
+         * Unlike [recycleCount], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("recycle_count")
+        @ExcludeMissing
+        fun _recycleCount(): JsonField<Double> = recycleCount
+
+        /**
+         * Returns the raw JSON value of [startDate].
+         *
+         * Unlike [startDate], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("start_date")
+        @ExcludeMissing
+        fun _startDate(): JsonField<OffsetDateTime> = startDate
+
+        /**
+         * Returns the raw JSON value of [updatedAt].
+         *
+         * Unlike [updatedAt], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("updated_at")
+        @ExcludeMissing
+        fun _updatedAt(): JsonField<OffsetDateTime> = updatedAt
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [Recycling].
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * .contentVariationIndex()
+             * .contentVariations()
+             * .createdAt()
+             * .enabled()
+             * .expireCount()
+             * .expireDate()
+             * .gap()
+             * .gapFreq()
+             * .lastRecycledAt()
+             * .nextRecycleAt()
+             * .recycleCount()
+             * .startDate()
+             * .updatedAt()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Recycling]. */
+        class Builder internal constructor() {
+
+            private var id: JsonField<String>? = null
+            private var contentVariationIndex: JsonField<Double>? = null
+            private var contentVariations: JsonField<MutableList<String>>? = null
+            private var createdAt: JsonField<OffsetDateTime>? = null
+            private var enabled: JsonField<Boolean>? = null
+            private var expireCount: JsonField<Double>? = null
+            private var expireDate: JsonField<OffsetDateTime>? = null
+            private var gap: JsonField<Double>? = null
+            private var gapFreq: JsonField<GapFreq>? = null
+            private var lastRecycledAt: JsonField<OffsetDateTime>? = null
+            private var nextRecycleAt: JsonField<OffsetDateTime>? = null
+            private var recycleCount: JsonField<Double>? = null
+            private var startDate: JsonField<OffsetDateTime>? = null
+            private var updatedAt: JsonField<OffsetDateTime>? = null
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(recycling: Recycling) = apply {
+                id = recycling.id
+                contentVariationIndex = recycling.contentVariationIndex
+                contentVariations = recycling.contentVariations.map { it.toMutableList() }
+                createdAt = recycling.createdAt
+                enabled = recycling.enabled
+                expireCount = recycling.expireCount
+                expireDate = recycling.expireDate
+                gap = recycling.gap
+                gapFreq = recycling.gapFreq
+                lastRecycledAt = recycling.lastRecycledAt
+                nextRecycleAt = recycling.nextRecycleAt
+                recycleCount = recycling.recycleCount
+                startDate = recycling.startDate
+                updatedAt = recycling.updatedAt
+                additionalProperties = recycling.additionalProperties.toMutableMap()
+            }
+
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            fun contentVariationIndex(contentVariationIndex: Double) =
+                contentVariationIndex(JsonField.of(contentVariationIndex))
+
+            /**
+             * Sets [Builder.contentVariationIndex] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.contentVariationIndex] with a well-typed [Double]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun contentVariationIndex(contentVariationIndex: JsonField<Double>) = apply {
+                this.contentVariationIndex = contentVariationIndex
+            }
+
+            fun contentVariations(contentVariations: List<String>) =
+                contentVariations(JsonField.of(contentVariations))
+
+            /**
+             * Sets [Builder.contentVariations] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.contentVariations] with a well-typed `List<String>`
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun contentVariations(contentVariations: JsonField<List<String>>) = apply {
+                this.contentVariations = contentVariations.map { it.toMutableList() }
+            }
+
+            /**
+             * Adds a single [String] to [contentVariations].
+             *
+             * @throws IllegalStateException if the field was previously set to a non-list.
+             */
+            fun addContentVariation(contentVariation: String) = apply {
+                contentVariations =
+                    (contentVariations ?: JsonField.of(mutableListOf())).also {
+                        checkKnown("contentVariations", it).add(contentVariation)
+                    }
+            }
+
+            fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
+
+            /**
+             * Sets [Builder.createdAt] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.createdAt] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply {
+                this.createdAt = createdAt
+            }
+
+            fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
+
+            /**
+             * Sets [Builder.enabled] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
+
+            fun expireCount(expireCount: Double?) = expireCount(JsonField.ofNullable(expireCount))
+
+            /**
+             * Alias for [Builder.expireCount].
+             *
+             * This unboxed primitive overload exists for backwards compatibility.
+             */
+            fun expireCount(expireCount: Double) = expireCount(expireCount as Double?)
+
+            /** Alias for calling [Builder.expireCount] with `expireCount.orElse(null)`. */
+            fun expireCount(expireCount: Optional<Double>) = expireCount(expireCount.getOrNull())
+
+            /**
+             * Sets [Builder.expireCount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.expireCount] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun expireCount(expireCount: JsonField<Double>) = apply {
+                this.expireCount = expireCount
+            }
+
+            fun expireDate(expireDate: OffsetDateTime?) =
+                expireDate(JsonField.ofNullable(expireDate))
+
+            /** Alias for calling [Builder.expireDate] with `expireDate.orElse(null)`. */
+            fun expireDate(expireDate: Optional<OffsetDateTime>) =
+                expireDate(expireDate.getOrNull())
+
+            /**
+             * Sets [Builder.expireDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.expireDate] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun expireDate(expireDate: JsonField<OffsetDateTime>) = apply {
+                this.expireDate = expireDate
+            }
+
+            fun gap(gap: Double) = gap(JsonField.of(gap))
+
+            /**
+             * Sets [Builder.gap] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.gap] with a well-typed [Double] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun gap(gap: JsonField<Double>) = apply { this.gap = gap }
+
+            fun gapFreq(gapFreq: GapFreq) = gapFreq(JsonField.of(gapFreq))
+
+            /**
+             * Sets [Builder.gapFreq] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.gapFreq] with a well-typed [GapFreq] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun gapFreq(gapFreq: JsonField<GapFreq>) = apply { this.gapFreq = gapFreq }
+
+            fun lastRecycledAt(lastRecycledAt: OffsetDateTime?) =
+                lastRecycledAt(JsonField.ofNullable(lastRecycledAt))
+
+            /** Alias for calling [Builder.lastRecycledAt] with `lastRecycledAt.orElse(null)`. */
+            fun lastRecycledAt(lastRecycledAt: Optional<OffsetDateTime>) =
+                lastRecycledAt(lastRecycledAt.getOrNull())
+
+            /**
+             * Sets [Builder.lastRecycledAt] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.lastRecycledAt] with a well-typed [OffsetDateTime]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun lastRecycledAt(lastRecycledAt: JsonField<OffsetDateTime>) = apply {
+                this.lastRecycledAt = lastRecycledAt
+            }
+
+            fun nextRecycleAt(nextRecycleAt: OffsetDateTime?) =
+                nextRecycleAt(JsonField.ofNullable(nextRecycleAt))
+
+            /** Alias for calling [Builder.nextRecycleAt] with `nextRecycleAt.orElse(null)`. */
+            fun nextRecycleAt(nextRecycleAt: Optional<OffsetDateTime>) =
+                nextRecycleAt(nextRecycleAt.getOrNull())
+
+            /**
+             * Sets [Builder.nextRecycleAt] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.nextRecycleAt] with a well-typed [OffsetDateTime]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun nextRecycleAt(nextRecycleAt: JsonField<OffsetDateTime>) = apply {
+                this.nextRecycleAt = nextRecycleAt
+            }
+
+            fun recycleCount(recycleCount: Double) = recycleCount(JsonField.of(recycleCount))
+
+            /**
+             * Sets [Builder.recycleCount] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.recycleCount] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun recycleCount(recycleCount: JsonField<Double>) = apply {
+                this.recycleCount = recycleCount
+            }
+
+            fun startDate(startDate: OffsetDateTime) = startDate(JsonField.of(startDate))
+
+            /**
+             * Sets [Builder.startDate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.startDate] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun startDate(startDate: JsonField<OffsetDateTime>) = apply {
+                this.startDate = startDate
+            }
+
+            fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
+
+            /**
+             * Sets [Builder.updatedAt] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.updatedAt] with a well-typed [OffsetDateTime] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun updatedAt(updatedAt: JsonField<OffsetDateTime>) = apply {
+                this.updatedAt = updatedAt
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Recycling].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * .contentVariationIndex()
+             * .contentVariations()
+             * .createdAt()
+             * .enabled()
+             * .expireCount()
+             * .expireDate()
+             * .gap()
+             * .gapFreq()
+             * .lastRecycledAt()
+             * .nextRecycleAt()
+             * .recycleCount()
+             * .startDate()
+             * .updatedAt()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): Recycling =
+                Recycling(
+                    checkRequired("id", id),
+                    checkRequired("contentVariationIndex", contentVariationIndex),
+                    checkRequired("contentVariations", contentVariations).map { it.toImmutable() },
+                    checkRequired("createdAt", createdAt),
+                    checkRequired("enabled", enabled),
+                    checkRequired("expireCount", expireCount),
+                    checkRequired("expireDate", expireDate),
+                    checkRequired("gap", gap),
+                    checkRequired("gapFreq", gapFreq),
+                    checkRequired("lastRecycledAt", lastRecycledAt),
+                    checkRequired("nextRecycleAt", nextRecycleAt),
+                    checkRequired("recycleCount", recycleCount),
+                    checkRequired("startDate", startDate),
+                    checkRequired("updatedAt", updatedAt),
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Recycling = apply {
+            if (validated) {
+                return@apply
+            }
+
+            id()
+            contentVariationIndex()
+            contentVariations()
+            createdAt()
+            enabled()
+            expireCount()
+            expireDate()
+            gap()
+            gapFreq().validate()
+            lastRecycledAt()
+            nextRecycleAt()
+            recycleCount()
+            startDate()
+            updatedAt()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (id.asKnown().isPresent) 1 else 0) +
+                (if (contentVariationIndex.asKnown().isPresent) 1 else 0) +
+                (contentVariations.asKnown().getOrNull()?.size ?: 0) +
+                (if (createdAt.asKnown().isPresent) 1 else 0) +
+                (if (enabled.asKnown().isPresent) 1 else 0) +
+                (if (expireCount.asKnown().isPresent) 1 else 0) +
+                (if (expireDate.asKnown().isPresent) 1 else 0) +
+                (if (gap.asKnown().isPresent) 1 else 0) +
+                (gapFreq.asKnown().getOrNull()?.validity() ?: 0) +
+                (if (lastRecycledAt.asKnown().isPresent) 1 else 0) +
+                (if (nextRecycleAt.asKnown().isPresent) 1 else 0) +
+                (if (recycleCount.asKnown().isPresent) 1 else 0) +
+                (if (startDate.asKnown().isPresent) 1 else 0) +
+                (if (updatedAt.asKnown().isPresent) 1 else 0)
+
+        class GapFreq @JsonCreator private constructor(private val value: JsonField<String>) :
+            Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val DAY = of("day")
+
+                @JvmField val WEEK = of("week")
+
+                @JvmField val MONTH = of("month")
+
+                @JvmStatic fun of(value: String) = GapFreq(JsonField.of(value))
+            }
+
+            /** An enum containing [GapFreq]'s known values. */
+            enum class Known {
+                DAY,
+                WEEK,
+                MONTH,
+            }
+
+            /**
+             * An enum containing [GapFreq]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [GapFreq] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                DAY,
+                WEEK,
+                MONTH,
+                /**
+                 * An enum member indicating that [GapFreq] was instantiated with an unknown value.
+                 */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    DAY -> Value.DAY
+                    WEEK -> Value.WEEK
+                    MONTH -> Value.MONTH
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws RelayInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    DAY -> Known.DAY
+                    WEEK -> Known.WEEK
+                    MONTH -> Known.MONTH
+                    else -> throw RelayInvalidDataException("Unknown GapFreq: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws RelayInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    RelayInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            fun validate(): GapFreq = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is GapFreq && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Recycling &&
+                id == other.id &&
+                contentVariationIndex == other.contentVariationIndex &&
+                contentVariations == other.contentVariations &&
+                createdAt == other.createdAt &&
+                enabled == other.enabled &&
+                expireCount == other.expireCount &&
+                expireDate == other.expireDate &&
+                gap == other.gap &&
+                gapFreq == other.gapFreq &&
+                lastRecycledAt == other.lastRecycledAt &&
+                nextRecycleAt == other.nextRecycleAt &&
+                recycleCount == other.recycleCount &&
+                startDate == other.startDate &&
+                updatedAt == other.updatedAt &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                id,
+                contentVariationIndex,
+                contentVariations,
+                createdAt,
+                enabled,
+                expireCount,
+                expireDate,
+                gap,
+                gapFreq,
+                lastRecycledAt,
+                nextRecycleAt,
+                recycleCount,
+                startDate,
+                updatedAt,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Recycling{id=$id, contentVariationIndex=$contentVariationIndex, contentVariations=$contentVariations, createdAt=$createdAt, enabled=$enabled, expireCount=$expireCount, expireDate=$expireDate, gap=$gap, gapFreq=$gapFreq, lastRecycledAt=$lastRecycledAt, nextRecycleAt=$nextRecycleAt, recycleCount=$recycleCount, startDate=$startDate, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+    }
+
     class Status @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -1007,6 +2246,547 @@ private constructor(
         override fun toString() = "Targets{additionalProperties=$additionalProperties}"
     }
 
+    /** Engagement metrics (reactions, comments, views, etc.) */
+    class Metrics
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val clicks: JsonField<Double>,
+        private val comments: JsonField<Double>,
+        private val engagementRate: JsonField<Double>,
+        private val impressions: JsonField<Double>,
+        private val likes: JsonField<Double>,
+        private val reach: JsonField<Double>,
+        private val saves: JsonField<Double>,
+        private val shares: JsonField<Double>,
+        private val views: JsonField<Double>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("clicks") @ExcludeMissing clicks: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("comments")
+            @ExcludeMissing
+            comments: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("engagement_rate")
+            @ExcludeMissing
+            engagementRate: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("impressions")
+            @ExcludeMissing
+            impressions: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("likes") @ExcludeMissing likes: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("reach") @ExcludeMissing reach: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("saves") @ExcludeMissing saves: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("shares") @ExcludeMissing shares: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("views") @ExcludeMissing views: JsonField<Double> = JsonMissing.of(),
+        ) : this(
+            clicks,
+            comments,
+            engagementRate,
+            impressions,
+            likes,
+            reach,
+            saves,
+            shares,
+            views,
+            mutableMapOf(),
+        )
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun clicks(): Optional<Double> = clicks.getOptional("clicks")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun comments(): Optional<Double> = comments.getOptional("comments")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun engagementRate(): Optional<Double> = engagementRate.getOptional("engagement_rate")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun impressions(): Optional<Double> = impressions.getOptional("impressions")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun likes(): Optional<Double> = likes.getOptional("likes")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun reach(): Optional<Double> = reach.getOptional("reach")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun saves(): Optional<Double> = saves.getOptional("saves")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun shares(): Optional<Double> = shares.getOptional("shares")
+
+        /**
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun views(): Optional<Double> = views.getOptional("views")
+
+        /**
+         * Returns the raw JSON value of [clicks].
+         *
+         * Unlike [clicks], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("clicks") @ExcludeMissing fun _clicks(): JsonField<Double> = clicks
+
+        /**
+         * Returns the raw JSON value of [comments].
+         *
+         * Unlike [comments], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("comments") @ExcludeMissing fun _comments(): JsonField<Double> = comments
+
+        /**
+         * Returns the raw JSON value of [engagementRate].
+         *
+         * Unlike [engagementRate], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("engagement_rate")
+        @ExcludeMissing
+        fun _engagementRate(): JsonField<Double> = engagementRate
+
+        /**
+         * Returns the raw JSON value of [impressions].
+         *
+         * Unlike [impressions], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("impressions")
+        @ExcludeMissing
+        fun _impressions(): JsonField<Double> = impressions
+
+        /**
+         * Returns the raw JSON value of [likes].
+         *
+         * Unlike [likes], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("likes") @ExcludeMissing fun _likes(): JsonField<Double> = likes
+
+        /**
+         * Returns the raw JSON value of [reach].
+         *
+         * Unlike [reach], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("reach") @ExcludeMissing fun _reach(): JsonField<Double> = reach
+
+        /**
+         * Returns the raw JSON value of [saves].
+         *
+         * Unlike [saves], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("saves") @ExcludeMissing fun _saves(): JsonField<Double> = saves
+
+        /**
+         * Returns the raw JSON value of [shares].
+         *
+         * Unlike [shares], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("shares") @ExcludeMissing fun _shares(): JsonField<Double> = shares
+
+        /**
+         * Returns the raw JSON value of [views].
+         *
+         * Unlike [views], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("views") @ExcludeMissing fun _views(): JsonField<Double> = views
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Metrics]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Metrics]. */
+        class Builder internal constructor() {
+
+            private var clicks: JsonField<Double> = JsonMissing.of()
+            private var comments: JsonField<Double> = JsonMissing.of()
+            private var engagementRate: JsonField<Double> = JsonMissing.of()
+            private var impressions: JsonField<Double> = JsonMissing.of()
+            private var likes: JsonField<Double> = JsonMissing.of()
+            private var reach: JsonField<Double> = JsonMissing.of()
+            private var saves: JsonField<Double> = JsonMissing.of()
+            private var shares: JsonField<Double> = JsonMissing.of()
+            private var views: JsonField<Double> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(metrics: Metrics) = apply {
+                clicks = metrics.clicks
+                comments = metrics.comments
+                engagementRate = metrics.engagementRate
+                impressions = metrics.impressions
+                likes = metrics.likes
+                reach = metrics.reach
+                saves = metrics.saves
+                shares = metrics.shares
+                views = metrics.views
+                additionalProperties = metrics.additionalProperties.toMutableMap()
+            }
+
+            fun clicks(clicks: Double) = clicks(JsonField.of(clicks))
+
+            /**
+             * Sets [Builder.clicks] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.clicks] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun clicks(clicks: JsonField<Double>) = apply { this.clicks = clicks }
+
+            fun comments(comments: Double) = comments(JsonField.of(comments))
+
+            /**
+             * Sets [Builder.comments] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.comments] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun comments(comments: JsonField<Double>) = apply { this.comments = comments }
+
+            fun engagementRate(engagementRate: Double) =
+                engagementRate(JsonField.of(engagementRate))
+
+            /**
+             * Sets [Builder.engagementRate] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.engagementRate] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun engagementRate(engagementRate: JsonField<Double>) = apply {
+                this.engagementRate = engagementRate
+            }
+
+            fun impressions(impressions: Double) = impressions(JsonField.of(impressions))
+
+            /**
+             * Sets [Builder.impressions] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.impressions] with a well-typed [Double] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun impressions(impressions: JsonField<Double>) = apply {
+                this.impressions = impressions
+            }
+
+            fun likes(likes: Double) = likes(JsonField.of(likes))
+
+            /**
+             * Sets [Builder.likes] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.likes] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun likes(likes: JsonField<Double>) = apply { this.likes = likes }
+
+            fun reach(reach: Double) = reach(JsonField.of(reach))
+
+            /**
+             * Sets [Builder.reach] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.reach] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun reach(reach: JsonField<Double>) = apply { this.reach = reach }
+
+            fun saves(saves: Double) = saves(JsonField.of(saves))
+
+            /**
+             * Sets [Builder.saves] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.saves] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun saves(saves: JsonField<Double>) = apply { this.saves = saves }
+
+            fun shares(shares: Double) = shares(JsonField.of(shares))
+
+            /**
+             * Sets [Builder.shares] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.shares] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun shares(shares: JsonField<Double>) = apply { this.shares = shares }
+
+            fun views(views: Double) = views(JsonField.of(views))
+
+            /**
+             * Sets [Builder.views] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.views] with a well-typed [Double] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun views(views: JsonField<Double>) = apply { this.views = views }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Metrics].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Metrics =
+                Metrics(
+                    clicks,
+                    comments,
+                    engagementRate,
+                    impressions,
+                    likes,
+                    reach,
+                    saves,
+                    shares,
+                    views,
+                    additionalProperties.toMutableMap(),
+                )
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Metrics = apply {
+            if (validated) {
+                return@apply
+            }
+
+            clicks()
+            comments()
+            engagementRate()
+            impressions()
+            likes()
+            reach()
+            saves()
+            shares()
+            views()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (clicks.asKnown().isPresent) 1 else 0) +
+                (if (comments.asKnown().isPresent) 1 else 0) +
+                (if (engagementRate.asKnown().isPresent) 1 else 0) +
+                (if (impressions.asKnown().isPresent) 1 else 0) +
+                (if (likes.asKnown().isPresent) 1 else 0) +
+                (if (reach.asKnown().isPresent) 1 else 0) +
+                (if (saves.asKnown().isPresent) 1 else 0) +
+                (if (shares.asKnown().isPresent) 1 else 0) +
+                (if (views.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Metrics &&
+                clicks == other.clicks &&
+                comments == other.comments &&
+                engagementRate == other.engagementRate &&
+                impressions == other.impressions &&
+                likes == other.likes &&
+                reach == other.reach &&
+                saves == other.saves &&
+                shares == other.shares &&
+                views == other.views &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                clicks,
+                comments,
+                engagementRate,
+                impressions,
+                likes,
+                reach,
+                saves,
+                shares,
+                views,
+                additionalProperties,
+            )
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Metrics{clicks=$clicks, comments=$comments, engagementRate=$engagementRate, impressions=$impressions, likes=$likes, reach=$reach, saves=$saves, shares=$shares, views=$views, additionalProperties=$additionalProperties}"
+    }
+
+    /** Per-target customizations */
+    class TargetOptions
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [TargetOptions]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [TargetOptions]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(targetOptions: TargetOptions) = apply {
+                additionalProperties = targetOptions.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [TargetOptions].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): TargetOptions = TargetOptions(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): TargetOptions = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: RelayInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is TargetOptions && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "TargetOptions{additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -1017,10 +2797,18 @@ private constructor(
             content == other.content &&
             createdAt == other.createdAt &&
             media == other.media &&
+            publishedAt == other.publishedAt &&
+            recycledFromId == other.recycledFromId &&
+            recycling == other.recycling &&
             scheduledAt == other.scheduledAt &&
             status == other.status &&
             targets == other.targets &&
             updatedAt == other.updatedAt &&
+            metrics == other.metrics &&
+            targetOptions == other.targetOptions &&
+            threadGroupId == other.threadGroupId &&
+            threadPosition == other.threadPosition &&
+            timezone == other.timezone &&
             additionalProperties == other.additionalProperties
     }
 
@@ -1030,10 +2818,18 @@ private constructor(
             content,
             createdAt,
             media,
+            publishedAt,
+            recycledFromId,
+            recycling,
             scheduledAt,
             status,
             targets,
             updatedAt,
+            metrics,
+            targetOptions,
+            threadGroupId,
+            threadPosition,
+            timezone,
             additionalProperties,
         )
     }
@@ -1041,5 +2837,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "PostRetrieveResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "PostRetrieveResponse{id=$id, content=$content, createdAt=$createdAt, media=$media, publishedAt=$publishedAt, recycledFromId=$recycledFromId, recycling=$recycling, scheduledAt=$scheduledAt, status=$status, targets=$targets, updatedAt=$updatedAt, metrics=$metrics, targetOptions=$targetOptions, threadGroupId=$threadGroupId, threadPosition=$threadPosition, timezone=$timezone, additionalProperties=$additionalProperties}"
 }

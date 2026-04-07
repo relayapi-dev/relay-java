@@ -24,6 +24,7 @@ internal class ConnectServiceAsyncTest {
                     .platform(ConnectCompleteOAuthCallbackParams.Platform.TWITTER)
                     .code("code")
                     .redirectUrl("https://example.com")
+                    .state("state")
                     .build()
             )
 

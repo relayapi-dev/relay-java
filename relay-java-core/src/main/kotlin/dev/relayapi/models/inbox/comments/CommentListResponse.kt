@@ -311,10 +311,12 @@ private constructor(
         private val createdAt: JsonField<OffsetDateTime>,
         private val platform: JsonField<Platform>,
         private val text: JsonField<String>,
+        private val accountAvatarUrl: JsonField<String>,
         private val accountId: JsonField<String>,
         private val authorAvatar: JsonField<String>,
         private val hidden: JsonField<Boolean>,
         private val likes: JsonField<Double>,
+        private val parentId: JsonField<String>,
         private val postId: JsonField<String>,
         private val postPlatformUrl: JsonField<String>,
         private val postText: JsonField<String>,
@@ -336,6 +338,9 @@ private constructor(
             @ExcludeMissing
             platform: JsonField<Platform> = JsonMissing.of(),
             @JsonProperty("text") @ExcludeMissing text: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("account_avatar_url")
+            @ExcludeMissing
+            accountAvatarUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("account_id")
             @ExcludeMissing
             accountId: JsonField<String> = JsonMissing.of(),
@@ -344,6 +349,9 @@ private constructor(
             authorAvatar: JsonField<String> = JsonMissing.of(),
             @JsonProperty("hidden") @ExcludeMissing hidden: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("likes") @ExcludeMissing likes: JsonField<Double> = JsonMissing.of(),
+            @JsonProperty("parent_id")
+            @ExcludeMissing
+            parentId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("post_id") @ExcludeMissing postId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("post_platform_url")
             @ExcludeMissing
@@ -363,10 +371,12 @@ private constructor(
             createdAt,
             platform,
             text,
+            accountAvatarUrl,
             accountId,
             authorAvatar,
             hidden,
             likes,
+            parentId,
             postId,
             postPlatformUrl,
             postText,
@@ -414,6 +424,15 @@ private constructor(
         fun text(): String = text.getRequired("text")
 
         /**
+         * Social account avatar URL
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun accountAvatarUrl(): Optional<String> =
+            accountAvatarUrl.getOptional("account_avatar_url")
+
+        /**
          * Social account ID
          *
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -444,6 +463,14 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun likes(): Optional<Double> = likes.getOptional("likes")
+
+        /**
+         * Parent comment ID if this is a reply
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun parentId(): Optional<String> = parentId.getOptional("parent_id")
 
         /**
          * Platform post/media/video ID
@@ -526,6 +553,16 @@ private constructor(
         @JsonProperty("text") @ExcludeMissing fun _text(): JsonField<String> = text
 
         /**
+         * Returns the raw JSON value of [accountAvatarUrl].
+         *
+         * Unlike [accountAvatarUrl], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("account_avatar_url")
+        @ExcludeMissing
+        fun _accountAvatarUrl(): JsonField<String> = accountAvatarUrl
+
+        /**
          * Returns the raw JSON value of [accountId].
          *
          * Unlike [accountId], this method doesn't throw if the JSON field has an unexpected type.
@@ -555,6 +592,13 @@ private constructor(
          * Unlike [likes], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("likes") @ExcludeMissing fun _likes(): JsonField<Double> = likes
+
+        /**
+         * Returns the raw JSON value of [parentId].
+         *
+         * Unlike [parentId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("parent_id") @ExcludeMissing fun _parentId(): JsonField<String> = parentId
 
         /**
          * Returns the raw JSON value of [postId].
@@ -637,10 +681,12 @@ private constructor(
             private var createdAt: JsonField<OffsetDateTime>? = null
             private var platform: JsonField<Platform>? = null
             private var text: JsonField<String>? = null
+            private var accountAvatarUrl: JsonField<String> = JsonMissing.of()
             private var accountId: JsonField<String> = JsonMissing.of()
             private var authorAvatar: JsonField<String> = JsonMissing.of()
             private var hidden: JsonField<Boolean> = JsonMissing.of()
             private var likes: JsonField<Double> = JsonMissing.of()
+            private var parentId: JsonField<String> = JsonMissing.of()
             private var postId: JsonField<String> = JsonMissing.of()
             private var postPlatformUrl: JsonField<String> = JsonMissing.of()
             private var postText: JsonField<String> = JsonMissing.of()
@@ -655,10 +701,12 @@ private constructor(
                 createdAt = data.createdAt
                 platform = data.platform
                 text = data.text
+                accountAvatarUrl = data.accountAvatarUrl
                 accountId = data.accountId
                 authorAvatar = data.authorAvatar
                 hidden = data.hidden
                 likes = data.likes
+                parentId = data.parentId
                 postId = data.postId
                 postPlatformUrl = data.postPlatformUrl
                 postText = data.postText
@@ -728,6 +776,27 @@ private constructor(
              */
             fun text(text: JsonField<String>) = apply { this.text = text }
 
+            /** Social account avatar URL */
+            fun accountAvatarUrl(accountAvatarUrl: String?) =
+                accountAvatarUrl(JsonField.ofNullable(accountAvatarUrl))
+
+            /**
+             * Alias for calling [Builder.accountAvatarUrl] with `accountAvatarUrl.orElse(null)`.
+             */
+            fun accountAvatarUrl(accountAvatarUrl: Optional<String>) =
+                accountAvatarUrl(accountAvatarUrl.getOrNull())
+
+            /**
+             * Sets [Builder.accountAvatarUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.accountAvatarUrl] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun accountAvatarUrl(accountAvatarUrl: JsonField<String>) = apply {
+                this.accountAvatarUrl = accountAvatarUrl
+            }
+
             /** Social account ID */
             fun accountId(accountId: String) = accountId(JsonField.of(accountId))
 
@@ -782,6 +851,21 @@ private constructor(
              * supported value.
              */
             fun likes(likes: JsonField<Double>) = apply { this.likes = likes }
+
+            /** Parent comment ID if this is a reply */
+            fun parentId(parentId: String?) = parentId(JsonField.ofNullable(parentId))
+
+            /** Alias for calling [Builder.parentId] with `parentId.orElse(null)`. */
+            fun parentId(parentId: Optional<String>) = parentId(parentId.getOrNull())
+
+            /**
+             * Sets [Builder.parentId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.parentId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun parentId(parentId: JsonField<String>) = apply { this.parentId = parentId }
 
             /** Platform post/media/video ID */
             fun postId(postId: String) = postId(JsonField.of(postId))
@@ -906,10 +990,12 @@ private constructor(
                     checkRequired("createdAt", createdAt),
                     checkRequired("platform", platform),
                     checkRequired("text", text),
+                    accountAvatarUrl,
                     accountId,
                     authorAvatar,
                     hidden,
                     likes,
+                    parentId,
                     postId,
                     postPlatformUrl,
                     postText,
@@ -931,10 +1017,12 @@ private constructor(
             createdAt()
             platform().validate()
             text()
+            accountAvatarUrl()
             accountId()
             authorAvatar()
             hidden()
             likes()
+            parentId()
             postId()
             postPlatformUrl()
             postText()
@@ -964,10 +1052,12 @@ private constructor(
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (platform.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (text.asKnown().isPresent) 1 else 0) +
+                (if (accountAvatarUrl.asKnown().isPresent) 1 else 0) +
                 (if (accountId.asKnown().isPresent) 1 else 0) +
                 (if (authorAvatar.asKnown().isPresent) 1 else 0) +
                 (if (hidden.asKnown().isPresent) 1 else 0) +
                 (if (likes.asKnown().isPresent) 1 else 0) +
+                (if (parentId.asKnown().isPresent) 1 else 0) +
                 (if (postId.asKnown().isPresent) 1 else 0) +
                 (if (postPlatformUrl.asKnown().isPresent) 1 else 0) +
                 (if (postText.asKnown().isPresent) 1 else 0) +
@@ -1023,6 +1113,14 @@ private constructor(
 
                 @JvmField val SMS = of("sms")
 
+                @JvmField val BEEHIIV = of("beehiiv")
+
+                @JvmField val CONVERTKIT = of("convertkit")
+
+                @JvmField val MAILCHIMP = of("mailchimp")
+
+                @JvmField val LISTMONK = of("listmonk")
+
                 @JvmStatic fun of(value: String) = Platform(JsonField.of(value))
             }
 
@@ -1045,6 +1143,10 @@ private constructor(
                 MASTODON,
                 DISCORD,
                 SMS,
+                BEEHIIV,
+                CONVERTKIT,
+                MAILCHIMP,
+                LISTMONK,
             }
 
             /**
@@ -1074,6 +1176,10 @@ private constructor(
                 MASTODON,
                 DISCORD,
                 SMS,
+                BEEHIIV,
+                CONVERTKIT,
+                MAILCHIMP,
+                LISTMONK,
                 /**
                  * An enum member indicating that [Platform] was instantiated with an unknown value.
                  */
@@ -1106,6 +1212,10 @@ private constructor(
                     MASTODON -> Value.MASTODON
                     DISCORD -> Value.DISCORD
                     SMS -> Value.SMS
+                    BEEHIIV -> Value.BEEHIIV
+                    CONVERTKIT -> Value.CONVERTKIT
+                    MAILCHIMP -> Value.MAILCHIMP
+                    LISTMONK -> Value.LISTMONK
                     else -> Value._UNKNOWN
                 }
 
@@ -1137,6 +1247,10 @@ private constructor(
                     MASTODON -> Known.MASTODON
                     DISCORD -> Known.DISCORD
                     SMS -> Known.SMS
+                    BEEHIIV -> Known.BEEHIIV
+                    CONVERTKIT -> Known.CONVERTKIT
+                    MAILCHIMP -> Known.MAILCHIMP
+                    LISTMONK -> Known.LISTMONK
                     else -> throw RelayInvalidDataException("Unknown Platform: $value")
                 }
 
@@ -1205,10 +1319,12 @@ private constructor(
                 createdAt == other.createdAt &&
                 platform == other.platform &&
                 text == other.text &&
+                accountAvatarUrl == other.accountAvatarUrl &&
                 accountId == other.accountId &&
                 authorAvatar == other.authorAvatar &&
                 hidden == other.hidden &&
                 likes == other.likes &&
+                parentId == other.parentId &&
                 postId == other.postId &&
                 postPlatformUrl == other.postPlatformUrl &&
                 postText == other.postText &&
@@ -1224,10 +1340,12 @@ private constructor(
                 createdAt,
                 platform,
                 text,
+                accountAvatarUrl,
                 accountId,
                 authorAvatar,
                 hidden,
                 likes,
+                parentId,
                 postId,
                 postPlatformUrl,
                 postText,
@@ -1240,7 +1358,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, accountId=$accountId, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, postId=$postId, postPlatformUrl=$postPlatformUrl, postText=$postText, postThumbnailUrl=$postThumbnailUrl, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
+            "Data{id=$id, authorName=$authorName, createdAt=$createdAt, platform=$platform, text=$text, accountAvatarUrl=$accountAvatarUrl, accountId=$accountId, authorAvatar=$authorAvatar, hidden=$hidden, likes=$likes, parentId=$parentId, postId=$postId, postPlatformUrl=$postPlatformUrl, postText=$postText, postThumbnailUrl=$postThumbnailUrl, repliesCount=$repliesCount, additionalProperties=$additionalProperties}"
     }
 
     class Platform @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -1291,6 +1409,14 @@ private constructor(
 
             @JvmField val SMS = of("sms")
 
+            @JvmField val BEEHIIV = of("beehiiv")
+
+            @JvmField val CONVERTKIT = of("convertkit")
+
+            @JvmField val MAILCHIMP = of("mailchimp")
+
+            @JvmField val LISTMONK = of("listmonk")
+
             @JvmStatic fun of(value: String) = Platform(JsonField.of(value))
         }
 
@@ -1313,6 +1439,10 @@ private constructor(
             MASTODON,
             DISCORD,
             SMS,
+            BEEHIIV,
+            CONVERTKIT,
+            MAILCHIMP,
+            LISTMONK,
         }
 
         /**
@@ -1342,6 +1472,10 @@ private constructor(
             MASTODON,
             DISCORD,
             SMS,
+            BEEHIIV,
+            CONVERTKIT,
+            MAILCHIMP,
+            LISTMONK,
             /** An enum member indicating that [Platform] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -1372,6 +1506,10 @@ private constructor(
                 MASTODON -> Value.MASTODON
                 DISCORD -> Value.DISCORD
                 SMS -> Value.SMS
+                BEEHIIV -> Value.BEEHIIV
+                CONVERTKIT -> Value.CONVERTKIT
+                MAILCHIMP -> Value.MAILCHIMP
+                LISTMONK -> Value.LISTMONK
                 else -> Value._UNKNOWN
             }
 
@@ -1402,6 +1540,10 @@ private constructor(
                 MASTODON -> Known.MASTODON
                 DISCORD -> Known.DISCORD
                 SMS -> Known.SMS
+                BEEHIIV -> Known.BEEHIIV
+                CONVERTKIT -> Known.CONVERTKIT
+                MAILCHIMP -> Known.MAILCHIMP
+                LISTMONK -> Known.LISTMONK
                 else -> throw RelayInvalidDataException("Unknown Platform: $value")
             }
 

@@ -10,7 +10,7 @@ configure<PublishingExtension> {
 
             pom {
                 name.set("RelayAPI")
-                description.set("Unified social media API — post to 16 platforms via a single API")
+                description.set("Unified social media API — post to 17 platforms via a single API")
                 url.set("https://docs.relayapi.dev")
 
                 licenses {
