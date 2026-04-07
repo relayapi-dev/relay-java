@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 (2026-04-07)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/relayapi-dev/relay-java/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** api update ([24a3205](https://github.com/relayapi-dev/relay-java/commit/24a32051a8433be4a30b4a3bd4feba4fac9672bf))
+
 ## 0.1.0 (2026-04-07)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/relayapi-dev/relay-java/compare/v0.0.1...v0.1.0)
