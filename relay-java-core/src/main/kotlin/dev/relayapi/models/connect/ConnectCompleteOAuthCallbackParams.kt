@@ -50,6 +50,14 @@ private constructor(
     fun redirectUrl(): Optional<String> = body.redirectUrl()
 
     /**
+     * OAuth state token for direct KV lookup
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun state(): Optional<String> = body.state()
+
+    /**
      * Returns the raw JSON value of [code].
      *
      * Unlike [code], this method doesn't throw if the JSON field has an unexpected type.
@@ -62,6 +70,13 @@ private constructor(
      * Unlike [redirectUrl], this method doesn't throw if the JSON field has an unexpected type.
      */
     fun _redirectUrl(): JsonField<String> = body._redirectUrl()
+
+    /**
+     * Returns the raw JSON value of [state].
+     *
+     * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _state(): JsonField<String> = body._state()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -118,6 +133,7 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [code]
          * - [redirectUrl]
+         * - [state]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
@@ -143,6 +159,17 @@ private constructor(
          * value.
          */
         fun redirectUrl(redirectUrl: JsonField<String>) = apply { body.redirectUrl(redirectUrl) }
+
+        /** OAuth state token for direct KV lookup */
+        fun state(state: String) = apply { body.state(state) }
+
+        /**
+         * Sets [Builder.state] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.state] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun state(state: JsonField<String>) = apply { body.state(state) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -299,6 +326,7 @@ private constructor(
     private constructor(
         private val code: JsonField<String>,
         private val redirectUrl: JsonField<String>,
+        private val state: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -308,7 +336,8 @@ private constructor(
             @JsonProperty("redirect_url")
             @ExcludeMissing
             redirectUrl: JsonField<String> = JsonMissing.of(),
-        ) : this(code, redirectUrl, mutableMapOf())
+            @JsonProperty("state") @ExcludeMissing state: JsonField<String> = JsonMissing.of(),
+        ) : this(code, redirectUrl, state, mutableMapOf())
 
         /**
          * OAuth authorization code
@@ -327,6 +356,14 @@ private constructor(
         fun redirectUrl(): Optional<String> = redirectUrl.getOptional("redirect_url")
 
         /**
+         * OAuth state token for direct KV lookup
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun state(): Optional<String> = state.getOptional("state")
+
+        /**
          * Returns the raw JSON value of [code].
          *
          * Unlike [code], this method doesn't throw if the JSON field has an unexpected type.
@@ -341,6 +378,13 @@ private constructor(
         @JsonProperty("redirect_url")
         @ExcludeMissing
         fun _redirectUrl(): JsonField<String> = redirectUrl
+
+        /**
+         * Returns the raw JSON value of [state].
+         *
+         * Unlike [state], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("state") @ExcludeMissing fun _state(): JsonField<String> = state
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -372,12 +416,14 @@ private constructor(
 
             private var code: JsonField<String>? = null
             private var redirectUrl: JsonField<String> = JsonMissing.of()
+            private var state: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 code = body.code
                 redirectUrl = body.redirectUrl
+                state = body.state
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
@@ -406,6 +452,18 @@ private constructor(
             fun redirectUrl(redirectUrl: JsonField<String>) = apply {
                 this.redirectUrl = redirectUrl
             }
+
+            /** OAuth state token for direct KV lookup */
+            fun state(state: String) = state(JsonField.of(state))
+
+            /**
+             * Sets [Builder.state] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.state] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun state(state: JsonField<String>) = apply { this.state = state }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -439,7 +497,12 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Body =
-                Body(checkRequired("code", code), redirectUrl, additionalProperties.toMutableMap())
+                Body(
+                    checkRequired("code", code),
+                    redirectUrl,
+                    state,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -451,6 +514,7 @@ private constructor(
 
             code()
             redirectUrl()
+            state()
             validated = true
         }
 
@@ -471,7 +535,8 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (code.asKnown().isPresent) 1 else 0) +
-                (if (redirectUrl.asKnown().isPresent) 1 else 0)
+                (if (redirectUrl.asKnown().isPresent) 1 else 0) +
+                (if (state.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -481,15 +546,18 @@ private constructor(
             return other is Body &&
                 code == other.code &&
                 redirectUrl == other.redirectUrl &&
+                state == other.state &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(code, redirectUrl, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(code, redirectUrl, state, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{code=$code, redirectUrl=$redirectUrl, additionalProperties=$additionalProperties}"
+            "Body{code=$code, redirectUrl=$redirectUrl, state=$state, additionalProperties=$additionalProperties}"
     }
 
     /** OAuth platform to complete */
