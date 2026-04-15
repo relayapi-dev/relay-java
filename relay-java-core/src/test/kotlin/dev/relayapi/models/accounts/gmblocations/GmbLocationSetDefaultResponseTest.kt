@@ -19,7 +19,6 @@ internal class GmbLocationSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(GmbLocationSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     GmbLocationSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -29,6 +28,9 @@ internal class GmbLocationSetDefaultResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(
+                    GmbLocationSetDefaultResponse.Workspace.builder().id("id").name("name").build()
+                )
                 .build()
 
         assertThat(gmbLocationSetDefaultResponse.id()).isEqualTo("id")
@@ -36,8 +38,6 @@ internal class GmbLocationSetDefaultResponseTest {
         assertThat(gmbLocationSetDefaultResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(gmbLocationSetDefaultResponse.displayName()).contains("display_name")
-        assertThat(gmbLocationSetDefaultResponse.group())
-            .contains(GmbLocationSetDefaultResponse.Group.builder().id("id").name("name").build())
         assertThat(gmbLocationSetDefaultResponse.metadata())
             .contains(
                 GmbLocationSetDefaultResponse.Metadata.builder()
@@ -51,6 +51,10 @@ internal class GmbLocationSetDefaultResponseTest {
         assertThat(gmbLocationSetDefaultResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(gmbLocationSetDefaultResponse.username()).contains("username")
+        assertThat(gmbLocationSetDefaultResponse.workspace())
+            .contains(
+                GmbLocationSetDefaultResponse.Workspace.builder().id("id").name("name").build()
+            )
     }
 
     @Test
@@ -62,7 +66,6 @@ internal class GmbLocationSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(GmbLocationSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     GmbLocationSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -72,6 +75,9 @@ internal class GmbLocationSetDefaultResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(
+                    GmbLocationSetDefaultResponse.Workspace.builder().id("id").name("name").build()
+                )
                 .build()
 
         val roundtrippedGmbLocationSetDefaultResponse =

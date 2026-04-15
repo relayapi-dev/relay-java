@@ -21,9 +21,6 @@ internal class AccountListResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            AccountListResponse.Data.Group.builder().id("id").name("name").build()
-                        )
                         .metadata(
                             AccountListResponse.Data.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -33,6 +30,12 @@ internal class AccountListResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            AccountListResponse.Data.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .hasMore(true)
@@ -46,7 +49,6 @@ internal class AccountListResponseTest {
                     .avatarUrl("avatar_url")
                     .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .displayName("display_name")
-                    .group(AccountListResponse.Data.Group.builder().id("id").name("name").build())
                     .metadata(
                         AccountListResponse.Data.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -56,6 +58,9 @@ internal class AccountListResponseTest {
                     .platformAccountId("platform_account_id")
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .username("username")
+                    .workspace(
+                        AccountListResponse.Data.Workspace.builder().id("id").name("name").build()
+                    )
                     .build()
             )
         assertThat(accountListResponse.hasMore()).isEqualTo(true)
@@ -73,9 +78,6 @@ internal class AccountListResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            AccountListResponse.Data.Group.builder().id("id").name("name").build()
-                        )
                         .metadata(
                             AccountListResponse.Data.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -85,6 +87,12 @@ internal class AccountListResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            AccountListResponse.Data.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .hasMore(true)

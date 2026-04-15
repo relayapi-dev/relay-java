@@ -19,7 +19,6 @@ internal class FacebookPageSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(FacebookPageSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     FacebookPageSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -29,6 +28,9 @@ internal class FacebookPageSetDefaultResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(
+                    FacebookPageSetDefaultResponse.Workspace.builder().id("id").name("name").build()
+                )
                 .build()
 
         assertThat(facebookPageSetDefaultResponse.id()).isEqualTo("id")
@@ -36,8 +38,6 @@ internal class FacebookPageSetDefaultResponseTest {
         assertThat(facebookPageSetDefaultResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(facebookPageSetDefaultResponse.displayName()).contains("display_name")
-        assertThat(facebookPageSetDefaultResponse.group())
-            .contains(FacebookPageSetDefaultResponse.Group.builder().id("id").name("name").build())
         assertThat(facebookPageSetDefaultResponse.metadata())
             .contains(
                 FacebookPageSetDefaultResponse.Metadata.builder()
@@ -51,6 +51,10 @@ internal class FacebookPageSetDefaultResponseTest {
         assertThat(facebookPageSetDefaultResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(facebookPageSetDefaultResponse.username()).contains("username")
+        assertThat(facebookPageSetDefaultResponse.workspace())
+            .contains(
+                FacebookPageSetDefaultResponse.Workspace.builder().id("id").name("name").build()
+            )
     }
 
     @Test
@@ -62,7 +66,6 @@ internal class FacebookPageSetDefaultResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(FacebookPageSetDefaultResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     FacebookPageSetDefaultResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -72,6 +75,9 @@ internal class FacebookPageSetDefaultResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(
+                    FacebookPageSetDefaultResponse.Workspace.builder().id("id").name("name").build()
+                )
                 .build()
 
         val roundtrippedFacebookPageSetDefaultResponse =
