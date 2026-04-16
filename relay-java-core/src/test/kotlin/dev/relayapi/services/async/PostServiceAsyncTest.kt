@@ -35,6 +35,7 @@ internal class PostServiceAsyncTest {
                             .delayMinutes(0L)
                             .build()
                     )
+                    .ideaId("idea_id")
                     .addMedia(
                         PostCreateParams.Media.builder()
                             .url("https://example.com")
@@ -190,6 +191,7 @@ internal class PostServiceAsyncTest {
                                     .delayMinutes(0L)
                                     .build()
                             )
+                            .ideaId("idea_id")
                             .addMedia(
                                 PostBulkCreateParams.Post.Media.builder()
                                     .url("https://example.com")

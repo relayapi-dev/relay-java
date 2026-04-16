@@ -25,6 +25,7 @@ internal class PostBulkCreateParamsTest {
                             .delayMinutes(0L)
                             .build()
                     )
+                    .ideaId("idea_id")
                     .addMedia(
                         PostBulkCreateParams.Post.Media.builder()
                             .url("https://example.com")
@@ -81,6 +82,7 @@ internal class PostBulkCreateParamsTest {
                                 .delayMinutes(0L)
                                 .build()
                         )
+                        .ideaId("idea_id")
                         .addMedia(
                             PostBulkCreateParams.Post.Media.builder()
                                 .url("https://example.com")
@@ -133,6 +135,7 @@ internal class PostBulkCreateParamsTest {
                             .delayMinutes(0L)
                             .build()
                     )
+                    .ideaId("idea_id")
                     .addMedia(
                         PostBulkCreateParams.Post.Media.builder()
                             .url("https://example.com")

@@ -68,6 +68,15 @@ private constructor(
     fun crossPostActions(): Optional<List<CrossPostAction>> = body.crossPostActions()
 
     /**
+     * Create post from an idea. Pre-fills content from the idea. Explicit 'content' field takes
+     * precedence.
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun ideaId(): Optional<String> = body.ideaId()
+
+    /**
      * Media attachments
      *
      * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -172,6 +181,13 @@ private constructor(
      * type.
      */
     fun _crossPostActions(): JsonField<List<CrossPostAction>> = body._crossPostActions()
+
+    /**
+     * Returns the raw JSON value of [ideaId].
+     *
+     * Unlike [ideaId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _ideaId(): JsonField<String> = body._ideaId()
 
     /**
      * Returns the raw JSON value of [media].
@@ -284,7 +300,7 @@ private constructor(
          * - [targets]
          * - [content]
          * - [crossPostActions]
-         * - [media]
+         * - [ideaId]
          * - etc.
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
@@ -362,6 +378,20 @@ private constructor(
         fun addCrossPostAction(crossPostAction: CrossPostAction) = apply {
             body.addCrossPostAction(crossPostAction)
         }
+
+        /**
+         * Create post from an idea. Pre-fills content from the idea. Explicit 'content' field takes
+         * precedence.
+         */
+        fun ideaId(ideaId: String) = apply { body.ideaId(ideaId) }
+
+        /**
+         * Sets [Builder.ideaId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.ideaId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun ideaId(ideaId: JsonField<String>) = apply { body.ideaId(ideaId) }
 
         /** Media attachments */
         fun media(media: List<Media>) = apply { body.media(media) }
@@ -651,6 +681,7 @@ private constructor(
         private val targets: JsonField<List<String>>,
         private val content: JsonField<String>,
         private val crossPostActions: JsonField<List<CrossPostAction>>,
+        private val ideaId: JsonField<String>,
         private val media: JsonField<List<Media>>,
         private val recycling: JsonField<Recycling>,
         private val shortenUrls: JsonField<Boolean>,
@@ -675,6 +706,7 @@ private constructor(
             @JsonProperty("cross_post_actions")
             @ExcludeMissing
             crossPostActions: JsonField<List<CrossPostAction>> = JsonMissing.of(),
+            @JsonProperty("idea_id") @ExcludeMissing ideaId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("media") @ExcludeMissing media: JsonField<List<Media>> = JsonMissing.of(),
             @JsonProperty("recycling")
             @ExcludeMissing
@@ -705,6 +737,7 @@ private constructor(
             targets,
             content,
             crossPostActions,
+            ideaId,
             media,
             recycling,
             shortenUrls,
@@ -752,6 +785,15 @@ private constructor(
          */
         fun crossPostActions(): Optional<List<CrossPostAction>> =
             crossPostActions.getOptional("cross_post_actions")
+
+        /**
+         * Create post from an idea. Pre-fills content from the idea. Explicit 'content' field takes
+         * precedence.
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun ideaId(): Optional<String> = ideaId.getOptional("idea_id")
 
         /**
          * Media attachments
@@ -863,6 +905,13 @@ private constructor(
         @JsonProperty("cross_post_actions")
         @ExcludeMissing
         fun _crossPostActions(): JsonField<List<CrossPostAction>> = crossPostActions
+
+        /**
+         * Returns the raw JSON value of [ideaId].
+         *
+         * Unlike [ideaId], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("idea_id") @ExcludeMissing fun _ideaId(): JsonField<String> = ideaId
 
         /**
          * Returns the raw JSON value of [media].
@@ -977,6 +1026,7 @@ private constructor(
             private var targets: JsonField<MutableList<String>>? = null
             private var content: JsonField<String> = JsonMissing.of()
             private var crossPostActions: JsonField<MutableList<CrossPostAction>>? = null
+            private var ideaId: JsonField<String> = JsonMissing.of()
             private var media: JsonField<MutableList<Media>>? = null
             private var recycling: JsonField<Recycling> = JsonMissing.of()
             private var shortenUrls: JsonField<Boolean> = JsonMissing.of()
@@ -994,6 +1044,7 @@ private constructor(
                 targets = body.targets.map { it.toMutableList() }
                 content = body.content
                 crossPostActions = body.crossPostActions.map { it.toMutableList() }
+                ideaId = body.ideaId
                 media = body.media.map { it.toMutableList() }
                 recycling = body.recycling
                 shortenUrls = body.shortenUrls
@@ -1091,6 +1142,21 @@ private constructor(
                         checkKnown("crossPostActions", it).add(crossPostAction)
                     }
             }
+
+            /**
+             * Create post from an idea. Pre-fills content from the idea. Explicit 'content' field
+             * takes precedence.
+             */
+            fun ideaId(ideaId: String) = ideaId(JsonField.of(ideaId))
+
+            /**
+             * Sets [Builder.ideaId] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.ideaId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun ideaId(ideaId: JsonField<String>) = apply { this.ideaId = ideaId }
 
             /** Media attachments */
             fun media(media: List<Media>) = media(JsonField.of(media))
@@ -1277,6 +1343,7 @@ private constructor(
                     checkRequired("targets", targets).map { it.toImmutable() },
                     content,
                     (crossPostActions ?: JsonMissing.of()).map { it.toImmutable() },
+                    ideaId,
                     (media ?: JsonMissing.of()).map { it.toImmutable() },
                     recycling,
                     shortenUrls,
@@ -1301,6 +1368,7 @@ private constructor(
             targets()
             content()
             crossPostActions().ifPresent { it.forEach { it.validate() } }
+            ideaId()
             media().ifPresent { it.forEach { it.validate() } }
             recycling().ifPresent { it.validate() }
             shortenUrls()
@@ -1333,6 +1401,7 @@ private constructor(
                 (targets.asKnown().getOrNull()?.size ?: 0) +
                 (if (content.asKnown().isPresent) 1 else 0) +
                 (crossPostActions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (if (ideaId.asKnown().isPresent) 1 else 0) +
                 (media.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (recycling.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (shortenUrls.asKnown().isPresent) 1 else 0) +
@@ -1353,6 +1422,7 @@ private constructor(
                 targets == other.targets &&
                 content == other.content &&
                 crossPostActions == other.crossPostActions &&
+                ideaId == other.ideaId &&
                 media == other.media &&
                 recycling == other.recycling &&
                 shortenUrls == other.shortenUrls &&
@@ -1371,6 +1441,7 @@ private constructor(
                 targets,
                 content,
                 crossPostActions,
+                ideaId,
                 media,
                 recycling,
                 shortenUrls,
@@ -1387,7 +1458,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{scheduledAt=$scheduledAt, targets=$targets, content=$content, crossPostActions=$crossPostActions, media=$media, recycling=$recycling, shortenUrls=$shortenUrls, skipSignature=$skipSignature, targetOptions=$targetOptions, templateId=$templateId, templateVariables=$templateVariables, timezone=$timezone, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
+            "Body{scheduledAt=$scheduledAt, targets=$targets, content=$content, crossPostActions=$crossPostActions, ideaId=$ideaId, media=$media, recycling=$recycling, shortenUrls=$shortenUrls, skipSignature=$skipSignature, targetOptions=$targetOptions, templateId=$templateId, templateVariables=$templateVariables, timezone=$timezone, workspaceId=$workspaceId, additionalProperties=$additionalProperties}"
     }
 
     class CrossPostAction
