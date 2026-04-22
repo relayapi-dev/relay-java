@@ -21,9 +21,6 @@ internal class PageSelectResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            PageSelectResponse.Account.Group.builder().id("id").name("name").build()
-                        )
                         .metadata(
                             PageSelectResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -33,6 +30,12 @@ internal class PageSelectResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            PageSelectResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -44,7 +47,6 @@ internal class PageSelectResponseTest {
                     .avatarUrl("avatar_url")
                     .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .displayName("display_name")
-                    .group(PageSelectResponse.Account.Group.builder().id("id").name("name").build())
                     .metadata(
                         PageSelectResponse.Account.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -54,6 +56,9 @@ internal class PageSelectResponseTest {
                     .platformAccountId("platform_account_id")
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .username("username")
+                    .workspace(
+                        PageSelectResponse.Account.Workspace.builder().id("id").name("name").build()
+                    )
                     .build()
             )
     }
@@ -69,9 +74,6 @@ internal class PageSelectResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            PageSelectResponse.Account.Group.builder().id("id").name("name").build()
-                        )
                         .metadata(
                             PageSelectResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -81,6 +83,12 @@ internal class PageSelectResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            PageSelectResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()

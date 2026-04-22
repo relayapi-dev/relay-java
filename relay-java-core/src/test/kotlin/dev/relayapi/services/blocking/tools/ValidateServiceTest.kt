@@ -78,6 +78,7 @@ internal class ValidateServiceTest {
                             .delayMinutes(0L)
                             .build()
                     )
+                    .ideaId("idea_id")
                     .addMedia(
                         ValidateValidatePostParams.Media.builder()
                             .url("https://example.com")

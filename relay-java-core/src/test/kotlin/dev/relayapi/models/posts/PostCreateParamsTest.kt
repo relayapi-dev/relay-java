@@ -24,6 +24,7 @@ internal class PostCreateParamsTest {
                     .delayMinutes(0L)
                     .build()
             )
+            .ideaId("idea_id")
             .addMedia(
                 PostCreateParams.Media.builder()
                     .url("https://example.com")
@@ -74,6 +75,7 @@ internal class PostCreateParamsTest {
                         .delayMinutes(0L)
                         .build()
                 )
+                .ideaId("idea_id")
                 .addMedia(
                     PostCreateParams.Media.builder()
                         .url("https://example.com")
@@ -122,6 +124,7 @@ internal class PostCreateParamsTest {
                     .delayMinutes(0L)
                     .build()
             )
+        assertThat(body.ideaId()).contains("idea_id")
         assertThat(body.media().getOrNull())
             .containsExactly(
                 PostCreateParams.Media.builder()

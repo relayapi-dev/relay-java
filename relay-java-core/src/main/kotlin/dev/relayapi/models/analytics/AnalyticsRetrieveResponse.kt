@@ -26,6 +26,7 @@ class AnalyticsRetrieveResponse
 private constructor(
     private val data: JsonField<List<Data>>,
     private val overview: JsonField<Overview>,
+    private val truncated: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -33,7 +34,8 @@ private constructor(
     private constructor(
         @JsonProperty("data") @ExcludeMissing data: JsonField<List<Data>> = JsonMissing.of(),
         @JsonProperty("overview") @ExcludeMissing overview: JsonField<Overview> = JsonMissing.of(),
-    ) : this(data, overview, mutableMapOf())
+        @JsonProperty("truncated") @ExcludeMissing truncated: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(data, overview, truncated, mutableMapOf())
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
@@ -48,6 +50,15 @@ private constructor(
     fun overview(): Optional<Overview> = overview.getOptional("overview")
 
     /**
+     * True when the matching target set exceeds the per-response cap. Narrow by
+     * from_date/to_date/platform to see the full set.
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun truncated(): Optional<Boolean> = truncated.getOptional("truncated")
+
+    /**
      * Returns the raw JSON value of [data].
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
@@ -60,6 +71,13 @@ private constructor(
      * Unlike [overview], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("overview") @ExcludeMissing fun _overview(): JsonField<Overview> = overview
+
+    /**
+     * Returns the raw JSON value of [truncated].
+     *
+     * Unlike [truncated], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("truncated") @ExcludeMissing fun _truncated(): JsonField<Boolean> = truncated
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -91,12 +109,14 @@ private constructor(
 
         private var data: JsonField<MutableList<Data>>? = null
         private var overview: JsonField<Overview> = JsonMissing.of()
+        private var truncated: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(analyticsRetrieveResponse: AnalyticsRetrieveResponse) = apply {
             data = analyticsRetrieveResponse.data.map { it.toMutableList() }
             overview = analyticsRetrieveResponse.overview
+            truncated = analyticsRetrieveResponse.truncated
             additionalProperties = analyticsRetrieveResponse.additionalProperties.toMutableMap()
         }
 
@@ -135,6 +155,21 @@ private constructor(
          */
         fun overview(overview: JsonField<Overview>) = apply { this.overview = overview }
 
+        /**
+         * True when the matching target set exceeds the per-response cap. Narrow by
+         * from_date/to_date/platform to see the full set.
+         */
+        fun truncated(truncated: Boolean) = truncated(JsonField.of(truncated))
+
+        /**
+         * Sets [Builder.truncated] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.truncated] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun truncated(truncated: JsonField<Boolean>) = apply { this.truncated = truncated }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -170,6 +205,7 @@ private constructor(
             AnalyticsRetrieveResponse(
                 checkRequired("data", data).map { it.toImmutable() },
                 overview,
+                truncated,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -183,6 +219,7 @@ private constructor(
 
         data().forEach { it.validate() }
         overview().ifPresent { it.validate() }
+        truncated()
         validated = true
     }
 
@@ -202,7 +239,8 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
-            (overview.asKnown().getOrNull()?.validity() ?: 0)
+            (overview.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (truncated.asKnown().isPresent) 1 else 0)
 
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -1534,13 +1572,16 @@ private constructor(
         return other is AnalyticsRetrieveResponse &&
             data == other.data &&
             overview == other.overview &&
+            truncated == other.truncated &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(data, overview, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(data, overview, truncated, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AnalyticsRetrieveResponse{data=$data, overview=$overview, additionalProperties=$additionalProperties}"
+        "AnalyticsRetrieveResponse{data=$data, overview=$overview, truncated=$truncated, additionalProperties=$additionalProperties}"
 }
