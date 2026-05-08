@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import dev.relayapi.client.RelayClient
 import dev.relayapi.client.RelayClientImpl
 import dev.relayapi.core.ClientOptions
+import dev.relayapi.core.LogLevel
 import dev.relayapi.core.Sleeper
 import dev.relayapi.core.Timeout
 import dev.relayapi.core.http.Headers
@@ -276,6 +277,15 @@ class RelayOkHttpClient private constructor() {
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
+
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { clientOptions.logLevel(logLevel) }
 
         /** API key (rlay_live_* or rlay_test_*) */
         fun apiKey(apiKey: String) = apply { clientOptions.apiKey(apiKey) }

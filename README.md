@@ -236,8 +236,6 @@ The SDK throws custom unchecked exception types:
 
 ## Logging
 
-The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
-
 Enable logging by setting the `RELAY_LOG` environment variable to `info`:
 
 ```sh
@@ -248,6 +246,19 @@ Or to `debug` for more verbose logging:
 
 ```sh
 export RELAY_LOG=debug
+```
+
+Or configure the client manually using the `logLevel` method:
+
+```java
+import dev.relayapi.client.RelayClient;
+import dev.relayapi.client.okhttp.RelayOkHttpClient;
+import dev.relayapi.core.LogLevel;
+
+RelayClient client = RelayOkHttpClient.builder()
+    .fromEnv()
+    .logLevel(LogLevel.INFO)
+    .build();
 ```
 
 ## ProGuard and R8
