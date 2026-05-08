@@ -5,6 +5,7 @@ package dev.relayapi.core
 import com.fasterxml.jackson.databind.json.JsonMapper
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.HttpClient
+import dev.relayapi.core.http.LoggingHttpClient
 import dev.relayapi.core.http.PhantomReachableClosingHttpClient
 import dev.relayapi.core.http.QueryParams
 import dev.relayapi.core.http.RetryingHttpClient
@@ -96,6 +97,14 @@ private constructor(
      * Defaults to 2.
      */
     @get:JvmName("maxRetries") val maxRetries: Int,
+    /**
+     * The level at which to log request and response information.
+     *
+     * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+     *
+     * Defaults to [LogLevel.fromEnv].
+     */
+    @get:JvmName("logLevel") val logLevel: LogLevel,
     /** API key (rlay_live_* or rlay_test_*) */
     @get:JvmName("apiKey") val apiKey: String,
 ) {
@@ -152,6 +161,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
+        private var logLevel: LogLevel = LogLevel.fromEnv()
         private var apiKey: String? = null
 
         @JvmSynthetic
@@ -167,6 +177,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
+            logLevel = clientOptions.logLevel
             apiKey = clientOptions.apiKey
         }
 
@@ -277,6 +288,15 @@ private constructor(
          */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { this.logLevel = logLevel }
+
         /** API key (rlay_live_* or rlay_test_*) */
         fun apiKey(apiKey: String) = apply { this.apiKey = apiKey }
 
@@ -375,6 +395,7 @@ private constructor(
          * System properties take precedence over environment variables.
          */
         fun fromEnv() = apply {
+            logLevel(LogLevel.fromEnv())
             (System.getProperty("relay.baseUrl") ?: System.getenv("RELAY_BASE_URL"))?.let {
                 baseUrl(it)
             }
@@ -431,7 +452,13 @@ private constructor(
             return ClientOptions(
                 httpClient,
                 RetryingHttpClient.builder()
-                    .httpClient(httpClient)
+                    .httpClient(
+                        LoggingHttpClient.builder()
+                            .httpClient(httpClient)
+                            .clock(clock)
+                            .level(logLevel)
+                            .build()
+                    )
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
@@ -446,6 +473,7 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
+                logLevel,
                 apiKey,
             )
         }
