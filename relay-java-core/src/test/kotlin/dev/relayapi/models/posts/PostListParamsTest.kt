@@ -13,6 +13,7 @@ internal class PostListParamsTest {
     fun create() {
         PostListParams.builder()
             .accountId("account_id")
+            .accountIds("account_ids")
             .cursor("cursor")
             .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .include("include")
@@ -29,6 +30,7 @@ internal class PostListParamsTest {
         val params =
             PostListParams.builder()
                 .accountId("account_id")
+                .accountIds("account_ids")
                 .cursor("cursor")
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .include("include")
@@ -45,6 +47,7 @@ internal class PostListParamsTest {
             .isEqualTo(
                 QueryParams.builder()
                     .put("account_id", "account_id")
+                    .put("account_ids", "account_ids")
                     .put("cursor", "cursor")
                     .put("from", "2019-12-27T18:11:19.117Z")
                     .put("include", "include")

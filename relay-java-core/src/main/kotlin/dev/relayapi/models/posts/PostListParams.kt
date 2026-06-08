@@ -19,6 +19,7 @@ import kotlin.jvm.optionals.getOrNull
 class PostListParams
 private constructor(
     private val accountId: String?,
+    private val accountIds: String?,
     private val cursor: String?,
     private val from: OffsetDateTime?,
     private val include: String?,
@@ -33,6 +34,9 @@ private constructor(
 
     /** Filter by specific account ID */
     fun accountId(): Optional<String> = Optional.ofNullable(accountId)
+
+    /** Filter by any of several account IDs (comma-separated). Takes precedence over account_id. */
+    fun accountIds(): Optional<String> = Optional.ofNullable(accountIds)
 
     /** Pagination cursor */
     fun cursor(): Optional<String> = Optional.ofNullable(cursor)
@@ -81,6 +85,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var accountId: String? = null
+        private var accountIds: String? = null
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
         private var include: String? = null
@@ -95,6 +100,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(postListParams: PostListParams) = apply {
             accountId = postListParams.accountId
+            accountIds = postListParams.accountIds
             cursor = postListParams.cursor
             from = postListParams.from
             include = postListParams.include
@@ -112,6 +118,14 @@ private constructor(
 
         /** Alias for calling [Builder.accountId] with `accountId.orElse(null)`. */
         fun accountId(accountId: Optional<String>) = accountId(accountId.getOrNull())
+
+        /**
+         * Filter by any of several account IDs (comma-separated). Takes precedence over account_id.
+         */
+        fun accountIds(accountIds: String?) = apply { this.accountIds = accountIds }
+
+        /** Alias for calling [Builder.accountIds] with `accountIds.orElse(null)`. */
+        fun accountIds(accountIds: Optional<String>) = accountIds(accountIds.getOrNull())
 
         /** Pagination cursor */
         fun cursor(cursor: String?) = apply { this.cursor = cursor }
@@ -280,6 +294,7 @@ private constructor(
         fun build(): PostListParams =
             PostListParams(
                 accountId,
+                accountIds,
                 cursor,
                 from,
                 include,
@@ -299,6 +314,7 @@ private constructor(
         QueryParams.builder()
             .apply {
                 accountId?.let { put("account_id", it) }
+                accountIds?.let { put("account_ids", it) }
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 include?.let { put("include", it) }
@@ -611,6 +627,7 @@ private constructor(
 
         return other is PostListParams &&
             accountId == other.accountId &&
+            accountIds == other.accountIds &&
             cursor == other.cursor &&
             from == other.from &&
             include == other.include &&
@@ -626,6 +643,7 @@ private constructor(
     override fun hashCode(): Int =
         Objects.hash(
             accountId,
+            accountIds,
             cursor,
             from,
             include,
@@ -639,5 +657,5 @@ private constructor(
         )
 
     override fun toString() =
-        "PostListParams{accountId=$accountId, cursor=$cursor, from=$from, include=$include, includeExternal=$includeExternal, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "PostListParams{accountId=$accountId, accountIds=$accountIds, cursor=$cursor, from=$from, include=$include, includeExternal=$includeExternal, limit=$limit, status=$status, to=$to, workspaceId=$workspaceId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

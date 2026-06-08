@@ -141,6 +141,7 @@ internal class PostServiceAsyncTest {
             postServiceAsync.list(
                 PostListParams.builder()
                     .accountId("account_id")
+                    .accountIds("account_ids")
                     .cursor("cursor")
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .include("include")
