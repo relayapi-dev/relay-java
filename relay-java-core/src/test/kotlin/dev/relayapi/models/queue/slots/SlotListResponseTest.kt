@@ -22,7 +22,7 @@ internal class SlotListResponseTest {
                         .addSlot(
                             SlotListResponse.Data.Slot.builder()
                                 .dayOfWeek(0L)
-                                .time("73:16")
+                                .time("20:29")
                                 .timezone("timezone")
                                 .build()
                         )
@@ -41,7 +41,7 @@ internal class SlotListResponseTest {
                     .addSlot(
                         SlotListResponse.Data.Slot.builder()
                             .dayOfWeek(0L)
-                            .time("73:16")
+                            .time("20:29")
                             .timezone("timezone")
                             .build()
                     )
@@ -64,7 +64,7 @@ internal class SlotListResponseTest {
                         .addSlot(
                             SlotListResponse.Data.Slot.builder()
                                 .dayOfWeek(0L)
-                                .time("73:16")
+                                .time("20:29")
                                 .timezone("timezone")
                                 .build()
                         )

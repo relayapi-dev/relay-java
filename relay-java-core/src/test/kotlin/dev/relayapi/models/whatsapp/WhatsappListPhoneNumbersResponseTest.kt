@@ -4,7 +4,6 @@ package dev.relayapi.models.whatsapp
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import dev.relayapi.core.jsonMapper
-import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -17,14 +16,9 @@ internal class WhatsappListPhoneNumbersResponseTest {
                 .addData(
                     WhatsappListPhoneNumbersResponse.Data.builder()
                         .id("id")
-                        .country("country")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .monthlyCostCents(0.0)
                         .phoneNumber("phone_number")
-                        .provider("provider")
-                        .status(WhatsappListPhoneNumbersResponse.Data.Status.PURCHASING)
-                        .socialAccountId("social_account_id")
-                        .waPhoneNumberId("wa_phone_number_id")
+                        .status(WhatsappListPhoneNumbersResponse.Data.Status.ACTIVE)
+                        .displayName("display_name")
                         .build()
                 )
                 .build()
@@ -33,14 +27,9 @@ internal class WhatsappListPhoneNumbersResponseTest {
             .containsExactly(
                 WhatsappListPhoneNumbersResponse.Data.builder()
                     .id("id")
-                    .country("country")
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .monthlyCostCents(0.0)
                     .phoneNumber("phone_number")
-                    .provider("provider")
-                    .status(WhatsappListPhoneNumbersResponse.Data.Status.PURCHASING)
-                    .socialAccountId("social_account_id")
-                    .waPhoneNumberId("wa_phone_number_id")
+                    .status(WhatsappListPhoneNumbersResponse.Data.Status.ACTIVE)
+                    .displayName("display_name")
                     .build()
             )
     }
@@ -53,14 +42,9 @@ internal class WhatsappListPhoneNumbersResponseTest {
                 .addData(
                     WhatsappListPhoneNumbersResponse.Data.builder()
                         .id("id")
-                        .country("country")
-                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                        .monthlyCostCents(0.0)
                         .phoneNumber("phone_number")
-                        .provider("provider")
-                        .status(WhatsappListPhoneNumbersResponse.Data.Status.PURCHASING)
-                        .socialAccountId("social_account_id")
-                        .waPhoneNumberId("wa_phone_number_id")
+                        .status(WhatsappListPhoneNumbersResponse.Data.Status.ACTIVE)
+                        .displayName("display_name")
                         .build()
                 )
                 .build()

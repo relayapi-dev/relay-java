@@ -10,29 +10,16 @@ internal class WhatsappListPhoneNumbersParamsTest {
 
     @Test
     fun create() {
-        WhatsappListPhoneNumbersParams.builder()
-            .status(WhatsappListPhoneNumbersParams.Status.PURCHASING)
-            .build()
+        WhatsappListPhoneNumbersParams.builder().accountId("account_id").build()
     }
 
     @Test
     fun queryParams() {
-        val params =
-            WhatsappListPhoneNumbersParams.builder()
-                .status(WhatsappListPhoneNumbersParams.Status.PURCHASING)
-                .build()
+        val params = WhatsappListPhoneNumbersParams.builder().accountId("account_id").build()
 
         val queryParams = params._queryParams()
 
-        assertThat(queryParams).isEqualTo(QueryParams.builder().put("status", "purchasing").build())
-    }
-
-    @Test
-    fun queryParamsWithoutOptionalFields() {
-        val params = WhatsappListPhoneNumbersParams.builder().build()
-
-        val queryParams = params._queryParams()
-
-        assertThat(queryParams).isEqualTo(QueryParams.builder().build())
+        assertThat(queryParams)
+            .isEqualTo(QueryParams.builder().put("account_id", "account_id").build())
     }
 }

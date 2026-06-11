@@ -7,18 +7,28 @@ import dev.relayapi.core.checkRequired
 import dev.relayapi.core.http.Headers
 import dev.relayapi.core.http.QueryParams
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /** Deprecated. Use GET /v1/broadcasts instead. */
 @Deprecated("deprecated")
 class BroadcastListParams
 private constructor(
     private val accountId: String,
+    private val cursor: String?,
+    private val limit: Long?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** WhatsApp account ID */
     fun accountId(): String = accountId
+
+    /** Pagination cursor */
+    fun cursor(): Optional<String> = Optional.ofNullable(cursor)
+
+    /** Number of items per page */
+    fun limit(): Optional<Long> = Optional.ofNullable(limit)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -45,18 +55,41 @@ private constructor(
     class Builder internal constructor() {
 
         private var accountId: String? = null
+        private var cursor: String? = null
+        private var limit: Long? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(broadcastListParams: BroadcastListParams) = apply {
             accountId = broadcastListParams.accountId
+            cursor = broadcastListParams.cursor
+            limit = broadcastListParams.limit
             additionalHeaders = broadcastListParams.additionalHeaders.toBuilder()
             additionalQueryParams = broadcastListParams.additionalQueryParams.toBuilder()
         }
 
         /** WhatsApp account ID */
         fun accountId(accountId: String) = apply { this.accountId = accountId }
+
+        /** Pagination cursor */
+        fun cursor(cursor: String?) = apply { this.cursor = cursor }
+
+        /** Alias for calling [Builder.cursor] with `cursor.orElse(null)`. */
+        fun cursor(cursor: Optional<String>) = cursor(cursor.getOrNull())
+
+        /** Number of items per page */
+        fun limit(limit: Long?) = apply { this.limit = limit }
+
+        /**
+         * Alias for [Builder.limit].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun limit(limit: Long) = limit(limit as Long?)
+
+        /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
+        fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -171,6 +204,8 @@ private constructor(
         fun build(): BroadcastListParams =
             BroadcastListParams(
                 checkRequired("accountId", accountId),
+                cursor,
+                limit,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
@@ -182,6 +217,8 @@ private constructor(
         QueryParams.builder()
             .apply {
                 put("account_id", accountId)
+                cursor?.let { put("cursor", it) }
+                limit?.let { put("limit", it.toString()) }
                 putAll(additionalQueryParams)
             }
             .build()
@@ -193,12 +230,15 @@ private constructor(
 
         return other is BroadcastListParams &&
             accountId == other.accountId &&
+            cursor == other.cursor &&
+            limit == other.limit &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(accountId, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(accountId, cursor, limit, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "BroadcastListParams{accountId=$accountId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "BroadcastListParams{accountId=$accountId, cursor=$cursor, limit=$limit, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

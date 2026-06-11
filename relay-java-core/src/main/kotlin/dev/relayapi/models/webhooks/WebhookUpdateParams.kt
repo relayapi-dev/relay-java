@@ -582,6 +582,8 @@ private constructor(
 
             @JvmField val POST_RECYCLED = of("post.recycled")
 
+            @JvmField val THREAD_PUBLISHED = of("thread.published")
+
             @JvmField val ACCOUNT_CONNECTED = of("account.connected")
 
             @JvmField val ACCOUNT_DISCONNECTED = of("account.disconnected")
@@ -590,11 +592,19 @@ private constructor(
 
             @JvmField val MESSAGE_RECEIVED = of("message.received")
 
+            @JvmField val MESSAGE_SENT = of("message.sent")
+
             @JvmField val AUTO_POST_CREATED = of("auto_post.created")
 
             @JvmField val AUTO_POST_ERROR = of("auto_post.error")
 
-            @JvmField val ENGAGEMENT_RULE_TRIGGERED = of("engagement_rule.triggered")
+            @JvmField val STREAK_STARTED = of("streak.started")
+
+            @JvmField val STREAK_MILESTONE = of("streak.milestone")
+
+            @JvmField val STREAK_WARNING = of("streak.warning")
+
+            @JvmField val STREAK_BROKEN = of("streak.broken")
 
             @JvmField val CROSS_POST_ACTION_EXECUTED = of("cross_post_action.executed")
 
@@ -610,13 +620,18 @@ private constructor(
             POST_FAILED,
             POST_SCHEDULED,
             POST_RECYCLED,
+            THREAD_PUBLISHED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
             MESSAGE_RECEIVED,
+            MESSAGE_SENT,
             AUTO_POST_CREATED,
             AUTO_POST_ERROR,
-            ENGAGEMENT_RULE_TRIGGERED,
+            STREAK_STARTED,
+            STREAK_MILESTONE,
+            STREAK_WARNING,
+            STREAK_BROKEN,
             CROSS_POST_ACTION_EXECUTED,
             CROSS_POST_ACTION_FAILED,
         }
@@ -636,13 +651,18 @@ private constructor(
             POST_FAILED,
             POST_SCHEDULED,
             POST_RECYCLED,
+            THREAD_PUBLISHED,
             ACCOUNT_CONNECTED,
             ACCOUNT_DISCONNECTED,
             COMMENT_RECEIVED,
             MESSAGE_RECEIVED,
+            MESSAGE_SENT,
             AUTO_POST_CREATED,
             AUTO_POST_ERROR,
-            ENGAGEMENT_RULE_TRIGGERED,
+            STREAK_STARTED,
+            STREAK_MILESTONE,
+            STREAK_WARNING,
+            STREAK_BROKEN,
             CROSS_POST_ACTION_EXECUTED,
             CROSS_POST_ACTION_FAILED,
             /** An enum member indicating that [Event] was instantiated with an unknown value. */
@@ -663,13 +683,18 @@ private constructor(
                 POST_FAILED -> Value.POST_FAILED
                 POST_SCHEDULED -> Value.POST_SCHEDULED
                 POST_RECYCLED -> Value.POST_RECYCLED
+                THREAD_PUBLISHED -> Value.THREAD_PUBLISHED
                 ACCOUNT_CONNECTED -> Value.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Value.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Value.COMMENT_RECEIVED
                 MESSAGE_RECEIVED -> Value.MESSAGE_RECEIVED
+                MESSAGE_SENT -> Value.MESSAGE_SENT
                 AUTO_POST_CREATED -> Value.AUTO_POST_CREATED
                 AUTO_POST_ERROR -> Value.AUTO_POST_ERROR
-                ENGAGEMENT_RULE_TRIGGERED -> Value.ENGAGEMENT_RULE_TRIGGERED
+                STREAK_STARTED -> Value.STREAK_STARTED
+                STREAK_MILESTONE -> Value.STREAK_MILESTONE
+                STREAK_WARNING -> Value.STREAK_WARNING
+                STREAK_BROKEN -> Value.STREAK_BROKEN
                 CROSS_POST_ACTION_EXECUTED -> Value.CROSS_POST_ACTION_EXECUTED
                 CROSS_POST_ACTION_FAILED -> Value.CROSS_POST_ACTION_FAILED
                 else -> Value._UNKNOWN
@@ -690,13 +715,18 @@ private constructor(
                 POST_FAILED -> Known.POST_FAILED
                 POST_SCHEDULED -> Known.POST_SCHEDULED
                 POST_RECYCLED -> Known.POST_RECYCLED
+                THREAD_PUBLISHED -> Known.THREAD_PUBLISHED
                 ACCOUNT_CONNECTED -> Known.ACCOUNT_CONNECTED
                 ACCOUNT_DISCONNECTED -> Known.ACCOUNT_DISCONNECTED
                 COMMENT_RECEIVED -> Known.COMMENT_RECEIVED
                 MESSAGE_RECEIVED -> Known.MESSAGE_RECEIVED
+                MESSAGE_SENT -> Known.MESSAGE_SENT
                 AUTO_POST_CREATED -> Known.AUTO_POST_CREATED
                 AUTO_POST_ERROR -> Known.AUTO_POST_ERROR
-                ENGAGEMENT_RULE_TRIGGERED -> Known.ENGAGEMENT_RULE_TRIGGERED
+                STREAK_STARTED -> Known.STREAK_STARTED
+                STREAK_MILESTONE -> Known.STREAK_MILESTONE
+                STREAK_WARNING -> Known.STREAK_WARNING
+                STREAK_BROKEN -> Known.STREAK_BROKEN
                 CROSS_POST_ACTION_EXECUTED -> Known.CROSS_POST_ACTION_EXECUTED
                 CROSS_POST_ACTION_FAILED -> Known.CROSS_POST_ACTION_FAILED
                 else -> throw RelayInvalidDataException("Unknown Event: $value")

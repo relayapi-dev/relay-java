@@ -111,7 +111,8 @@ interface MediaServiceAsync {
 
     /**
      * Upload a raw file body. Pass the filename as a query parameter and set the Content-Type
-     * header.
+     * header to the file's actual MIME type (e.g. image/png, video/mp4). The Content-Type is
+     * validated against an allowlist; application/octet-stream is rejected.
      */
     fun upload(body: String, params: MediaUploadParams): CompletableFuture<MediaUploadResponse> =
         upload(body, params, RequestOptions.none())

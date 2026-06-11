@@ -3,6 +3,8 @@
 package dev.relayapi.services.blocking.inbox.comments
 
 import dev.relayapi.client.okhttp.RelayOkHttpClient
+import dev.relayapi.models.inbox.comments.hide.HideCreateParams
+import dev.relayapi.models.inbox.comments.hide.HideDeleteParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -14,7 +16,10 @@ internal class HideServiceTest {
         val client = RelayOkHttpClient.builder().apiKey("My API Key").build()
         val hideService = client.inbox().comments().hide()
 
-        val hide = hideService.create("comment_id")
+        val hide =
+            hideService.create(
+                HideCreateParams.builder().commentId("comment_id").accountId("account_id").build()
+            )
 
         hide.validate()
     }
@@ -25,7 +30,10 @@ internal class HideServiceTest {
         val client = RelayOkHttpClient.builder().apiKey("My API Key").build()
         val hideService = client.inbox().comments().hide()
 
-        val hide = hideService.delete("comment_id")
+        val hide =
+            hideService.delete(
+                HideDeleteParams.builder().commentId("comment_id").accountId("account_id").build()
+            )
 
         hide.validate()
     }
