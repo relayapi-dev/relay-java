@@ -51,24 +51,15 @@ interface WhatsappService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): WhatsappBulkSendResponse
 
-    /** List purchased phone numbers */
-    fun listPhoneNumbers(): WhatsappListPhoneNumbersResponse =
-        listPhoneNumbers(WhatsappListPhoneNumbersParams.none())
+    /** List registered phone numbers */
+    fun listPhoneNumbers(params: WhatsappListPhoneNumbersParams): WhatsappListPhoneNumbersResponse =
+        listPhoneNumbers(params, RequestOptions.none())
 
     /** @see listPhoneNumbers */
     fun listPhoneNumbers(
-        params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none(),
+        params: WhatsappListPhoneNumbersParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): WhatsappListPhoneNumbersResponse
-
-    /** @see listPhoneNumbers */
-    fun listPhoneNumbers(
-        params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none()
-    ): WhatsappListPhoneNumbersResponse = listPhoneNumbers(params, RequestOptions.none())
-
-    /** @see listPhoneNumbers */
-    fun listPhoneNumbers(requestOptions: RequestOptions): WhatsappListPhoneNumbersResponse =
-        listPhoneNumbers(WhatsappListPhoneNumbersParams.none(), requestOptions)
 
     /** A view of [WhatsappService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -110,28 +101,16 @@ interface WhatsappService {
          * same as [WhatsappService.listPhoneNumbers].
          */
         @MustBeClosed
-        fun listPhoneNumbers(): HttpResponseFor<WhatsappListPhoneNumbersResponse> =
-            listPhoneNumbers(WhatsappListPhoneNumbersParams.none())
-
-        /** @see listPhoneNumbers */
-        @MustBeClosed
         fun listPhoneNumbers(
-            params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<WhatsappListPhoneNumbersResponse>
-
-        /** @see listPhoneNumbers */
-        @MustBeClosed
-        fun listPhoneNumbers(
-            params: WhatsappListPhoneNumbersParams = WhatsappListPhoneNumbersParams.none()
+            params: WhatsappListPhoneNumbersParams
         ): HttpResponseFor<WhatsappListPhoneNumbersResponse> =
             listPhoneNumbers(params, RequestOptions.none())
 
         /** @see listPhoneNumbers */
         @MustBeClosed
         fun listPhoneNumbers(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<WhatsappListPhoneNumbersResponse> =
-            listPhoneNumbers(WhatsappListPhoneNumbersParams.none(), requestOptions)
+            params: WhatsappListPhoneNumbersParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<WhatsappListPhoneNumbersResponse>
     }
 }

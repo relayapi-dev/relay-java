@@ -15,6 +15,7 @@ import kotlin.jvm.optionals.getOrNull
 class HideCreateParams
 private constructor(
     private val commentId: String?,
+    private val accountId: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
@@ -22,6 +23,9 @@ private constructor(
 
     /** Comment ID */
     fun commentId(): Optional<String> = Optional.ofNullable(commentId)
+
+    /** Target a specific account instead of fanning out to all org accounts */
+    fun accountId(): Optional<String> = Optional.ofNullable(accountId)
 
     /** Additional body properties to send with the request. */
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
@@ -46,6 +50,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var commentId: String? = null
+        private var accountId: String? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -53,6 +58,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(hideCreateParams: HideCreateParams) = apply {
             commentId = hideCreateParams.commentId
+            accountId = hideCreateParams.accountId
             additionalHeaders = hideCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = hideCreateParams.additionalQueryParams.toBuilder()
             additionalBodyProperties = hideCreateParams.additionalBodyProperties.toMutableMap()
@@ -63,6 +69,12 @@ private constructor(
 
         /** Alias for calling [Builder.commentId] with `commentId.orElse(null)`. */
         fun commentId(commentId: Optional<String>) = commentId(commentId.getOrNull())
+
+        /** Target a specific account instead of fanning out to all org accounts */
+        fun accountId(accountId: String?) = apply { this.accountId = accountId }
+
+        /** Alias for calling [Builder.accountId] with `accountId.orElse(null)`. */
+        fun accountId(accountId: Optional<String>) = accountId(accountId.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -192,6 +204,7 @@ private constructor(
         fun build(): HideCreateParams =
             HideCreateParams(
                 commentId,
+                accountId,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -209,7 +222,13 @@ private constructor(
 
     override fun _headers(): Headers = additionalHeaders
 
-    override fun _queryParams(): QueryParams = additionalQueryParams
+    override fun _queryParams(): QueryParams =
+        QueryParams.builder()
+            .apply {
+                accountId?.let { put("account_id", it) }
+                putAll(additionalQueryParams)
+            }
+            .build()
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -218,14 +237,21 @@ private constructor(
 
         return other is HideCreateParams &&
             commentId == other.commentId &&
+            accountId == other.accountId &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams &&
             additionalBodyProperties == other.additionalBodyProperties
     }
 
     override fun hashCode(): Int =
-        Objects.hash(commentId, additionalHeaders, additionalQueryParams, additionalBodyProperties)
+        Objects.hash(
+            commentId,
+            accountId,
+            additionalHeaders,
+            additionalQueryParams,
+            additionalBodyProperties,
+        )
 
     override fun toString() =
-        "HideCreateParams{commentId=$commentId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "HideCreateParams{commentId=$commentId, accountId=$accountId, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }

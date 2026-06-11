@@ -25,13 +25,19 @@ class BroadcastListResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val data: JsonField<List<Data>>,
+    private val hasMore: JsonField<Boolean>,
+    private val nextCursor: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("data") @ExcludeMissing data: JsonField<List<Data>> = JsonMissing.of()
-    ) : this(data, mutableMapOf())
+        @JsonProperty("data") @ExcludeMissing data: JsonField<List<Data>> = JsonMissing.of(),
+        @JsonProperty("has_more") @ExcludeMissing hasMore: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("next_cursor")
+        @ExcludeMissing
+        nextCursor: JsonField<String> = JsonMissing.of(),
+    ) : this(data, hasMore, nextCursor, mutableMapOf())
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
@@ -40,11 +46,41 @@ private constructor(
     fun data(): List<Data> = data.getRequired("data")
 
     /**
+     * Whether more items exist
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun hasMore(): Optional<Boolean> = hasMore.getOptional("has_more")
+
+    /**
+     * Cursor for next page
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun nextCursor(): Optional<String> = nextCursor.getOptional("next_cursor")
+
+    /**
      * Returns the raw JSON value of [data].
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<Data>> = data
+
+    /**
+     * Returns the raw JSON value of [hasMore].
+     *
+     * Unlike [hasMore], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("has_more") @ExcludeMissing fun _hasMore(): JsonField<Boolean> = hasMore
+
+    /**
+     * Returns the raw JSON value of [nextCursor].
+     *
+     * Unlike [nextCursor], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("next_cursor") @ExcludeMissing fun _nextCursor(): JsonField<String> = nextCursor
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -75,11 +111,15 @@ private constructor(
     class Builder internal constructor() {
 
         private var data: JsonField<MutableList<Data>>? = null
+        private var hasMore: JsonField<Boolean> = JsonMissing.of()
+        private var nextCursor: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(broadcastListResponse: BroadcastListResponse) = apply {
             data = broadcastListResponse.data.map { it.toMutableList() }
+            hasMore = broadcastListResponse.hasMore
+            nextCursor = broadcastListResponse.nextCursor
             additionalProperties = broadcastListResponse.additionalProperties.toMutableMap()
         }
 
@@ -106,6 +146,32 @@ private constructor(
                     checkKnown("data", it).add(data)
                 }
         }
+
+        /** Whether more items exist */
+        fun hasMore(hasMore: Boolean) = hasMore(JsonField.of(hasMore))
+
+        /**
+         * Sets [Builder.hasMore] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.hasMore] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun hasMore(hasMore: JsonField<Boolean>) = apply { this.hasMore = hasMore }
+
+        /** Cursor for next page */
+        fun nextCursor(nextCursor: String?) = nextCursor(JsonField.ofNullable(nextCursor))
+
+        /** Alias for calling [Builder.nextCursor] with `nextCursor.orElse(null)`. */
+        fun nextCursor(nextCursor: Optional<String>) = nextCursor(nextCursor.getOrNull())
+
+        /**
+         * Sets [Builder.nextCursor] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.nextCursor] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -141,6 +207,8 @@ private constructor(
         fun build(): BroadcastListResponse =
             BroadcastListResponse(
                 checkRequired("data", data).map { it.toImmutable() },
+                hasMore,
+                nextCursor,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -161,6 +229,8 @@ private constructor(
         }
 
         data().forEach { it.validate() }
+        hasMore()
+        nextCursor()
         validated = true
     }
 
@@ -179,7 +249,9 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
+        (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (hasMore.asKnown().isPresent) 1 else 0) +
+            (if (nextCursor.asKnown().isPresent) 1 else 0)
 
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -863,13 +935,17 @@ private constructor(
 
         return other is BroadcastListResponse &&
             data == other.data &&
+            hasMore == other.hasMore &&
+            nextCursor == other.nextCursor &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(data, additionalProperties) }
+    private val hashCode: Int by lazy {
+        Objects.hash(data, hasMore, nextCursor, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "BroadcastListResponse{data=$data, additionalProperties=$additionalProperties}"
+        "BroadcastListResponse{data=$data, hasMore=$hasMore, nextCursor=$nextCursor, additionalProperties=$additionalProperties}"
 }

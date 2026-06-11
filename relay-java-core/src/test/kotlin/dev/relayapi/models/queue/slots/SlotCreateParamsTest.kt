@@ -13,7 +13,7 @@ internal class SlotCreateParamsTest {
             .addSlot(
                 SlotCreateParams.Slot.builder()
                     .dayOfWeek(0L)
-                    .time("73:16")
+                    .time("20:29")
                     .timezone("timezone")
                     .build()
             )
@@ -29,7 +29,7 @@ internal class SlotCreateParamsTest {
                 .addSlot(
                     SlotCreateParams.Slot.builder()
                         .dayOfWeek(0L)
-                        .time("73:16")
+                        .time("20:29")
                         .timezone("timezone")
                         .build()
                 )
@@ -43,7 +43,7 @@ internal class SlotCreateParamsTest {
             .containsExactly(
                 SlotCreateParams.Slot.builder()
                     .dayOfWeek(0L)
-                    .time("73:16")
+                    .time("20:29")
                     .timezone("timezone")
                     .build()
             )
@@ -58,7 +58,7 @@ internal class SlotCreateParamsTest {
                 .addSlot(
                     SlotCreateParams.Slot.builder()
                         .dayOfWeek(0L)
-                        .time("73:16")
+                        .time("20:29")
                         .timezone("timezone")
                         .build()
                 )
@@ -71,7 +71,7 @@ internal class SlotCreateParamsTest {
             .containsExactly(
                 SlotCreateParams.Slot.builder()
                     .dayOfWeek(0L)
-                    .time("73:16")
+                    .time("20:29")
                     .timezone("timezone")
                     .build()
             )

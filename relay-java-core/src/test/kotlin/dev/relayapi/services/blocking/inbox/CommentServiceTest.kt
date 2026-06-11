@@ -3,6 +3,7 @@
 package dev.relayapi.services.blocking.inbox
 
 import dev.relayapi.client.okhttp.RelayOkHttpClient
+import dev.relayapi.models.inbox.comments.CommentDeleteParams
 import dev.relayapi.models.inbox.comments.CommentListParams
 import dev.relayapi.models.inbox.comments.CommentPrivateReplyParams
 import dev.relayapi.models.inbox.comments.CommentReplyParams
@@ -57,7 +58,13 @@ internal class CommentServiceTest {
         val client = RelayOkHttpClient.builder().apiKey("My API Key").build()
         val commentService = client.inbox().comments()
 
-        val comment = commentService.delete("comment_id")
+        val comment =
+            commentService.delete(
+                CommentDeleteParams.builder()
+                    .commentId("comment_id")
+                    .accountId("account_id")
+                    .build()
+            )
 
         comment.validate()
     }

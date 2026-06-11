@@ -76,7 +76,11 @@ internal class BroadcastServiceAsyncTest {
 
         val broadcastsFuture =
             broadcastServiceAsync.list(
-                BroadcastListParams.builder().accountId("account_id").build()
+                BroadcastListParams.builder()
+                    .accountId("account_id")
+                    .cursor("cursor")
+                    .limit(1L)
+                    .build()
             )
 
         val broadcasts = broadcastsFuture.get()

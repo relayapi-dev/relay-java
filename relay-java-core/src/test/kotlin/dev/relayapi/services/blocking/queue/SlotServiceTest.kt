@@ -22,7 +22,7 @@ internal class SlotServiceTest {
                     .addSlot(
                         SlotCreateParams.Slot.builder()
                             .dayOfWeek(0L)
-                            .time("73:16")
+                            .time("20:29")
                             .timezone("timezone")
                             .build()
                     )
@@ -48,7 +48,7 @@ internal class SlotServiceTest {
                     .addSlot(
                         SlotUpdateParams.Slot.builder()
                             .dayOfWeek(0L)
-                            .time("73:16")
+                            .time("20:29")
                             .timezone("timezone")
                             .build()
                     )

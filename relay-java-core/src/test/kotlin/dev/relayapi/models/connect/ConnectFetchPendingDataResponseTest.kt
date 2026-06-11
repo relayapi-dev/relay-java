@@ -5,7 +5,7 @@ package dev.relayapi.models.connect
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import dev.relayapi.core.JsonValue
 import dev.relayapi.core.jsonMapper
-import kotlin.jvm.optionals.getOrNull
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -16,84 +16,68 @@ internal class ConnectFetchPendingDataResponseTest {
         val connectFetchPendingDataResponse =
             ConnectFetchPendingDataResponse.builder()
                 .platform(ConnectFetchPendingDataResponse.Platform.TWITTER)
-                .tempToken("temp_token")
-                .userProfile(
-                    ConnectFetchPendingDataResponse.UserProfile.builder()
+                .status(ConnectFetchPendingDataResponse.Status.SUCCESS)
+                .account(
+                    ConnectFetchPendingDataResponse.Account.builder()
                         .id("id")
                         .avatarUrl("avatar_url")
-                        .name("name")
+                        .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .displayName("display_name")
+                        .metadata(
+                            ConnectFetchPendingDataResponse.Account.Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .platform(ConnectFetchPendingDataResponse.Account.Platform.TWITTER)
+                        .platformAccountId("platform_account_id")
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            ConnectFetchPendingDataResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
-                .addBoard(
-                    ConnectFetchPendingDataResponse.Board.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addLocation(
-                    ConnectFetchPendingDataResponse.Location.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addOrganization(
-                    ConnectFetchPendingDataResponse.Organization.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addPage(
-                    ConnectFetchPendingDataResponse.Page.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addProfile(
-                    ConnectFetchPendingDataResponse.Profile.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
+                .error("error")
+                .errorCode("error_code")
+                .errorDescription("error_description")
+                .errorMessage("error_message")
                 .build()
 
         assertThat(connectFetchPendingDataResponse.platform())
             .isEqualTo(ConnectFetchPendingDataResponse.Platform.TWITTER)
-        assertThat(connectFetchPendingDataResponse.tempToken()).isEqualTo("temp_token")
-        assertThat(connectFetchPendingDataResponse.userProfile())
-            .isEqualTo(
-                ConnectFetchPendingDataResponse.UserProfile.builder()
+        assertThat(connectFetchPendingDataResponse.status())
+            .isEqualTo(ConnectFetchPendingDataResponse.Status.SUCCESS)
+        assertThat(connectFetchPendingDataResponse.account())
+            .contains(
+                ConnectFetchPendingDataResponse.Account.builder()
                     .id("id")
                     .avatarUrl("avatar_url")
-                    .name("name")
+                    .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .displayName("display_name")
+                    .metadata(
+                        ConnectFetchPendingDataResponse.Account.Metadata.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
+                    .platform(ConnectFetchPendingDataResponse.Account.Platform.TWITTER)
+                    .platformAccountId("platform_account_id")
+                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .username("username")
+                    .workspace(
+                        ConnectFetchPendingDataResponse.Account.Workspace.builder()
+                            .id("id")
+                            .name("name")
+                            .build()
+                    )
                     .build()
             )
-        assertThat(connectFetchPendingDataResponse.boards().getOrNull())
-            .containsExactly(
-                ConnectFetchPendingDataResponse.Board.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
-        assertThat(connectFetchPendingDataResponse.locations().getOrNull())
-            .containsExactly(
-                ConnectFetchPendingDataResponse.Location.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
-        assertThat(connectFetchPendingDataResponse.organizations().getOrNull())
-            .containsExactly(
-                ConnectFetchPendingDataResponse.Organization.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
-        assertThat(connectFetchPendingDataResponse.pages().getOrNull())
-            .containsExactly(
-                ConnectFetchPendingDataResponse.Page.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
-        assertThat(connectFetchPendingDataResponse.profiles().getOrNull())
-            .containsExactly(
-                ConnectFetchPendingDataResponse.Profile.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
+        assertThat(connectFetchPendingDataResponse.error()).contains("error")
+        assertThat(connectFetchPendingDataResponse.errorCode()).contains("error_code")
+        assertThat(connectFetchPendingDataResponse.errorDescription()).contains("error_description")
+        assertThat(connectFetchPendingDataResponse.errorMessage()).contains("error_message")
     }
 
     @Test
@@ -102,40 +86,34 @@ internal class ConnectFetchPendingDataResponseTest {
         val connectFetchPendingDataResponse =
             ConnectFetchPendingDataResponse.builder()
                 .platform(ConnectFetchPendingDataResponse.Platform.TWITTER)
-                .tempToken("temp_token")
-                .userProfile(
-                    ConnectFetchPendingDataResponse.UserProfile.builder()
+                .status(ConnectFetchPendingDataResponse.Status.SUCCESS)
+                .account(
+                    ConnectFetchPendingDataResponse.Account.builder()
                         .id("id")
                         .avatarUrl("avatar_url")
-                        .name("name")
+                        .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .displayName("display_name")
+                        .metadata(
+                            ConnectFetchPendingDataResponse.Account.Metadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .platform(ConnectFetchPendingDataResponse.Account.Platform.TWITTER)
+                        .platformAccountId("platform_account_id")
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            ConnectFetchPendingDataResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
-                .addBoard(
-                    ConnectFetchPendingDataResponse.Board.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addLocation(
-                    ConnectFetchPendingDataResponse.Location.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addOrganization(
-                    ConnectFetchPendingDataResponse.Organization.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addPage(
-                    ConnectFetchPendingDataResponse.Page.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .addProfile(
-                    ConnectFetchPendingDataResponse.Profile.builder()
-                        .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
+                .error("error")
+                .errorCode("error_code")
+                .errorDescription("error_description")
+                .errorMessage("error_message")
                 .build()
 
         val roundtrippedConnectFetchPendingDataResponse =

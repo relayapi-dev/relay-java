@@ -14,18 +14,21 @@ import dev.relayapi.core.checkRequired
 import dev.relayapi.errors.RelayInvalidDataException
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 
 class ConnectStartOAuthFlowResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val authUrl: JsonField<String>,
+    private val tempToken: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("auth_url") @ExcludeMissing authUrl: JsonField<String> = JsonMissing.of()
-    ) : this(authUrl, mutableMapOf())
+        @JsonProperty("auth_url") @ExcludeMissing authUrl: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("temp_token") @ExcludeMissing tempToken: JsonField<String> = JsonMissing.of(),
+    ) : this(authUrl, tempToken, mutableMapOf())
 
     /**
      * URL to redirect the user for OAuth authorization
@@ -36,11 +39,27 @@ private constructor(
     fun authUrl(): String = authUrl.getRequired("auth_url")
 
     /**
+     * Headless mode only: one-time token to poll GET /connect/pending-data for the OAuth result
+     * once the user finishes provider authorization
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun tempToken(): Optional<String> = tempToken.getOptional("temp_token")
+
+    /**
      * Returns the raw JSON value of [authUrl].
      *
      * Unlike [authUrl], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("auth_url") @ExcludeMissing fun _authUrl(): JsonField<String> = authUrl
+
+    /**
+     * Returns the raw JSON value of [tempToken].
+     *
+     * Unlike [tempToken], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("temp_token") @ExcludeMissing fun _tempToken(): JsonField<String> = tempToken
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -72,11 +91,13 @@ private constructor(
     class Builder internal constructor() {
 
         private var authUrl: JsonField<String>? = null
+        private var tempToken: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(connectStartOAuthFlowResponse: ConnectStartOAuthFlowResponse) = apply {
             authUrl = connectStartOAuthFlowResponse.authUrl
+            tempToken = connectStartOAuthFlowResponse.tempToken
             additionalProperties = connectStartOAuthFlowResponse.additionalProperties.toMutableMap()
         }
 
@@ -90,6 +111,21 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun authUrl(authUrl: JsonField<String>) = apply { this.authUrl = authUrl }
+
+        /**
+         * Headless mode only: one-time token to poll GET /connect/pending-data for the OAuth result
+         * once the user finishes provider authorization
+         */
+        fun tempToken(tempToken: String) = tempToken(JsonField.of(tempToken))
+
+        /**
+         * Sets [Builder.tempToken] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.tempToken] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun tempToken(tempToken: JsonField<String>) = apply { this.tempToken = tempToken }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -125,6 +161,7 @@ private constructor(
         fun build(): ConnectStartOAuthFlowResponse =
             ConnectStartOAuthFlowResponse(
                 checkRequired("authUrl", authUrl),
+                tempToken,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -145,6 +182,7 @@ private constructor(
         }
 
         authUrl()
+        tempToken()
         validated = true
     }
 
@@ -161,7 +199,9 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = (if (authUrl.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (authUrl.asKnown().isPresent) 1 else 0) + (if (tempToken.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -170,13 +210,14 @@ private constructor(
 
         return other is ConnectStartOAuthFlowResponse &&
             authUrl == other.authUrl &&
+            tempToken == other.tempToken &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(authUrl, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(authUrl, tempToken, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ConnectStartOAuthFlowResponse{authUrl=$authUrl, additionalProperties=$additionalProperties}"
+        "ConnectStartOAuthFlowResponse{authUrl=$authUrl, tempToken=$tempToken, additionalProperties=$additionalProperties}"
 }

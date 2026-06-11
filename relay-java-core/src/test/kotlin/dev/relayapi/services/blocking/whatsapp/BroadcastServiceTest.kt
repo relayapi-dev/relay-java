@@ -73,7 +73,13 @@ internal class BroadcastServiceTest {
         val broadcastService = client.whatsapp().broadcasts()
 
         val broadcasts =
-            broadcastService.list(BroadcastListParams.builder().accountId("account_id").build())
+            broadcastService.list(
+                BroadcastListParams.builder()
+                    .accountId("account_id")
+                    .cursor("cursor")
+                    .limit(1L)
+                    .build()
+            )
 
         broadcasts.validate()
     }

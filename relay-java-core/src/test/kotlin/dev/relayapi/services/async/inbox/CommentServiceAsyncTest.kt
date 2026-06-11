@@ -3,6 +3,7 @@
 package dev.relayapi.services.async.inbox
 
 import dev.relayapi.client.okhttp.RelayOkHttpClientAsync
+import dev.relayapi.models.inbox.comments.CommentDeleteParams
 import dev.relayapi.models.inbox.comments.CommentListParams
 import dev.relayapi.models.inbox.comments.CommentPrivateReplyParams
 import dev.relayapi.models.inbox.comments.CommentReplyParams
@@ -59,7 +60,13 @@ internal class CommentServiceAsyncTest {
         val client = RelayOkHttpClientAsync.builder().apiKey("My API Key").build()
         val commentServiceAsync = client.inbox().comments()
 
-        val commentFuture = commentServiceAsync.delete("comment_id")
+        val commentFuture =
+            commentServiceAsync.delete(
+                CommentDeleteParams.builder()
+                    .commentId("comment_id")
+                    .accountId("account_id")
+                    .build()
+            )
 
         val comment = commentFuture.get()
         comment.validate()
