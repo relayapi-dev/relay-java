@@ -40,6 +40,7 @@ internal class AccountListResponseTest {
                 )
                 .hasMore(true)
                 .nextCursor("next_cursor")
+                .total(0.0)
                 .build()
 
         assertThat(accountListResponse.data())
@@ -65,6 +66,7 @@ internal class AccountListResponseTest {
             )
         assertThat(accountListResponse.hasMore()).isEqualTo(true)
         assertThat(accountListResponse.nextCursor()).contains("next_cursor")
+        assertThat(accountListResponse.total()).isEqualTo(0.0)
     }
 
     @Test
@@ -97,6 +99,7 @@ internal class AccountListResponseTest {
                 )
                 .hasMore(true)
                 .nextCursor("next_cursor")
+                .total(0.0)
                 .build()
 
         val roundtrippedAccountListResponse =
