@@ -15,6 +15,7 @@ internal class ConnectionListLogsParamsTest {
             .cursor("cursor")
             .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .limit(1L)
+            .offset(0L)
             .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
             .build()
     }
@@ -26,6 +27,7 @@ internal class ConnectionListLogsParamsTest {
                 .cursor("cursor")
                 .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .limit(1L)
+                .offset(0L)
                 .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
@@ -37,6 +39,7 @@ internal class ConnectionListLogsParamsTest {
                     .put("cursor", "cursor")
                     .put("from", "2019-12-27T18:11:19.117Z")
                     .put("limit", "1")
+                    .put("offset", "0")
                     .put("to", "2019-12-27T18:11:19.117Z")
                     .build()
             )

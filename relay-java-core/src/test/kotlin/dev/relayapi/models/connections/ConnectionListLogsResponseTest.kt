@@ -26,6 +26,7 @@ internal class ConnectionListLogsResponseTest {
                 )
                 .hasMore(true)
                 .nextCursor("next_cursor")
+                .total(0.0)
                 .build()
 
         assertThat(connectionListLogsResponse.data())
@@ -41,6 +42,7 @@ internal class ConnectionListLogsResponseTest {
             )
         assertThat(connectionListLogsResponse.hasMore()).isEqualTo(true)
         assertThat(connectionListLogsResponse.nextCursor()).contains("next_cursor")
+        assertThat(connectionListLogsResponse.total()).isEqualTo(0.0)
     }
 
     @Test
@@ -60,6 +62,7 @@ internal class ConnectionListLogsResponseTest {
                 )
                 .hasMore(true)
                 .nextCursor("next_cursor")
+                .total(0.0)
                 .build()
 
         val roundtrippedConnectionListLogsResponse =
