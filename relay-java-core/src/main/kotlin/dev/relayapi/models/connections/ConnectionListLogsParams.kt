@@ -17,6 +17,7 @@ private constructor(
     private val cursor: String?,
     private val from: OffsetDateTime?,
     private val limit: Long?,
+    private val offset: Long?,
     private val to: OffsetDateTime?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -30,6 +31,12 @@ private constructor(
 
     /** Number of items per page */
     fun limit(): Optional<Long> = Optional.ofNullable(limit)
+
+    /**
+     * Number of items to skip for offset-based pagination. Enables random access to any page; takes
+     * precedence over `cursor` when provided.
+     */
+    fun offset(): Optional<Long> = Optional.ofNullable(offset)
 
     /** Filter: end date (ISO 8601) */
     fun to(): Optional<OffsetDateTime> = Optional.ofNullable(to)
@@ -56,6 +63,7 @@ private constructor(
         private var cursor: String? = null
         private var from: OffsetDateTime? = null
         private var limit: Long? = null
+        private var offset: Long? = null
         private var to: OffsetDateTime? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
@@ -65,6 +73,7 @@ private constructor(
             cursor = connectionListLogsParams.cursor
             from = connectionListLogsParams.from
             limit = connectionListLogsParams.limit
+            offset = connectionListLogsParams.offset
             to = connectionListLogsParams.to
             additionalHeaders = connectionListLogsParams.additionalHeaders.toBuilder()
             additionalQueryParams = connectionListLogsParams.additionalQueryParams.toBuilder()
@@ -94,6 +103,22 @@ private constructor(
 
         /** Alias for calling [Builder.limit] with `limit.orElse(null)`. */
         fun limit(limit: Optional<Long>) = limit(limit.getOrNull())
+
+        /**
+         * Number of items to skip for offset-based pagination. Enables random access to any page;
+         * takes precedence over `cursor` when provided.
+         */
+        fun offset(offset: Long?) = apply { this.offset = offset }
+
+        /**
+         * Alias for [Builder.offset].
+         *
+         * This unboxed primitive overload exists for backwards compatibility.
+         */
+        fun offset(offset: Long) = offset(offset as Long?)
+
+        /** Alias for calling [Builder.offset] with `offset.orElse(null)`. */
+        fun offset(offset: Optional<Long>) = offset(offset.getOrNull())
 
         /** Filter: end date (ISO 8601) */
         fun to(to: OffsetDateTime?) = apply { this.to = to }
@@ -209,6 +234,7 @@ private constructor(
                 cursor,
                 from,
                 limit,
+                offset,
                 to,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -223,6 +249,7 @@ private constructor(
                 cursor?.let { put("cursor", it) }
                 from?.let { put("from", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 limit?.let { put("limit", it.toString()) }
+                offset?.let { put("offset", it.toString()) }
                 to?.let { put("to", DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(it)) }
                 putAll(additionalQueryParams)
             }
@@ -237,14 +264,15 @@ private constructor(
             cursor == other.cursor &&
             from == other.from &&
             limit == other.limit &&
+            offset == other.offset &&
             to == other.to &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(cursor, from, limit, to, additionalHeaders, additionalQueryParams)
+        Objects.hash(cursor, from, limit, offset, to, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "ConnectionListLogsParams{cursor=$cursor, from=$from, limit=$limit, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "ConnectionListLogsParams{cursor=$cursor, from=$from, limit=$limit, offset=$offset, to=$to, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
