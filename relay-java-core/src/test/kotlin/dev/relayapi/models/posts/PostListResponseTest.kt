@@ -23,6 +23,7 @@ internal class PostListResponseTest {
                         .addMedia(
                             PostListResponse.Data.Media.builder()
                                 .url("https://example.com")
+                                .thumbnail("thumbnail")
                                 .type(PostListResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
@@ -116,6 +117,7 @@ internal class PostListResponseTest {
                     .addMedia(
                         PostListResponse.Data.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostListResponse.Data.Media.Type.IMAGE)
                             .build()
                     )
@@ -213,6 +215,7 @@ internal class PostListResponseTest {
                         .addMedia(
                             PostListResponse.Data.Media.builder()
                                 .url("https://example.com")
+                                .thumbnail("thumbnail")
                                 .type(PostListResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )

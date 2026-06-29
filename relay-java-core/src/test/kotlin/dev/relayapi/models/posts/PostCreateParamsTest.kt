@@ -28,6 +28,7 @@ internal class PostCreateParamsTest {
             .addMedia(
                 PostCreateParams.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostCreateParams.Media.Type.IMAGE)
                     .build()
             )
@@ -79,6 +80,7 @@ internal class PostCreateParamsTest {
                 .addMedia(
                     PostCreateParams.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostCreateParams.Media.Type.IMAGE)
                         .build()
                 )
@@ -129,6 +131,7 @@ internal class PostCreateParamsTest {
             .containsExactly(
                 PostCreateParams.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostCreateParams.Media.Type.IMAGE)
                     .build()
             )

@@ -23,6 +23,7 @@ internal class PostBulkCreateResponseTest {
                         .addMedia(
                             PostBulkCreateResponse.Data.Media.builder()
                                 .url("https://example.com")
+                                .thumbnail("thumbnail")
                                 .type(PostBulkCreateResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
@@ -121,6 +122,7 @@ internal class PostBulkCreateResponseTest {
                     .addMedia(
                         PostBulkCreateResponse.Data.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostBulkCreateResponse.Data.Media.Type.IMAGE)
                             .build()
                     )
@@ -224,6 +226,7 @@ internal class PostBulkCreateResponseTest {
                         .addMedia(
                             PostBulkCreateResponse.Data.Media.builder()
                                 .url("https://example.com")
+                                .thumbnail("thumbnail")
                                 .type(PostBulkCreateResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )

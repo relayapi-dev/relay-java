@@ -39,6 +39,7 @@ internal class PostServiceTest {
                     .addMedia(
                         PostCreateParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostCreateParams.Media.Type.IMAGE)
                             .build()
                     )
@@ -99,6 +100,7 @@ internal class PostServiceTest {
                     .addMedia(
                         PostUpdateParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostUpdateParams.Media.Type.IMAGE)
                             .build()
                     )
@@ -190,6 +192,7 @@ internal class PostServiceTest {
                             .addMedia(
                                 PostBulkCreateParams.Post.Media.builder()
                                     .url("https://example.com")
+                                    .thumbnail("thumbnail")
                                     .type(PostBulkCreateParams.Post.Media.Type.IMAGE)
                                     .build()
                             )

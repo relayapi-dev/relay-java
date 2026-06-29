@@ -22,6 +22,7 @@ internal class PostUpdateResponseTest {
                 .addMedia(
                     PostUpdateResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostUpdateResponse.Media.Type.IMAGE)
                         .build()
                 )
@@ -110,6 +111,7 @@ internal class PostUpdateResponseTest {
             .containsExactly(
                 PostUpdateResponse.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostUpdateResponse.Media.Type.IMAGE)
                     .build()
             )
@@ -206,6 +208,7 @@ internal class PostUpdateResponseTest {
                 .addMedia(
                     PostUpdateResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostUpdateResponse.Media.Type.IMAGE)
                         .build()
                 )

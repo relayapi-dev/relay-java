@@ -22,6 +22,7 @@ internal class PostRetryResponseTest {
                 .addMedia(
                     PostRetryResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostRetryResponse.Media.Type.IMAGE)
                         .build()
                 )
@@ -110,6 +111,7 @@ internal class PostRetryResponseTest {
             .containsExactly(
                 PostRetryResponse.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostRetryResponse.Media.Type.IMAGE)
                     .build()
             )
@@ -206,6 +208,7 @@ internal class PostRetryResponseTest {
                 .addMedia(
                     PostRetryResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostRetryResponse.Media.Type.IMAGE)
                         .build()
                 )
