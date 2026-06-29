@@ -85,6 +85,7 @@ internal class ValidateServiceAsyncTest {
                     .addMedia(
                         ValidateValidatePostParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(ValidateValidatePostParams.Media.Type.IMAGE)
                             .build()
                     )

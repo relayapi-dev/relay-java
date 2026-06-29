@@ -22,6 +22,7 @@ internal class PostRetrieveResponseTest {
                 .addMedia(
                     PostRetrieveResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostRetrieveResponse.Media.Type.IMAGE)
                         .build()
                 )
@@ -110,6 +111,7 @@ internal class PostRetrieveResponseTest {
             .containsExactly(
                 PostRetrieveResponse.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostRetrieveResponse.Media.Type.IMAGE)
                     .build()
             )
@@ -206,6 +208,7 @@ internal class PostRetrieveResponseTest {
                 .addMedia(
                     PostRetrieveResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostRetrieveResponse.Media.Type.IMAGE)
                         .build()
                 )

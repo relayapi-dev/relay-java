@@ -78,6 +78,7 @@ internal class ProGuardCompatibilityTest {
                 .addMedia(
                     PostCreateResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostCreateResponse.Media.Type.IMAGE)
                         .build()
                 )

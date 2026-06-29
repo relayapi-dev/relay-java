@@ -82,6 +82,7 @@ internal class ValidateServiceTest {
                     .addMedia(
                         ValidateValidatePostParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(ValidateValidatePostParams.Media.Type.IMAGE)
                             .build()
                     )

@@ -29,6 +29,7 @@ internal class PostBulkCreateParamsTest {
                     .addMedia(
                         PostBulkCreateParams.Post.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostBulkCreateParams.Post.Media.Type.IMAGE)
                             .build()
                     )
@@ -86,6 +87,7 @@ internal class PostBulkCreateParamsTest {
                         .addMedia(
                             PostBulkCreateParams.Post.Media.builder()
                                 .url("https://example.com")
+                                .thumbnail("thumbnail")
                                 .type(PostBulkCreateParams.Post.Media.Type.IMAGE)
                                 .build()
                         )
@@ -139,6 +141,7 @@ internal class PostBulkCreateParamsTest {
                     .addMedia(
                         PostBulkCreateParams.Post.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostBulkCreateParams.Post.Media.Type.IMAGE)
                             .build()
                     )

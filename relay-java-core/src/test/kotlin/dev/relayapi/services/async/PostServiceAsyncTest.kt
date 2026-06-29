@@ -39,6 +39,7 @@ internal class PostServiceAsyncTest {
                     .addMedia(
                         PostCreateParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostCreateParams.Media.Type.IMAGE)
                             .build()
                     )
@@ -101,6 +102,7 @@ internal class PostServiceAsyncTest {
                     .addMedia(
                         PostUpdateParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostUpdateParams.Media.Type.IMAGE)
                             .build()
                     )
@@ -196,6 +198,7 @@ internal class PostServiceAsyncTest {
                             .addMedia(
                                 PostBulkCreateParams.Post.Media.builder()
                                     .url("https://example.com")
+                                    .thumbnail("thumbnail")
                                     .type(PostBulkCreateParams.Post.Media.Type.IMAGE)
                                     .build()
                             )

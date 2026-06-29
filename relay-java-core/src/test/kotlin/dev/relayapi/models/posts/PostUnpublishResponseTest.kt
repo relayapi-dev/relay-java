@@ -22,6 +22,7 @@ internal class PostUnpublishResponseTest {
                 .addMedia(
                     PostUnpublishResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostUnpublishResponse.Media.Type.IMAGE)
                         .build()
                 )
@@ -110,6 +111,7 @@ internal class PostUnpublishResponseTest {
             .containsExactly(
                 PostUnpublishResponse.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostUnpublishResponse.Media.Type.IMAGE)
                     .build()
             )
@@ -206,6 +208,7 @@ internal class PostUnpublishResponseTest {
                 .addMedia(
                     PostUnpublishResponse.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostUnpublishResponse.Media.Type.IMAGE)
                         .build()
                 )

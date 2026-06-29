@@ -28,6 +28,7 @@ internal class ValidateValidatePostParamsTest {
             .addMedia(
                 ValidateValidatePostParams.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(ValidateValidatePostParams.Media.Type.IMAGE)
                     .build()
             )
@@ -79,6 +80,7 @@ internal class ValidateValidatePostParamsTest {
                 .addMedia(
                     ValidateValidatePostParams.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(ValidateValidatePostParams.Media.Type.IMAGE)
                         .build()
                 )
@@ -129,6 +131,7 @@ internal class ValidateValidatePostParamsTest {
             .containsExactly(
                 ValidateValidatePostParams.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(ValidateValidatePostParams.Media.Type.IMAGE)
                     .build()
             )
