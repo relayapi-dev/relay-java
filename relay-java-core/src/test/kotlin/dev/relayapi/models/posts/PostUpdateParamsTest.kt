@@ -18,6 +18,7 @@ internal class PostUpdateParamsTest {
             .addMedia(
                 PostUpdateParams.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostUpdateParams.Media.Type.IMAGE)
                     .build()
             )
@@ -62,6 +63,7 @@ internal class PostUpdateParamsTest {
                 .addMedia(
                     PostUpdateParams.Media.builder()
                         .url("https://example.com")
+                        .thumbnail("thumbnail")
                         .type(PostUpdateParams.Media.Type.IMAGE)
                         .build()
                 )
@@ -94,6 +96,7 @@ internal class PostUpdateParamsTest {
             .containsExactly(
                 PostUpdateParams.Media.builder()
                     .url("https://example.com")
+                    .thumbnail("thumbnail")
                     .type(PostUpdateParams.Media.Type.IMAGE)
                     .build()
             )

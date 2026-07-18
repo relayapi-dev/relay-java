@@ -21,12 +21,6 @@ internal class ConnectCompleteOAuthCallbackResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            ConnectCompleteOAuthCallbackResponse.Account.Group.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
                         .metadata(
                             ConnectCompleteOAuthCallbackResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -36,6 +30,12 @@ internal class ConnectCompleteOAuthCallbackResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            ConnectCompleteOAuthCallbackResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -47,12 +47,6 @@ internal class ConnectCompleteOAuthCallbackResponseTest {
                     .avatarUrl("avatar_url")
                     .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .displayName("display_name")
-                    .group(
-                        ConnectCompleteOAuthCallbackResponse.Account.Group.builder()
-                            .id("id")
-                            .name("name")
-                            .build()
-                    )
                     .metadata(
                         ConnectCompleteOAuthCallbackResponse.Account.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -62,6 +56,12 @@ internal class ConnectCompleteOAuthCallbackResponseTest {
                     .platformAccountId("platform_account_id")
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .username("username")
+                    .workspace(
+                        ConnectCompleteOAuthCallbackResponse.Account.Workspace.builder()
+                            .id("id")
+                            .name("name")
+                            .build()
+                    )
                     .build()
             )
     }
@@ -77,12 +77,6 @@ internal class ConnectCompleteOAuthCallbackResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            ConnectCompleteOAuthCallbackResponse.Account.Group.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
                         .metadata(
                             ConnectCompleteOAuthCallbackResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -92,6 +86,12 @@ internal class ConnectCompleteOAuthCallbackResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            ConnectCompleteOAuthCallbackResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()

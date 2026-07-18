@@ -27,6 +27,7 @@ private constructor(
     private val data: JsonField<List<Data>>,
     private val hasMore: JsonField<Boolean>,
     private val nextCursor: JsonField<String>,
+    private val total: JsonField<Double>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -37,7 +38,8 @@ private constructor(
         @JsonProperty("next_cursor")
         @ExcludeMissing
         nextCursor: JsonField<String> = JsonMissing.of(),
-    ) : this(data, hasMore, nextCursor, mutableMapOf())
+        @JsonProperty("total") @ExcludeMissing total: JsonField<Double> = JsonMissing.of(),
+    ) : this(data, hasMore, nextCursor, total, mutableMapOf())
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
@@ -62,6 +64,14 @@ private constructor(
     fun nextCursor(): Optional<String> = nextCursor.getOptional("next_cursor")
 
     /**
+     * Total accounts matching the filters
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
+     *   missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun total(): Double = total.getRequired("total")
+
+    /**
      * Returns the raw JSON value of [data].
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
@@ -81,6 +91,13 @@ private constructor(
      * Unlike [nextCursor], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("next_cursor") @ExcludeMissing fun _nextCursor(): JsonField<String> = nextCursor
+
+    /**
+     * Returns the raw JSON value of [total].
+     *
+     * Unlike [total], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("total") @ExcludeMissing fun _total(): JsonField<Double> = total
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -104,6 +121,7 @@ private constructor(
          * .data()
          * .hasMore()
          * .nextCursor()
+         * .total()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -115,6 +133,7 @@ private constructor(
         private var data: JsonField<MutableList<Data>>? = null
         private var hasMore: JsonField<Boolean>? = null
         private var nextCursor: JsonField<String>? = null
+        private var total: JsonField<Double>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -122,6 +141,7 @@ private constructor(
             data = accountListResponse.data.map { it.toMutableList() }
             hasMore = accountListResponse.hasMore
             nextCursor = accountListResponse.nextCursor
+            total = accountListResponse.total
             additionalProperties = accountListResponse.additionalProperties.toMutableMap()
         }
 
@@ -175,6 +195,17 @@ private constructor(
          */
         fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
+        /** Total accounts matching the filters */
+        fun total(total: Double) = total(JsonField.of(total))
+
+        /**
+         * Sets [Builder.total] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.total] with a well-typed [Double] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun total(total: JsonField<Double>) = apply { this.total = total }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -204,6 +235,7 @@ private constructor(
          * .data()
          * .hasMore()
          * .nextCursor()
+         * .total()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -213,12 +245,21 @@ private constructor(
                 checkRequired("data", data).map { it.toImmutable() },
                 checkRequired("hasMore", hasMore),
                 checkRequired("nextCursor", nextCursor),
+                checkRequired("total", total),
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws RelayInvalidDataException if any value type in this object doesn't match its expected
+     *   type.
+     */
     fun validate(): AccountListResponse = apply {
         if (validated) {
             return@apply
@@ -227,6 +268,7 @@ private constructor(
         data().forEach { it.validate() }
         hasMore()
         nextCursor()
+        total()
         validated = true
     }
 
@@ -247,7 +289,8 @@ private constructor(
     internal fun validity(): Int =
         (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (hasMore.asKnown().isPresent) 1 else 0) +
-            (if (nextCursor.asKnown().isPresent) 1 else 0)
+            (if (nextCursor.asKnown().isPresent) 1 else 0) +
+            (if (total.asKnown().isPresent) 1 else 0)
 
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -256,12 +299,12 @@ private constructor(
         private val avatarUrl: JsonField<String>,
         private val connectedAt: JsonField<OffsetDateTime>,
         private val displayName: JsonField<String>,
-        private val group: JsonField<Group>,
         private val metadata: JsonField<Metadata>,
         private val platform: JsonField<Platform>,
         private val platformAccountId: JsonField<String>,
         private val updatedAt: JsonField<OffsetDateTime>,
         private val username: JsonField<String>,
+        private val workspace: JsonField<Workspace>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -277,7 +320,6 @@ private constructor(
             @JsonProperty("display_name")
             @ExcludeMissing
             displayName: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("group") @ExcludeMissing group: JsonField<Group> = JsonMissing.of(),
             @JsonProperty("metadata")
             @ExcludeMissing
             metadata: JsonField<Metadata> = JsonMissing.of(),
@@ -290,18 +332,23 @@ private constructor(
             @JsonProperty("updated_at")
             @ExcludeMissing
             updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-            @JsonProperty("username") @ExcludeMissing username: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("username")
+            @ExcludeMissing
+            username: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("workspace")
+            @ExcludeMissing
+            workspace: JsonField<Workspace> = JsonMissing.of(),
         ) : this(
             id,
             avatarUrl,
             connectedAt,
             displayName,
-            group,
             metadata,
             platform,
             platformAccountId,
             updatedAt,
             username,
+            workspace,
             mutableMapOf(),
         )
 
@@ -330,14 +377,6 @@ private constructor(
          *   server responded with an unexpected value).
          */
         fun displayName(): Optional<String> = displayName.getOptional("display_name")
-
-        /**
-         * Account group
-         *
-         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
-         *   server responded with an unexpected value).
-         */
-        fun group(): Optional<Group> = group.getOptional("group")
 
         /**
          * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -370,6 +409,14 @@ private constructor(
         fun username(): Optional<String> = username.getOptional("username")
 
         /**
+         * Account workspace
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun workspace(): Optional<Workspace> = workspace.getOptional("workspace")
+
+        /**
          * Returns the raw JSON value of [id].
          *
          * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -400,13 +447,6 @@ private constructor(
         @JsonProperty("display_name")
         @ExcludeMissing
         fun _displayName(): JsonField<String> = displayName
-
-        /**
-         * Returns the raw JSON value of [group].
-         *
-         * Unlike [group], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("group") @ExcludeMissing fun _group(): JsonField<Group> = group
 
         /**
          * Returns the raw JSON value of [metadata].
@@ -448,6 +488,15 @@ private constructor(
          */
         @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
 
+        /**
+         * Returns the raw JSON value of [workspace].
+         *
+         * Unlike [workspace], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("workspace")
+        @ExcludeMissing
+        fun _workspace(): JsonField<Workspace> = workspace
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -471,12 +520,12 @@ private constructor(
              * .avatarUrl()
              * .connectedAt()
              * .displayName()
-             * .group()
              * .metadata()
              * .platform()
              * .platformAccountId()
              * .updatedAt()
              * .username()
+             * .workspace()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -489,12 +538,12 @@ private constructor(
             private var avatarUrl: JsonField<String>? = null
             private var connectedAt: JsonField<OffsetDateTime>? = null
             private var displayName: JsonField<String>? = null
-            private var group: JsonField<Group>? = null
             private var metadata: JsonField<Metadata>? = null
             private var platform: JsonField<Platform>? = null
             private var platformAccountId: JsonField<String>? = null
             private var updatedAt: JsonField<OffsetDateTime>? = null
             private var username: JsonField<String>? = null
+            private var workspace: JsonField<Workspace>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -503,12 +552,12 @@ private constructor(
                 avatarUrl = data.avatarUrl
                 connectedAt = data.connectedAt
                 displayName = data.displayName
-                group = data.group
                 metadata = data.metadata
                 platform = data.platform
                 platformAccountId = data.platformAccountId
                 updatedAt = data.updatedAt
                 username = data.username
+                workspace = data.workspace
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
@@ -566,21 +615,6 @@ private constructor(
             fun displayName(displayName: JsonField<String>) = apply {
                 this.displayName = displayName
             }
-
-            /** Account group */
-            fun group(group: Group?) = group(JsonField.ofNullable(group))
-
-            /** Alias for calling [Builder.group] with `group.orElse(null)`. */
-            fun group(group: Optional<Group>) = group(group.getOrNull())
-
-            /**
-             * Sets [Builder.group] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.group] with a well-typed [Group] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun group(group: JsonField<Group>) = apply { this.group = group }
 
             fun metadata(metadata: Metadata?) = metadata(JsonField.ofNullable(metadata))
 
@@ -648,6 +682,21 @@ private constructor(
              */
             fun username(username: JsonField<String>) = apply { this.username = username }
 
+            /** Account workspace */
+            fun workspace(workspace: Workspace?) = workspace(JsonField.ofNullable(workspace))
+
+            /** Alias for calling [Builder.workspace] with `workspace.orElse(null)`. */
+            fun workspace(workspace: Optional<Workspace>) = workspace(workspace.getOrNull())
+
+            /**
+             * Sets [Builder.workspace] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.workspace] with a well-typed [Workspace] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun workspace(workspace: JsonField<Workspace>) = apply { this.workspace = workspace }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -678,12 +727,12 @@ private constructor(
              * .avatarUrl()
              * .connectedAt()
              * .displayName()
-             * .group()
              * .metadata()
              * .platform()
              * .platformAccountId()
              * .updatedAt()
              * .username()
+             * .workspace()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
@@ -694,18 +743,27 @@ private constructor(
                     checkRequired("avatarUrl", avatarUrl),
                     checkRequired("connectedAt", connectedAt),
                     checkRequired("displayName", displayName),
-                    checkRequired("group", group),
                     checkRequired("metadata", metadata),
                     checkRequired("platform", platform),
                     checkRequired("platformAccountId", platformAccountId),
                     checkRequired("updatedAt", updatedAt),
                     checkRequired("username", username),
+                    checkRequired("workspace", workspace),
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Data = apply {
             if (validated) {
                 return@apply
@@ -715,12 +773,12 @@ private constructor(
             avatarUrl()
             connectedAt()
             displayName()
-            group().ifPresent { it.validate() }
             metadata().ifPresent { it.validate() }
             platform().validate()
             platformAccountId()
             updatedAt()
             username()
+            workspace().ifPresent { it.validate() }
             validated = true
         }
 
@@ -744,209 +802,12 @@ private constructor(
                 (if (avatarUrl.asKnown().isPresent) 1 else 0) +
                 (if (connectedAt.asKnown().isPresent) 1 else 0) +
                 (if (displayName.asKnown().isPresent) 1 else 0) +
-                (group.asKnown().getOrNull()?.validity() ?: 0) +
                 (metadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (platform.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (platformAccountId.asKnown().isPresent) 1 else 0) +
                 (if (updatedAt.asKnown().isPresent) 1 else 0) +
-                (if (username.asKnown().isPresent) 1 else 0)
-
-        /** Account group */
-        class Group
-        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-        private constructor(
-            private val id: JsonField<String>,
-            private val name: JsonField<String>,
-            private val additionalProperties: MutableMap<String, JsonValue>,
-        ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            ) : this(id, name, mutableMapOf())
-
-            /**
-             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun id(): String = id.getRequired("id")
-
-            /**
-             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun name(): String = name.getRequired("name")
-
-            /**
-             * Returns the raw JSON value of [id].
-             *
-             * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-            /**
-             * Returns the raw JSON value of [name].
-             *
-             * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-            @JsonAnySetter
-            private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
-            }
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of [Group].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .id()
-                 * .name()
-                 * ```
-                 */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [Group]. */
-            class Builder internal constructor() {
-
-                private var id: JsonField<String>? = null
-                private var name: JsonField<String>? = null
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(group: Group) = apply {
-                    id = group.id
-                    name = group.name
-                    additionalProperties = group.additionalProperties.toMutableMap()
-                }
-
-                fun id(id: String) = id(JsonField.of(id))
-
-                /**
-                 * Sets [Builder.id] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.id] with a well-typed [String] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
-                fun id(id: JsonField<String>) = apply { this.id = id }
-
-                fun name(name: String) = name(JsonField.of(name))
-
-                /**
-                 * Sets [Builder.name] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.name] with a well-typed [String] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
-                fun name(name: JsonField<String>) = apply { this.name = name }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [Group].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .id()
-                 * .name()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
-                 */
-                fun build(): Group =
-                    Group(
-                        checkRequired("id", id),
-                        checkRequired("name", name),
-                        additionalProperties.toMutableMap(),
-                    )
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): Group = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                id()
-                name()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: RelayInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Group &&
-                    id == other.id &&
-                    name == other.name &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy { Objects.hash(id, name, additionalProperties) }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "Group{id=$id, name=$name, additionalProperties=$additionalProperties}"
-        }
+                (if (username.asKnown().isPresent) 1 else 0) +
+                (workspace.asKnown().getOrNull()?.validity() ?: 0)
 
         class Metadata
         @JsonCreator
@@ -1009,6 +870,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Metadata = apply {
                 if (validated) {
                     return@apply
@@ -1256,6 +1127,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Platform = apply {
                 if (validated) {
                     return@apply
@@ -1294,6 +1175,213 @@ private constructor(
             override fun toString() = value.toString()
         }
 
+        /** Account workspace */
+        class Workspace
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+        private constructor(
+            private val id: JsonField<String>,
+            private val name: JsonField<String>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            ) : this(id, name, mutableMapOf())
+
+            /**
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun id(): String = id.getRequired("id")
+
+            /**
+             * @throws RelayInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun name(): String = name.getRequired("name")
+
+            /**
+             * Returns the raw JSON value of [id].
+             *
+             * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+            /**
+             * Returns the raw JSON value of [name].
+             *
+             * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [Workspace].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * .name()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [Workspace]. */
+            class Builder internal constructor() {
+
+                private var id: JsonField<String>? = null
+                private var name: JsonField<String>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(workspace: Workspace) = apply {
+                    id = workspace.id
+                    name = workspace.name
+                    additionalProperties = workspace.additionalProperties.toMutableMap()
+                }
+
+                fun id(id: String) = id(JsonField.of(id))
+
+                /**
+                 * Sets [Builder.id] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.id] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun id(id: JsonField<String>) = apply { this.id = id }
+
+                fun name(name: String) = name(JsonField.of(name))
+
+                /**
+                 * Sets [Builder.name] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.name] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun name(name: JsonField<String>) = apply { this.name = name }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [Workspace].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * .name()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): Workspace =
+                    Workspace(
+                        checkRequired("id", id),
+                        checkRequired("name", name),
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
+            fun validate(): Workspace = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                id()
+                name()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: RelayInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Workspace &&
+                    id == other.id &&
+                    name == other.name &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(id, name, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "Workspace{id=$id, name=$name, additionalProperties=$additionalProperties}"
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -1304,12 +1392,12 @@ private constructor(
                 avatarUrl == other.avatarUrl &&
                 connectedAt == other.connectedAt &&
                 displayName == other.displayName &&
-                group == other.group &&
                 metadata == other.metadata &&
                 platform == other.platform &&
                 platformAccountId == other.platformAccountId &&
                 updatedAt == other.updatedAt &&
                 username == other.username &&
+                workspace == other.workspace &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1319,12 +1407,12 @@ private constructor(
                 avatarUrl,
                 connectedAt,
                 displayName,
-                group,
                 metadata,
                 platform,
                 platformAccountId,
                 updatedAt,
                 username,
+                workspace,
                 additionalProperties,
             )
         }
@@ -1332,7 +1420,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{id=$id, avatarUrl=$avatarUrl, connectedAt=$connectedAt, displayName=$displayName, group=$group, metadata=$metadata, platform=$platform, platformAccountId=$platformAccountId, updatedAt=$updatedAt, username=$username, additionalProperties=$additionalProperties}"
+            "Data{id=$id, avatarUrl=$avatarUrl, connectedAt=$connectedAt, displayName=$displayName, metadata=$metadata, platform=$platform, platformAccountId=$platformAccountId, updatedAt=$updatedAt, username=$username, workspace=$workspace, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -1344,15 +1432,16 @@ private constructor(
             data == other.data &&
             hasMore == other.hasMore &&
             nextCursor == other.nextCursor &&
+            total == other.total &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(data, hasMore, nextCursor, additionalProperties)
+        Objects.hash(data, hasMore, nextCursor, total, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AccountListResponse{data=$data, hasMore=$hasMore, nextCursor=$nextCursor, additionalProperties=$additionalProperties}"
+        "AccountListResponse{data=$data, hasMore=$hasMore, nextCursor=$nextCursor, total=$total, additionalProperties=$additionalProperties}"
 }

@@ -22,6 +22,7 @@ internal class ConnectionServiceTest {
                     .cursor("cursor")
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .limit(1L)
+                    .offset(0L)
                     .to(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )

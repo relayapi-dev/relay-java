@@ -27,6 +27,7 @@ private constructor(
     private val data: JsonField<List<Data>>,
     private val hasMore: JsonField<Boolean>,
     private val nextCursor: JsonField<String>,
+    private val total: JsonField<Double>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -37,7 +38,8 @@ private constructor(
         @JsonProperty("next_cursor")
         @ExcludeMissing
         nextCursor: JsonField<String> = JsonMissing.of(),
-    ) : this(data, hasMore, nextCursor, mutableMapOf())
+        @JsonProperty("total") @ExcludeMissing total: JsonField<Double> = JsonMissing.of(),
+    ) : this(data, hasMore, nextCursor, total, mutableMapOf())
 
     /**
      * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
@@ -56,6 +58,14 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun nextCursor(): Optional<String> = nextCursor.getOptional("next_cursor")
+
+    /**
+     * Total matching log entries (ignores pagination)
+     *
+     * @throws RelayInvalidDataException if the JSON field has an unexpected type or is unexpectedly
+     *   missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun total(): Double = total.getRequired("total")
 
     /**
      * Returns the raw JSON value of [data].
@@ -77,6 +87,13 @@ private constructor(
      * Unlike [nextCursor], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("next_cursor") @ExcludeMissing fun _nextCursor(): JsonField<String> = nextCursor
+
+    /**
+     * Returns the raw JSON value of [total].
+     *
+     * Unlike [total], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("total") @ExcludeMissing fun _total(): JsonField<Double> = total
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -100,6 +117,7 @@ private constructor(
          * .data()
          * .hasMore()
          * .nextCursor()
+         * .total()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -111,6 +129,7 @@ private constructor(
         private var data: JsonField<MutableList<Data>>? = null
         private var hasMore: JsonField<Boolean>? = null
         private var nextCursor: JsonField<String>? = null
+        private var total: JsonField<Double>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -118,6 +137,7 @@ private constructor(
             data = connectionListLogsResponse.data.map { it.toMutableList() }
             hasMore = connectionListLogsResponse.hasMore
             nextCursor = connectionListLogsResponse.nextCursor
+            total = connectionListLogsResponse.total
             additionalProperties = connectionListLogsResponse.additionalProperties.toMutableMap()
         }
 
@@ -169,6 +189,17 @@ private constructor(
          */
         fun nextCursor(nextCursor: JsonField<String>) = apply { this.nextCursor = nextCursor }
 
+        /** Total matching log entries (ignores pagination) */
+        fun total(total: Double) = total(JsonField.of(total))
+
+        /**
+         * Sets [Builder.total] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.total] with a well-typed [Double] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun total(total: JsonField<Double>) = apply { this.total = total }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -198,6 +229,7 @@ private constructor(
          * .data()
          * .hasMore()
          * .nextCursor()
+         * .total()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -207,12 +239,21 @@ private constructor(
                 checkRequired("data", data).map { it.toImmutable() },
                 checkRequired("hasMore", hasMore),
                 checkRequired("nextCursor", nextCursor),
+                checkRequired("total", total),
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws RelayInvalidDataException if any value type in this object doesn't match its expected
+     *   type.
+     */
     fun validate(): ConnectionListLogsResponse = apply {
         if (validated) {
             return@apply
@@ -221,6 +262,7 @@ private constructor(
         data().forEach { it.validate() }
         hasMore()
         nextCursor()
+        total()
         validated = true
     }
 
@@ -241,7 +283,8 @@ private constructor(
     internal fun validity(): Int =
         (data.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (if (hasMore.asKnown().isPresent) 1 else 0) +
-            (if (nextCursor.asKnown().isPresent) 1 else 0)
+            (if (nextCursor.asKnown().isPresent) 1 else 0) +
+            (if (total.asKnown().isPresent) 1 else 0)
 
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -543,6 +586,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Data = apply {
             if (validated) {
                 return@apply
@@ -684,6 +736,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Event = apply {
                 if (validated) {
                     return@apply
@@ -756,15 +818,16 @@ private constructor(
             data == other.data &&
             hasMore == other.hasMore &&
             nextCursor == other.nextCursor &&
+            total == other.total &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(data, hasMore, nextCursor, additionalProperties)
+        Objects.hash(data, hasMore, nextCursor, total, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ConnectionListLogsResponse{data=$data, hasMore=$hasMore, nextCursor=$nextCursor, additionalProperties=$additionalProperties}"
+        "ConnectionListLogsResponse{data=$data, hasMore=$hasMore, nextCursor=$nextCursor, total=$total, additionalProperties=$additionalProperties}"
 }

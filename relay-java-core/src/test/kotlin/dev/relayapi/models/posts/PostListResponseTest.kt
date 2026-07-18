@@ -23,6 +23,7 @@ internal class PostListResponseTest {
                         .addMedia(
                             PostListResponse.Data.Media.builder()
                                 .url("https://example.com")
+                                .thumbnail("thumbnail")
                                 .type(PostListResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
@@ -63,12 +64,17 @@ internal class PostListResponseTest {
                                                         "avatar_url" to "avatar_url",
                                                         "display_name" to "display_name",
                                                         "platform_post_id" to "platform_post_id",
+                                                        "target_id" to "target_id",
                                                         "url" to "url",
                                                         "username" to "username",
                                                     )
                                                 ),
                                             "error" to
-                                                mapOf("code" to "code", "message" to "message"),
+                                                mapOf(
+                                                    "code" to "code",
+                                                    "message" to "message",
+                                                    "detail" to "detail",
+                                                ),
                                         )
                                     ),
                                 )
@@ -111,6 +117,7 @@ internal class PostListResponseTest {
                     .addMedia(
                         PostListResponse.Data.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostListResponse.Data.Media.Type.IMAGE)
                             .build()
                     )
@@ -151,11 +158,17 @@ internal class PostListResponseTest {
                                                     "avatar_url" to "avatar_url",
                                                     "display_name" to "display_name",
                                                     "platform_post_id" to "platform_post_id",
+                                                    "target_id" to "target_id",
                                                     "url" to "url",
                                                     "username" to "username",
                                                 )
                                             ),
-                                        "error" to mapOf("code" to "code", "message" to "message"),
+                                        "error" to
+                                            mapOf(
+                                                "code" to "code",
+                                                "message" to "message",
+                                                "detail" to "detail",
+                                            ),
                                     )
                                 ),
                             )
@@ -202,6 +215,7 @@ internal class PostListResponseTest {
                         .addMedia(
                             PostListResponse.Data.Media.builder()
                                 .url("https://example.com")
+                                .thumbnail("thumbnail")
                                 .type(PostListResponse.Data.Media.Type.IMAGE)
                                 .build()
                         )
@@ -242,12 +256,17 @@ internal class PostListResponseTest {
                                                         "avatar_url" to "avatar_url",
                                                         "display_name" to "display_name",
                                                         "platform_post_id" to "platform_post_id",
+                                                        "target_id" to "target_id",
                                                         "url" to "url",
                                                         "username" to "username",
                                                     )
                                                 ),
                                             "error" to
-                                                mapOf("code" to "code", "message" to "message"),
+                                                mapOf(
+                                                    "code" to "code",
+                                                    "message" to "message",
+                                                    "detail" to "detail",
+                                                ),
                                         )
                                     ),
                                 )

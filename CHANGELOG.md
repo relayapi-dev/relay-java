@@ -1,5 +1,46 @@
 # Changelog
 
+## 0.2.0 (2026-07-18)
+
+Full Changelog: [v0.1.0...v0.2.0](https://github.com/relayapi-dev/relay-java/compare/v0.1.0...v0.2.0)
+
+### Features
+
+* **api:** api update ([e2d5033](https://github.com/relayapi-dev/relay-java/commit/e2d5033ec15c09c55096e0713e5df402bde169a5))
+* **api:** api update ([b748c79](https://github.com/relayapi-dev/relay-java/commit/b748c7900724a42f3774acd9e034a1410719ee21))
+* **api:** api update ([7a938cf](https://github.com/relayapi-dev/relay-java/commit/7a938cf1ebc49a6c1a8622ea40716c31da244e96))
+* **api:** api update ([561825d](https://github.com/relayapi-dev/relay-java/commit/561825d06cdd65dc91c2a6eb4e1b921f076ccb5b))
+* **api:** api update ([420279f](https://github.com/relayapi-dev/relay-java/commit/420279f2e934f4c425443c5222fd6d7b98a456f4))
+* **api:** api update ([3fb6d31](https://github.com/relayapi-dev/relay-java/commit/3fb6d3108b08ed568b9f4d86724c45088cfa622a))
+* **api:** api update ([3b3e97d](https://github.com/relayapi-dev/relay-java/commit/3b3e97dd6649ce0ff610874f87eb88f90847cfa1))
+* **api:** api update ([21bdffa](https://github.com/relayapi-dev/relay-java/commit/21bdffaf1c6f069a73c773bca496d5a0dd45b5b7))
+* **api:** api update ([fa73089](https://github.com/relayapi-dev/relay-java/commit/fa7308976ebf572565d2df9a9607e2a071194a78))
+* **api:** api update ([205514d](https://github.com/relayapi-dev/relay-java/commit/205514d10eb1021d113d954ab94ced959792d3b6))
+* **api:** api update ([806de26](https://github.com/relayapi-dev/relay-java/commit/806de267b11c720f394db29e4b93b15eaed3cc48))
+* **api:** api update ([42de5a0](https://github.com/relayapi-dev/relay-java/commit/42de5a0a4f1afa9f064e6497fd51f978f8ad8201))
+* **api:** api update ([24a3205](https://github.com/relayapi-dev/relay-java/commit/24a32051a8433be4a30b4a3bd4feba4fac9672bf))
+* **client:** improve logging ([afe8aaa](https://github.com/relayapi-dev/relay-java/commit/afe8aaacfe2d75a3bb11168f39152bc4a3532e39))
+* **client:** more robust error parsing ([757498a](https://github.com/relayapi-dev/relay-java/commit/757498a58c9ae2c4df5e372219b3debdb9dad8ac))
+* **client:** support proxy authentication ([0e68922](https://github.com/relayapi-dev/relay-java/commit/0e689226ee479b657ff4c5b2315df90dc1e17153))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([9c5c376](https://github.com/relayapi-dev/relay-java/commit/9c5c3760e8abc636511dea920140d05a7cb5fa24))
+* support setting headers via env ([1a0b211](https://github.com/relayapi-dev/relay-java/commit/1a0b2113422971ddb757dd40b0a346b303fbcb6b))
+
+
+### Performance Improvements
+
+* **client:** create one json mapper ([ecc501b](https://github.com/relayapi-dev/relay-java/commit/ecc501bdda8725e4942b3dd9b2a15fdf1d4b6301))
+
+
+### Chores
+
+* redact api-key headers in debug logs ([bc7b8e8](https://github.com/relayapi-dev/relay-java/commit/bc7b8e8757754b16ac1b2818a725c329a680f949))
+* remove duplicated dokka setup ([332535f](https://github.com/relayapi-dev/relay-java/commit/332535f0138ef432775aab25afebeee550b6fc33))
+
+
+### Documentation
+
+* clarify forwards compat behavior ([e6efe03](https://github.com/relayapi-dev/relay-java/commit/e6efe03c1e745b8fd140de5b1aa2c589c958acc3))
+
 ## 0.1.0 (2026-04-07)
 
 Full Changelog: [v0.0.1...v0.1.0](https://github.com/relayapi-dev/relay-java/compare/v0.0.1...v0.1.0)

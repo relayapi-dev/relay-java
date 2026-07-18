@@ -35,9 +35,11 @@ internal class PostServiceTest {
                             .delayMinutes(0L)
                             .build()
                     )
+                    .ideaId("idea_id")
                     .addMedia(
                         PostCreateParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostCreateParams.Media.Type.IMAGE)
                             .build()
                     )
@@ -98,6 +100,7 @@ internal class PostServiceTest {
                     .addMedia(
                         PostUpdateParams.Media.builder()
                             .url("https://example.com")
+                            .thumbnail("thumbnail")
                             .type(PostUpdateParams.Media.Type.IMAGE)
                             .build()
                     )
@@ -137,6 +140,7 @@ internal class PostServiceTest {
             postService.list(
                 PostListParams.builder()
                     .accountId("account_id")
+                    .accountIds("account_ids")
                     .cursor("cursor")
                     .from(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .include("include")
@@ -184,9 +188,11 @@ internal class PostServiceTest {
                                     .delayMinutes(0L)
                                     .build()
                             )
+                            .ideaId("idea_id")
                             .addMedia(
                                 PostBulkCreateParams.Post.Media.builder()
                                     .url("https://example.com")
+                                    .thumbnail("thumbnail")
                                     .type(PostBulkCreateParams.Post.Media.Type.IMAGE)
                                     .build()
                             )

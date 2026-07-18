@@ -21,12 +21,6 @@ internal class WhatsappConnectViaCredentialsResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            WhatsappConnectViaCredentialsResponse.Account.Group.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
                         .metadata(
                             WhatsappConnectViaCredentialsResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -36,6 +30,12 @@ internal class WhatsappConnectViaCredentialsResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            WhatsappConnectViaCredentialsResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -47,12 +47,6 @@ internal class WhatsappConnectViaCredentialsResponseTest {
                     .avatarUrl("avatar_url")
                     .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .displayName("display_name")
-                    .group(
-                        WhatsappConnectViaCredentialsResponse.Account.Group.builder()
-                            .id("id")
-                            .name("name")
-                            .build()
-                    )
                     .metadata(
                         WhatsappConnectViaCredentialsResponse.Account.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -62,6 +56,12 @@ internal class WhatsappConnectViaCredentialsResponseTest {
                     .platformAccountId("platform_account_id")
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .username("username")
+                    .workspace(
+                        WhatsappConnectViaCredentialsResponse.Account.Workspace.builder()
+                            .id("id")
+                            .name("name")
+                            .build()
+                    )
                     .build()
             )
     }
@@ -77,12 +77,6 @@ internal class WhatsappConnectViaCredentialsResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            WhatsappConnectViaCredentialsResponse.Account.Group.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
                         .metadata(
                             WhatsappConnectViaCredentialsResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -92,6 +86,12 @@ internal class WhatsappConnectViaCredentialsResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            WhatsappConnectViaCredentialsResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()

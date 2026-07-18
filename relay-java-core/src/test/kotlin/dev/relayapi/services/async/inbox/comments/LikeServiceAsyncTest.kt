@@ -3,6 +3,8 @@
 package dev.relayapi.services.async.inbox.comments
 
 import dev.relayapi.client.okhttp.RelayOkHttpClientAsync
+import dev.relayapi.models.inbox.comments.like.LikeCreateParams
+import dev.relayapi.models.inbox.comments.like.LikeDeleteParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -14,7 +16,10 @@ internal class LikeServiceAsyncTest {
         val client = RelayOkHttpClientAsync.builder().apiKey("My API Key").build()
         val likeServiceAsync = client.inbox().comments().like()
 
-        val likeFuture = likeServiceAsync.create("comment_id")
+        val likeFuture =
+            likeServiceAsync.create(
+                LikeCreateParams.builder().commentId("comment_id").accountId("account_id").build()
+            )
 
         val like = likeFuture.get()
         like.validate()
@@ -26,7 +31,10 @@ internal class LikeServiceAsyncTest {
         val client = RelayOkHttpClientAsync.builder().apiKey("My API Key").build()
         val likeServiceAsync = client.inbox().comments().like()
 
-        val likeFuture = likeServiceAsync.delete("comment_id")
+        val likeFuture =
+            likeServiceAsync.delete(
+                LikeDeleteParams.builder().commentId("comment_id").accountId("account_id").build()
+            )
 
         val like = likeFuture.get()
         like.validate()

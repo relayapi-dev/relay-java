@@ -138,6 +138,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws RelayInvalidDataException if any value type in this object doesn't match its expected
+     *   type.
+     */
     fun validate(): ValidateCheckPostLengthResponse = apply {
         if (validated) {
             return@apply
@@ -906,6 +914,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Platforms = apply {
             if (validated) {
                 return@apply
@@ -1170,6 +1187,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Beehiiv = apply {
                 if (validated) {
                     return@apply
@@ -1420,6 +1447,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Bluesky = apply {
                 if (validated) {
                     return@apply
@@ -1670,6 +1707,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Convertkit = apply {
                 if (validated) {
                     return@apply
@@ -1920,6 +1967,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Discord = apply {
                 if (validated) {
                     return@apply
@@ -2170,6 +2227,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Facebook = apply {
                 if (validated) {
                     return@apply
@@ -2420,6 +2487,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Googlebusiness = apply {
                 if (validated) {
                     return@apply
@@ -2670,6 +2747,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Instagram = apply {
                 if (validated) {
                     return@apply
@@ -2920,6 +3007,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Linkedin = apply {
                 if (validated) {
                     return@apply
@@ -3170,6 +3267,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Listmonk = apply {
                 if (validated) {
                     return@apply
@@ -3420,6 +3527,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Mailchimp = apply {
                 if (validated) {
                     return@apply
@@ -3670,6 +3787,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Mastodon = apply {
                 if (validated) {
                     return@apply
@@ -3920,6 +4047,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Pinterest = apply {
                 if (validated) {
                     return@apply
@@ -4170,6 +4307,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Reddit = apply {
                 if (validated) {
                     return@apply
@@ -4420,6 +4567,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Sms = apply {
                 if (validated) {
                     return@apply
@@ -4670,6 +4827,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Snapchat = apply {
                 if (validated) {
                     return@apply
@@ -4920,6 +5087,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Telegram = apply {
                 if (validated) {
                     return@apply
@@ -5170,6 +5347,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Threads = apply {
                 if (validated) {
                     return@apply
@@ -5420,6 +5607,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Tiktok = apply {
                 if (validated) {
                     return@apply
@@ -5670,6 +5867,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Twitter = apply {
                 if (validated) {
                     return@apply
@@ -5920,6 +6127,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Whatsapp = apply {
                 if (validated) {
                     return@apply
@@ -6170,6 +6387,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Youtube = apply {
                 if (validated) {
                     return@apply

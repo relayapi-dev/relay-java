@@ -21,12 +21,6 @@ internal class LocationSelectResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            LocationSelectResponse.Account.Group.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
                         .metadata(
                             LocationSelectResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -36,6 +30,12 @@ internal class LocationSelectResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            LocationSelectResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()
@@ -47,9 +47,6 @@ internal class LocationSelectResponseTest {
                     .avatarUrl("avatar_url")
                     .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .displayName("display_name")
-                    .group(
-                        LocationSelectResponse.Account.Group.builder().id("id").name("name").build()
-                    )
                     .metadata(
                         LocationSelectResponse.Account.Metadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -59,6 +56,12 @@ internal class LocationSelectResponseTest {
                     .platformAccountId("platform_account_id")
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .username("username")
+                    .workspace(
+                        LocationSelectResponse.Account.Workspace.builder()
+                            .id("id")
+                            .name("name")
+                            .build()
+                    )
                     .build()
             )
     }
@@ -74,12 +77,6 @@ internal class LocationSelectResponseTest {
                         .avatarUrl("avatar_url")
                         .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .displayName("display_name")
-                        .group(
-                            LocationSelectResponse.Account.Group.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
                         .metadata(
                             LocationSelectResponse.Account.Metadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -89,6 +86,12 @@ internal class LocationSelectResponseTest {
                         .platformAccountId("platform_account_id")
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .username("username")
+                        .workspace(
+                            LocationSelectResponse.Account.Workspace.builder()
+                                .id("id")
+                                .name("name")
+                                .build()
+                        )
                         .build()
                 )
                 .build()

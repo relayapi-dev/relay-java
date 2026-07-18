@@ -62,9 +62,7 @@ internal class WhatsappServiceTest {
 
         val response =
             whatsappService.listPhoneNumbers(
-                WhatsappListPhoneNumbersParams.builder()
-                    .status(WhatsappListPhoneNumbersParams.Status.PURCHASING)
-                    .build()
+                WhatsappListPhoneNumbersParams.builder().accountId("account_id").build()
             )
 
         response.validate()

@@ -22,7 +22,7 @@ internal class SlotServiceAsyncTest {
                     .addSlot(
                         SlotCreateParams.Slot.builder()
                             .dayOfWeek(0L)
-                            .time("73:16")
+                            .time("20:29")
                             .timezone("timezone")
                             .build()
                     )
@@ -49,7 +49,7 @@ internal class SlotServiceAsyncTest {
                     .addSlot(
                         SlotUpdateParams.Slot.builder()
                             .dayOfWeek(0L)
-                            .time("73:16")
+                            .time("20:29")
                             .timezone("timezone")
                             .build()
                     )

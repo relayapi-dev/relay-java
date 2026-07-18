@@ -40,6 +40,7 @@ internal class AnalyticsRetrieveResponseTest {
                         .totalViews(0.0)
                         .build()
                 )
+                .truncated(true)
                 .build()
 
         assertThat(analyticsRetrieveResponse.data())
@@ -70,6 +71,7 @@ internal class AnalyticsRetrieveResponseTest {
                     .totalViews(0.0)
                     .build()
             )
+        assertThat(analyticsRetrieveResponse.truncated()).contains(true)
     }
 
     @Test
@@ -103,6 +105,7 @@ internal class AnalyticsRetrieveResponseTest {
                         .totalViews(0.0)
                         .build()
                 )
+                .truncated(true)
                 .build()
 
         val roundtrippedAnalyticsRetrieveResponse =

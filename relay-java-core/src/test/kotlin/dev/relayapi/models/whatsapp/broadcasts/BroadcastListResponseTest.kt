@@ -27,6 +27,8 @@ internal class BroadcastListResponseTest {
                         .sent(0.0)
                         .build()
                 )
+                .hasMore(true)
+                .nextCursor("next_cursor")
                 .build()
 
         assertThat(broadcastListResponse.data())
@@ -43,6 +45,8 @@ internal class BroadcastListResponseTest {
                     .sent(0.0)
                     .build()
             )
+        assertThat(broadcastListResponse.hasMore()).contains(true)
+        assertThat(broadcastListResponse.nextCursor()).contains("next_cursor")
     }
 
     @Test
@@ -63,6 +67,8 @@ internal class BroadcastListResponseTest {
                         .sent(0.0)
                         .build()
                 )
+                .hasMore(true)
+                .nextCursor("next_cursor")
                 .build()
 
         val roundtrippedBroadcastListResponse =

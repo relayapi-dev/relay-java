@@ -20,7 +20,7 @@ internal class SlotUpdateResponseTest {
                 .addSlot(
                     SlotUpdateResponse.Slot.builder()
                         .dayOfWeek(0L)
-                        .time("73:16")
+                        .time("20:29")
                         .timezone("timezone")
                         .build()
                 )
@@ -36,7 +36,7 @@ internal class SlotUpdateResponseTest {
             .containsExactly(
                 SlotUpdateResponse.Slot.builder()
                     .dayOfWeek(0L)
-                    .time("73:16")
+                    .time("20:29")
                     .timezone("timezone")
                     .build()
             )
@@ -56,7 +56,7 @@ internal class SlotUpdateResponseTest {
                 .addSlot(
                     SlotUpdateResponse.Slot.builder()
                         .dayOfWeek(0L)
-                        .time("73:16")
+                        .time("20:29")
                         .timezone("timezone")
                         .build()
                 )

@@ -19,7 +19,6 @@ internal class AccountRetrieveResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(AccountRetrieveResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     AccountRetrieveResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -29,6 +28,9 @@ internal class AccountRetrieveResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(
+                    AccountRetrieveResponse.Workspace.builder().id("id").name("name").build()
+                )
                 .build()
 
         assertThat(accountRetrieveResponse.id()).isEqualTo("id")
@@ -36,8 +38,6 @@ internal class AccountRetrieveResponseTest {
         assertThat(accountRetrieveResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(accountRetrieveResponse.displayName()).contains("display_name")
-        assertThat(accountRetrieveResponse.group())
-            .contains(AccountRetrieveResponse.Group.builder().id("id").name("name").build())
         assertThat(accountRetrieveResponse.metadata())
             .contains(
                 AccountRetrieveResponse.Metadata.builder()
@@ -50,6 +50,8 @@ internal class AccountRetrieveResponseTest {
         assertThat(accountRetrieveResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(accountRetrieveResponse.username()).contains("username")
+        assertThat(accountRetrieveResponse.workspace())
+            .contains(AccountRetrieveResponse.Workspace.builder().id("id").name("name").build())
     }
 
     @Test
@@ -61,7 +63,6 @@ internal class AccountRetrieveResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(AccountRetrieveResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     AccountRetrieveResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -71,6 +72,9 @@ internal class AccountRetrieveResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(
+                    AccountRetrieveResponse.Workspace.builder().id("id").name("name").build()
+                )
                 .build()
 
         val roundtrippedAccountRetrieveResponse =

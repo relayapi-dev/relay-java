@@ -63,9 +63,7 @@ internal class WhatsappServiceAsyncTest {
 
         val responseFuture =
             whatsappServiceAsync.listPhoneNumbers(
-                WhatsappListPhoneNumbersParams.builder()
-                    .status(WhatsappListPhoneNumbersParams.Status.PURCHASING)
-                    .build()
+                WhatsappListPhoneNumbersParams.builder().accountId("account_id").build()
             )
 
         val response = responseFuture.get()

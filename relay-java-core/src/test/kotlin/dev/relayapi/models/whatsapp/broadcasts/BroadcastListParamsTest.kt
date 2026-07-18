@@ -10,11 +10,28 @@ internal class BroadcastListParamsTest {
 
     @Test
     fun create() {
-        BroadcastListParams.builder().accountId("account_id").build()
+        BroadcastListParams.builder().accountId("account_id").cursor("cursor").limit(1L).build()
     }
 
     @Test
     fun queryParams() {
+        val params =
+            BroadcastListParams.builder().accountId("account_id").cursor("cursor").limit(1L).build()
+
+        val queryParams = params._queryParams()
+
+        assertThat(queryParams)
+            .isEqualTo(
+                QueryParams.builder()
+                    .put("account_id", "account_id")
+                    .put("cursor", "cursor")
+                    .put("limit", "1")
+                    .build()
+            )
+    }
+
+    @Test
+    fun queryParamsWithoutOptionalFields() {
         val params = BroadcastListParams.builder().accountId("account_id").build()
 
         val queryParams = params._queryParams()

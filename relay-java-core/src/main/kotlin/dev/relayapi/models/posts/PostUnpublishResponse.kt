@@ -732,6 +732,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws RelayInvalidDataException if any value type in this object doesn't match its expected
+     *   type.
+     */
     fun validate(): PostUnpublishResponse = apply {
         if (validated) {
             return@apply
@@ -792,6 +800,7 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val url: JsonField<String>,
+        private val thumbnail: JsonField<String>,
         private val type: JsonField<Type>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -799,8 +808,11 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("thumbnail")
+            @ExcludeMissing
+            thumbnail: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-        ) : this(url, type, mutableMapOf())
+        ) : this(url, thumbnail, type, mutableMapOf())
 
         /**
          * Public URL of the media file
@@ -809,6 +821,15 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun url(): String = url.getRequired("url")
+
+        /**
+         * Read-only. Stable, hyper-optimized preview URL that persists after the full-res original
+         * expires. Ignored on write.
+         *
+         * @throws RelayInvalidDataException if the JSON field has an unexpected type (e.g. if the
+         *   server responded with an unexpected value).
+         */
+        fun thumbnail(): Optional<String> = thumbnail.getOptional("thumbnail")
 
         /**
          * Media type. Inferred from URL extension if omitted.
@@ -824,6 +845,13 @@ private constructor(
          * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+        /**
+         * Returns the raw JSON value of [thumbnail].
+         *
+         * Unlike [thumbnail], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("thumbnail") @ExcludeMissing fun _thumbnail(): JsonField<String> = thumbnail
 
         /**
          * Returns the raw JSON value of [type].
@@ -861,12 +889,14 @@ private constructor(
         class Builder internal constructor() {
 
             private var url: JsonField<String>? = null
+            private var thumbnail: JsonField<String> = JsonMissing.of()
             private var type: JsonField<Type> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(media: Media) = apply {
                 url = media.url
+                thumbnail = media.thumbnail
                 type = media.type
                 additionalProperties = media.additionalProperties.toMutableMap()
             }
@@ -882,6 +912,21 @@ private constructor(
              * value.
              */
             fun url(url: JsonField<String>) = apply { this.url = url }
+
+            /**
+             * Read-only. Stable, hyper-optimized preview URL that persists after the full-res
+             * original expires. Ignored on write.
+             */
+            fun thumbnail(thumbnail: String) = thumbnail(JsonField.of(thumbnail))
+
+            /**
+             * Sets [Builder.thumbnail] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.thumbnail] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun thumbnail(thumbnail: JsonField<String>) = apply { this.thumbnail = thumbnail }
 
             /** Media type. Inferred from URL extension if omitted. */
             fun type(type: Type) = type(JsonField.of(type))
@@ -927,17 +972,32 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Media =
-                Media(checkRequired("url", url), type, additionalProperties.toMutableMap())
+                Media(
+                    checkRequired("url", url),
+                    thumbnail,
+                    type,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Media = apply {
             if (validated) {
                 return@apply
             }
 
             url()
+            thumbnail()
             type().ifPresent { it.validate() }
             validated = true
         }
@@ -958,7 +1018,9 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (url.asKnown().isPresent) 1 else 0) + (type.asKnown().getOrNull()?.validity() ?: 0)
+            (if (url.asKnown().isPresent) 1 else 0) +
+                (if (thumbnail.asKnown().isPresent) 1 else 0) +
+                (type.asKnown().getOrNull()?.validity() ?: 0)
 
         /** Media type. Inferred from URL extension if omitted. */
         class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -1062,6 +1124,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): Type = apply {
                 if (validated) {
                     return@apply
@@ -1107,16 +1179,19 @@ private constructor(
 
             return other is Media &&
                 url == other.url &&
+                thumbnail == other.thumbnail &&
                 type == other.type &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(url, type, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(url, thumbnail, type, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Media{url=$url, type=$type, additionalProperties=$additionalProperties}"
+            "Media{url=$url, thumbnail=$thumbnail, type=$type, additionalProperties=$additionalProperties}"
     }
 
     /** Recycling configuration, if any */
@@ -1760,6 +1835,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Recycling = apply {
             if (validated) {
                 return@apply
@@ -1911,6 +1995,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): GapFreq = apply {
                 if (validated) {
                     return@apply
@@ -2108,6 +2202,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Status = apply {
             if (validated) {
                 return@apply
@@ -2205,6 +2308,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Targets = apply {
             if (validated) {
                 return@apply
@@ -2605,6 +2717,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Metrics = apply {
             if (validated) {
                 return@apply
@@ -2746,6 +2867,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): TargetOptions = apply {
             if (validated) {
                 return@apply

@@ -19,7 +19,6 @@ internal class AccountUpdateResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(AccountUpdateResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     AccountUpdateResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -29,6 +28,7 @@ internal class AccountUpdateResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(AccountUpdateResponse.Workspace.builder().id("id").name("name").build())
                 .build()
 
         assertThat(accountUpdateResponse.id()).isEqualTo("id")
@@ -36,8 +36,6 @@ internal class AccountUpdateResponseTest {
         assertThat(accountUpdateResponse.connectedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(accountUpdateResponse.displayName()).contains("display_name")
-        assertThat(accountUpdateResponse.group())
-            .contains(AccountUpdateResponse.Group.builder().id("id").name("name").build())
         assertThat(accountUpdateResponse.metadata())
             .contains(
                 AccountUpdateResponse.Metadata.builder()
@@ -50,6 +48,8 @@ internal class AccountUpdateResponseTest {
         assertThat(accountUpdateResponse.updatedAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(accountUpdateResponse.username()).contains("username")
+        assertThat(accountUpdateResponse.workspace())
+            .contains(AccountUpdateResponse.Workspace.builder().id("id").name("name").build())
     }
 
     @Test
@@ -61,7 +61,6 @@ internal class AccountUpdateResponseTest {
                 .avatarUrl("avatar_url")
                 .connectedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .displayName("display_name")
-                .group(AccountUpdateResponse.Group.builder().id("id").name("name").build())
                 .metadata(
                     AccountUpdateResponse.Metadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -71,6 +70,7 @@ internal class AccountUpdateResponseTest {
                 .platformAccountId("platform_account_id")
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .username("username")
+                .workspace(AccountUpdateResponse.Workspace.builder().id("id").name("name").build())
                 .build()
 
         val roundtrippedAccountUpdateResponse =

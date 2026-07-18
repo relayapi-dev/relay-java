@@ -5,12 +5,16 @@ package dev.relayapi.errors
 import dev.relayapi.core.JsonValue
 import dev.relayapi.core.checkRequired
 import dev.relayapi.core.http.Headers
+import dev.relayapi.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class RateLimitException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    RelayServiceException("429: $body", cause) {
+    RelayServiceException(
+        "429: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = 429
 

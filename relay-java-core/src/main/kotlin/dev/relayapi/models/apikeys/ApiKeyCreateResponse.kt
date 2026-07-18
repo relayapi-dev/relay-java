@@ -426,6 +426,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws RelayInvalidDataException if any value type in this object doesn't match its expected
+     *   type.
+     */
     fun validate(): ApiKeyCreateResponse = apply {
         if (validated) {
             return@apply
@@ -555,6 +563,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Permission = apply {
             if (validated) {
                 return@apply
@@ -617,6 +634,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import dev.relayapi.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = workspaceScope.accept(new WorkspaceScope.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitUnionMember0(UnionMember0 unionMember0) {
+         *         return Optional.of(unionMember0.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws RelayInvalidDataException if [Visitor.unknown] is not overridden in [visitor] and
+         *   the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
@@ -626,6 +672,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws RelayInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): WorkspaceScope = apply {
             if (validated) {
                 return@apply
@@ -858,6 +913,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws RelayInvalidDataException if any value type in this object doesn't match its
+             *   expected type.
+             */
             fun validate(): UnionMember0 = apply {
                 if (validated) {
                     return@apply
